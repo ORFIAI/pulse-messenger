@@ -39,7 +39,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.pulse.messenger.R;
 import com.pulse.messenger.ui.MainActivity;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -112,7 +112,7 @@ public class AuthActivity extends AppCompatActivity {
      * or Firebase work from blocking the UI. Tasks that must touch
      * views are posted back to the main thread inside the callback.
      */
-    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,7 +268,7 @@ public class AuthActivity extends AppCompatActivity {
 
         GoogleIdTokenCredential googleCredential;
         try {
-            googleCredential = GoogleIdTokenCredential.createFrom((CustomCredential) credential);
+            googleCredential = GoogleIdTokenCredential.createFrom(((CustomCredential) credential).getData());
         } catch (Exception parseError) {
             // Malformed payload from Credential Manager — treat as a
             // generic failure. Log only the exception type, never the

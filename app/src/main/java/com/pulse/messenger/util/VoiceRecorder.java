@@ -168,7 +168,7 @@ public class VoiceRecorder {
             r.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             r.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             r.setAudioSamplingRate(44100);
-            r.setAudioBitRate(64000);
+            r.setAudioEncodingBitRate(64000);
             r.setAudioChannels(1);
             r.setOutputFile(file.getAbsolutePath());
             r.prepare();
