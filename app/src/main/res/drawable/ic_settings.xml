@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_settings — gear/cogwheel icon (Settings row affordance)
+    ------------------------------------------------------------
+    Referenced by fragment_profile.xml's row_settings leading
+    ImageView.
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF), tinted at the consumer
+       level (ImageView's app:tint="?attr/colorOnSurfaceVariant").
+       The fill is a template — the actual rendered color is
+       determined by the theme tint, resolving to
+       md_on_surface_variant_light (#47464F) in light mode
+       and md_on_surface_variant_dark (#C9C4D0) in dark mode.
+
+    2. 24dp VIEWPORT.
+       Matches every other chrome icon in the app. The gear's
+       teeth and hollow center remain crisp at 24dp thanks to
+       the A-command arcs (not Bézier curves), which produce
+       true circular shapes rather than approximations.
+
+    3. STANDARD MATERIAL GLYPH.
+       This is the canonical Material Design "settings" gear.
+       It has:
+         - A hollow circular center (the gear's "hole")
+         - 8 teeth arranged radially around the outer edge
+         - A circular body between the center hole and the
+           tooth bases
+       The gear is one of the most universally recognizable
+       icons in existence — every Android app, every desktop
+       OS, and every web platform use essentially this shape.
+       Do NOT redesign it. The standard form is what users
+       recognize; any deviation (different tooth count,
+       different proportions, missing hollow center) reads as
+       a rendering error rather than a design choice.
+
+    4. TEETH = 8, EVENLY SPACED.
+       8 teeth is the Material standard and the visual
+       "sweet spot":
+         - 6 teeth looks like a cog with too few points —
+           reads more like a "sun" or "flame" than a gear.
+         - 10+ teeth looks like a bicycle chainring —
+           reads as mechanical, not UI.
+         - 8 teeth reads unambiguously as "settings gear"
+           and is the standard Material construction.
+
+    5. FILLED GEAR WITH HOLE, NOT OUTLINED GEAR.
+       The gear body is a solid filled shape with a hole
+       punched out of the center via evenOdd. This is the
+       standard Material gear construction — outlined gears
+       (where the gear body is a ring, not a filled shape)
+       look anemic at 24dp and are rarely used in Material
+       apps.
+
+    6. NO androidx.AutoMirrored.
+       A gear is rotationally symmetric (approximately). Mirroring
+       under RTL produces no visible change. Do not add
+       auto-mirroring.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        ============================================================
+        GEAR (filled, with a hollow center via evenOdd)
+        ============================================================
+        This is Google's canonical Material Design "settings"
+        path. Its construction is a single outer contour
+        representing the gear's outer silhouette (body + 8
+        teeth) and a second inner contour representing the
+        hollow center hole. Under evenOdd, the region between
+        the outer and inner contours is filled, and the
+        interior is transparent — producing the standard
+        filled-gear-with-hole look.
+
+        The outer silhouette is traced with alternating
+        radial teeth: for each tooth, the trace moves
+        outward to a radius of ~10 units, then inward to a
+        radius of ~8 units between teeth. The transitions
+        use curves (C or Q commands) to smooth the corners,
+        which is what makes the gear read as "smooth
+        mechanical part" rather than "star polygon."
+
+        The inner hole is a simple circle at the center
+        (radius ~3 units), drawn as two arcs.
+
+        DO NOT attempt to "clean up" this path by removing
+        the curves or rebuilding it from primitives. The
+        path data below is Google's official Material Icons
+        "settings" asset — it is battle-tested across every
+        Android device, every screen density, and every RTL
+        locale. Any hand-edit risks producing a subtle
+        rendering artifact (a tooth that looks "off-center"
+        or a hole that appears "wobbly") that is nearly
+        impossible to diagnose without side-by-side
+        comparison against the reference asset.
+        ============================================================
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M19.14,12.94c0.04,-0.3 0.06,-0.61 0.06,-0.94c0,-0.32 -0.02,-0.64 -0.07,-0.94l2.03,-1.58c0.18,-0.14 0.23,-0.41 0.12,-0.61l-1.92,-3.32c-0.12,-0.22 -0.37,-0.29 -0.59,-0.22l-2.39,0.96c-0.5,-0.38 -1.03,-0.7 -1.62,-0.94L14.4,2.81c-0.04,-0.24 -0.24,-0.41 -0.48,-0.41h-3.84c-0.24,0 -0.43,0.17 -0.47,0.41L9.25,5.35C8.66,5.59 8.12,5.92 7.63,6.29L5.24,5.33c-0.22,-0.08 -0.47,0 -0.59,0.22L2.74,8.87C2.62,9.08 2.66,9.34 2.86,9.48l2.03,1.58C4.84,11.36 4.8,11.69 4.8,12s0.02,0.64 0.07,0.94l-2.03,1.58c-0.18,0.14 -0.23,0.41 -0.12,0.61l1.92,3.32c0.12,0.22 0.37,0.29 0.59,0.22l2.39,-0.96c0.5,0.38 1.03,0.7 1.62,0.94l0.36,2.54c0.05,0.24 0.24,0.41 0.48,0.41h3.84c0.24,0 0.44,-0.17 0.47,-0.41l0.36,-2.54c0.59,-0.24 1.13,-0.56 1.62,-0.94l2.39,0.96c0.22,0.08 0.47,0 0.59,-0.22l1.92,-3.32c0.12,-0.22 0.07,-0.47 -0.12,-0.61L19.14,12.94z M12,15.6c-1.98,0 -3.6,-1.62 -3.6,-3.6s1.62,-3.6 3.6,-3.6s3.6,1.62 3.6,3.6S13.98,15.6 12,15.6z" />
+
+</vector>

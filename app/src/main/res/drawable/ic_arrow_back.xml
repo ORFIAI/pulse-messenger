@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_arrow_back — left-pointing back arrow
+    ------------------------------------------------------------
+    Referenced by:
+      - activity_settings.xml (toolbar navigationIcon)
+      - future: ChatActivity, ProfileEditActivity,
+        GroupCreateActivity (same navigationIcon pattern)
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF), tinted at the consumer
+       level (MaterialToolbar's app:navigationIconTint,
+       resolving to md_on_surface_light in light mode and
+       md_on_surface_dark in dark mode). Do NOT set a brand
+       color here — the fill is a template.
+
+    2. 24dp VIEWPORT.
+       Matches every other chrome icon in the app. MaterialToolbar
+       sizes its navigationIcon at 24dp by default; the vector
+       renders losslessly at 24dp on every screen density.
+
+    3. STANDARD MATERIAL GLYPH.
+       This is the canonical Material Design "arrow_back" icon:
+       a single solid arrow with a triangular head and a
+       rectangular shaft, pointing left. It is NOT a chevron
+       ("<") — that is `ic_chevron_right` mirrored, and is a
+       DIFFERENT affordance (chevron = "go deeper into a
+       flow", arrow = "return to previous screen"). Using a
+       chevron as a back arrow would be subtly wrong and
+       would look inconsistent with every Material app the
+       user has ever used.
+
+    4. SOLID ARROW, NOT OUTLINED.
+       The arrow head and shaft are a single solid shape.
+       An outlined (hollow) arrow back would look lighter
+       than every other chrome icon in the app (which are
+       all solid or solid-with-cutout). The Material standard
+       is solid — keep it that way.
+
+    5. NO androidx.AutoMirrored.
+       The back arrow SHOULD be auto-mirrored under RTL
+       locales (Arabic, Hebrew, Persian, Urdu) — a
+       left-pointing back arrow in an RTL layout points the
+       wrong way and confuses the navigation direction.
+       However, our v1 does not ship RTL support, and adding
+       `android:autoMirrored="true"` now would be a no-op
+       (all v1 target locales are LTR). Phase 5 will add RTL
+       support; at that time, the correct fix is to add
+       `android:autoMirrored="true"` to the consuming
+       MaterialToolbar's navigationIcon via a
+       selector/Alterable wrapper OR to add it at the vector
+       level. The vector-level attribute works on API 21+ but
+       is less reliable across OEMs than a wrapper — evaluate
+       options at Phase 5.
+
+    Rendering result at 24dp:
+      A crisp left-pointing arrow — universally recognized
+      as "back / return to previous screen."
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Solid back arrow (single closed path).
+
+        Geometry:
+          - Arrow tip: (4, 12) — the leftmost point
+          - Top-right of the head: (9, 7) — upper diagonal
+          - Shaft top: (20, 7) — the shaft's right edge
+          - Shaft bottom: (20, 17) — the shaft's right edge
+          - Bottom-right of the head: (9, 17) — lower diagonal
+          - Close back to (4, 12)
+
+        Wait — that produces a filled arrow WITHOUT the
+        notched style. The correct Material arrow-back shape
+        is:
+
+          - Arrow tip: (4, 12)
+          - Top head corner: (8.5, 7.5) — the head's top
+          - Top-of-shaft notch: (8.5, 10.5) — where the shaft
+            meets the head's inner edge (top)
+          - Shaft top: (20, 10.5) — shaft's right edge (top)
+          - Shaft bottom: (20, 13.5) — shaft's right edge
+            (bottom)
+          - Bottom-of-shaft notch: (8.5, 13.5) — where the
+            shaft meets the head's inner edge (bottom)
+          - Bottom head corner: (8.5, 16.5) — the head's
+            bottom
+          - Back to (4, 12)
+
+        Full trace (using the correct Material construction
+        with an inner notch so the head reads as a triangle,
+        not as a filled triangle overlapping a rectangle —
+        the two shapes share a boundary at x=8.5, producing
+        a clean single-shape silhouette):
+
+          M 20,10.5       shaft top-right
+          L 8.5,10.5      shaft top-left (meets head)
+          L 8.5,7.5       up along head's inner-left edge
+          L 4,12          diagonal down-left to the tip
+          L 8.5,16.5      diagonal down-right to head's bottom
+          L 8.5,13.5      up along head's inner-left edge
+          L 20,13.5       shaft bottom-right
+          Z               close (implicit: back to start)
+
+        This construction produces the correct silhouette:
+        a triangular head plus a rectangular shaft, sharing
+        a boundary at x=8.5. Under nonZero fill, the entire
+        shape is one closed region, and the shared boundary
+        disappears — producing a single solid arrow.
+
+        Do not "simplify" by using two separate <path>s
+        (head + shaft). That would produce a visible seam at
+        the intersection on some GPUs and would not match the
+        Material reference rendering exactly.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M20,10.5 L8.5,10.5 L8.5,7.5 L4,12 L8.5,16.5 L8.5,13.5 L20,13.5 Z" />
+
+</vector>

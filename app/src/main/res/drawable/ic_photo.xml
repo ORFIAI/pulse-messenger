@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_photo — photo/image glyph (attach menu, media bubble badge)
+    ------------------------------------------------------------
+    Referenced by:
+      - bottom_sheet_attach.xml (option_photo leading icon)
+      - future: image message bubble type badge (Phase 7)
+      - future: full-screen image viewer action bar (Phase 7)
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF), tinted at the consumer
+       level (app:tint="?attr/colorOnSurface" in
+       bottom_sheet_attach.xml, resolving to md_on_surface_light
+       in light mode and md_on_surface_dark in dark mode). Do
+       NOT set a brand color here — the fill is a template.
+
+    2. 24dp VIEWPORT.
+       Matches every other chrome icon in the app. The bottom
+       sheet's option tiles render it at 24dp (its native size);
+       future media-bubble badges may render it at 16dp or
+       20dp — the vector scales losslessly.
+
+    3. STANDARD MATERIAL "IMAGE" GLYPH.
+       This is the canonical Material Design "image" icon — a
+       filled rounded rectangle with a mountain landscape cut
+       out of the bottom portion. It is NOT a custom design.
+       Photo is a universal affordance and users recognize
+       this exact glyph from every photo/gallery app in the
+       world; any deviation reads as a rendering bug rather
+       than a design choice.
+
+    4. FILLED RECTANGLE, CUT-OUT LANDSCAPE.
+       The icon is a solid rectangle with the "landscape"
+       region punched out (transparent). Rendered on the
+       surface-variant background of the attach option tile,
+       this produces a dark rounded rectangle (the tint color)
+       with a lighter landscape shape showing through. This
+       is the same visual as every other Material app's
+       "photo" icon.
+
+       Do NOT switch to the "image_outlined" variant
+       (border-only rectangle with solid landscape inside)
+       — that variant is appropriate for toolbar actions
+       where the icon must not compete with the toolbar's
+       other content. In the attach sheet, a filled icon
+       has the right visual weight to indicate "tap to
+       send a photo."
+
+    5. FILL TYPE = evenOdd.
+       The mountain landscape is a "hole" in the filled
+       rectangle. The canonical Material path expresses this
+       via opposite winding directions between the two
+       subpaths (rectangle CW, mountain CCW), which renders
+       correctly under nonZero fill. However, to be robust
+       against any tooling that might normalize winding
+       directions during a future refactor, fillType is
+       set to "evenOdd" explicitly. This guarantees the
+       cutout regardless of winding and produces the same
+       visual as the canonical Google asset. Do NOT remove
+       this attribute.
+
+    6. SINGLE PATH WITH TWO CONTOURS.
+       The path data contains the outer rectangle contour
+       (first M...z block) and the mountain contour
+       (second M...z block) in a single <path> element.
+       This is the standard Material construction — a
+       separate <path> for the mountain would produce a
+       filled mountain on top of the rectangle (via the
+       default nonZero for that path alone), which is the
+       opposite of what we want. Keep both contours in
+       the single path element.
+
+    7. NO androidx.AutoMirrored.
+       A landscape photo icon is not directional.
+       Mirroring under RTL produces no visible change.
+       Do not add auto-mirroring.
+
+    Rendering result at 24dp:
+      A rounded-rectangle photo frame with a mountain
+      landscape cut out of it — immediately readable as
+      "photo / image" for any user of any photo app.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Canonical Material Design "image" path.
+
+        Contour 1 — outer rectangle (rounded corners):
+          M 21,19              start at bottom-right
+          V 5                  up the right edge
+          c0,-1.1 -0.9,-2 -2,-2  top-right corner curve
+          H 5                  left across the top
+          c-1.1,0 -2,0.9 -2,2  top-left corner curve
+          v 14                 down the left edge
+          c0,1.1 0.9,2 2,2     bottom-left corner curve
+          h 14                 right across the bottom
+          c1.1,0 2,-0.9 2,-2   bottom-right corner curve
+          z                    close (back to start)
+
+        Contour 2 — mountain landscape (cutout):
+          M 8.5,13.5           left mountain peak
+          l 2.5,3.01           slope down-right
+          L 14.5,12            right mountain peak (higher)
+          l 4.5,6              slope down-right to canvas
+          H 5                  horizontal line back to left
+          l 3.5,-4.5           slope up-right, close mountain
+          z                    close
+
+        Rendered together under evenOdd, the rectangle is
+        filled (the tint color) and the mountain region is
+        cut out (transparent), producing the standard "photo
+        with landscape" visual.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M21,19V5c0,-1.1 -0.9,-2 -2,-2H5c-1.1,0 -2,0.9 -2,2v14c0,1.1 0.9,2 2,2h14c1.1,0 2,-0.9 2,-2zM8.5,13.5l2.5,3.01L14.5,12l4.5,6H5l3.5,-4.5z" />
+
+</vector>

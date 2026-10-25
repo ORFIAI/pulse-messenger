@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_check_double — double-checkmark "delivered/read" indicator
+    ------------------------------------------------------------
+    Referenced by:
+      - MessageAdapter.java (via binding.ivStatus.setImageResource
+        when the peer has read the message, computed from the
+        conversation-level lastReadAt comparison)
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       All three sub-paths fill with #FFFFFFFF. The actual
+       rendered color comes from the ImageView's runtime tint
+       set by MessageAdapter:
+         - "delivered" (peer received but not read) → muted gray
+         - "read" (peer has read) → the "seen" blue accent
+       The tint is applied programmatically via
+       ImageViewCompat.setImageTintList, not via the layout's
+       app:tint, because the tint changes based on the message's
+       delivery state.
+
+    2. 24dp VIEWPORT.
+       Matches ic_check_single.xml exactly. The bubble's
+       ImageView declares 14dp × 14dp, so both checkmark
+       icons scale down from the same viewport and land at
+       the same visual size when rendered. Do NOT change one
+       viewport without changing the other — a mismatch
+       would produce a jarring size jump when the message
+       state transitions.
+
+    3. STANDARD MATERIAL "DONE_ALL" GLYPH.
+       This is the canonical Material Design "done_all" icon
+       — the same glyph Google uses in Gmail, Google
+       Messages, and every other Material app for
+       "delivered/read" in messaging contexts. It is NOT a
+       custom double-check composition.
+
+       The icon has three sub-paths that together produce
+       the "two checks" visual:
+         - Sub-path 1 (small, upper-right): the "tail" of
+           the right check, drawn separately for cleaner
+           anti-aliasing at the join.
+         - Sub-path 2 (large, center): the main body of the
+           right check.
+         - Sub-path 3 (small, lower-left): the left check
+           — the second checkmark that, together with the
+           right pair, produces the "double" reading.
+
+       Rendered together, the three sub-paths form the
+       familiar double-checkmark. Attempting to "simplify"
+       this into a single path would produce either a joined
+       shape with a visible seam where the two checks meet,
+       or an entirely different shape. Do not modify the
+       path data.
+
+    4. PAIRS VISUALLY WITH ic_check_single.
+       Both icons share:
+         - 2-unit stroke weight
+         - Same viewport (24dp)
+         - Same right-check geometry (the right check in
+           this file IS the same check as ic_check_single,
+           just with a second check added to the left)
+       The state transition "sent → read" therefore looks
+       like a subtle reveal of a second checkmark to the
+       left of the existing one, not like an entirely
+       different icon appearing. This is the WhatsApp /
+       Telegram / iMessage convention and is instantly
+       readable by users.
+
+    5. NO androidx.AutoMirrored.
+       The double checkmark is a symmetric pair of ticks;
+       mirroring under RTL produces no visible change. Do
+       not add auto-mirroring.
+
+    Rendering result at 14dp inside a bubble:
+      Two stacked ticks, crisp at 14dp, immediately readable
+      as "delivered" or "read" (depending on tint).
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Canonical Material Design "done_all" path data.
+
+        Three sub-paths that together produce the double
+        checkmark:
+
+          Sub-path 1: "M18,7 l-1.41,-1.41 -6.34,6.34 1.41,1.41 L18,7 z"
+            The inner portion of the right check's long
+            arm. Drawn as its own closed sub-path for
+            anti-aliasing clarity where it meets sub-path 2.
+
+          Sub-path 2: "M22.24,5.59 L11.66,16.17 7.48,12
+                       l-1.41,1.41 L11.66,19 l12,-12 -1.42,-1.41 z"
+            The main body of the right check — the long
+            arm ascending to the upper-right, and the tick
+            arm descending to the lower-left.
+
+          Sub-path 3: "M0.41,13.41 L6,19 l1.41,-1.41
+                       L1.83,12 0.41,13.41 z"
+            The left check — the second checkmark that
+            makes this a "double" check. Smaller than the
+            right check, positioned in the lower-left of
+            the viewport so both checks remain distinct
+            and legible at small sizes.
+
+        Do NOT:
+          - Merge any two sub-paths into one. The
+            join-point anti-aliasing depends on them
+            being independent filled shapes.
+          - Remove sub-path 1 thinking it "duplicates"
+            sub-path 2. Sub-path 1 fills a specific
+            geometric sliver that sub-path 2 does not.
+            Removing it produces a hairline gap in the
+            right check's long arm — visible at 14dp
+            on high-DPI screens.
+          - Change any coordinate. This is Google's
+            official Material Icons asset, byte-for-byte.
+            Even a 0.1-unit change produces a visibly
+            different glyph.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M18,7 l-1.41,-1.41 -6.34,6.34 1.41,1.41 L18,7 z M22.24,5.59 L11.66,16.17 7.48,12 l-1.41,1.41 L11.66,19 l12,-12 -1.42,-1.41 z M0.41,13.41 L6,19 l1.41,-1.41 L1.83,12 0.41,13.41 z" />
+
+</vector>

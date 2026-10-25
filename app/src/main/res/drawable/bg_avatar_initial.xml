@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    bg_avatar_initial — circular initials-avatar background
+    ------------------------------------------------------------
+    Referenced by:
+      - item_conversation.xml  (tv_initials)
+      - message-item layouts    (tv_sender_initials, when added)
+      - fragment_profile.xml    (tv_profile_initials, when added)
+      - item_user.xml           (tv_user_initials, when added)
+
+    Consumed by UiUtils.resolveAvatarColor(context, uid) at
+    bind time. The adapter calls:
+
+        ViewCompat.setBackgroundTintList(
+            tvInitials,
+            ColorStateList.valueOf(UiUtils.resolveAvatarColor(context, uid)));
+
+    Do NOT call setBackgroundResource / setBackgroundColor on a
+    view that uses this drawable — that would replace the shape
+    entirely and lose the circular outline. Tint is the only
+    supported modification path.
+
+    Why an <oval> shape, not a <vector> circle path:
+      - An oval in a square bounds view is a perfect circle and
+        costs one draw call. A vector circle path costs the same
+        but requires the consumer to also apply the tint to the
+        path, which is more error-prone in Java.
+      - Shape drawables respond to setBackgroundTintList with a
+        single line; vector path tinting requires DrawableCompat
+        wiring and recycling considerations. The shape is the
+        simpler primitive and does exactly what we need.
+
+    Why white as the solid color, not transparent:
+      - The shape drawable's solid is the color that
+        setBackgroundTintList replaces. If the solid were
+        transparent, the tint replacement would still work (tint
+        is a color filter), but the ShapeDrawable's own
+        self-draw would produce nothing visible if tinting is
+        ever skipped — e.g. during a layout inflation preview in
+        an editor, or if a future bug causes the tint to be
+        omitted. White is the "safe fallback" that produces a
+        valid, visible circle even without tinting (the letter
+        would be white-on-white, but the shape would still be
+        there and easy to spot in screenshots during debugging).
+      - Do NOT change the solid to one of the @color/avatar_*
+        values. That would hardcode one palette color and the
+        tint would then be layered over it — producing a subtle
+        color shift in the final rendering (e.g. #F2789F tinted
+        over a #5DA9E9 base becomes a muted purple, not the
+        intended pink). White is the only correct base for
+        runtime tinting.
+
+    Why no <stroke>:
+      - The white text needs to be visible against each palette
+        color. All six palette colors have been chosen to
+        provide at least 3:1 contrast against white. Adding a
+        stroke would make each avatar look like it has a "ring"
+        that some users would interpret as an online indicator —
+        confusing with the presence dot in the chat header.
+
+    Why no <corners>:
+      - <corners> is ignored on an <oval> shape (the oval's
+        radius is derived from the bounds). Adding it would be
+        harmless but would produce a lint warning. Leave it out.
+    ============================================================
+-->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="#FFFFFFFF" />
+
+</shape>

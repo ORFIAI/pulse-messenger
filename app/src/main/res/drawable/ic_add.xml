@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_add — plus-sign ("create new") icon
+    ------------------------------------------------------------
+    Referenced by:
+      - fragment_chats.xml (fab_new_chat, via app:srcCompat)
+      - future: ChatActivity attach button, GroupCreateActivity
+        "add member" affordance. All three use this same file
+        with app:tint applied at the call site. Do not duplicate.
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF), tinted at the consumer
+       level (FAB's app:tint, ImageView's app:tint, ...). The
+       fill is a template — the actual rendered color is
+       determined by the tint. Do NOT change the fill to a
+       brand color: it would be overridden by the tint, but
+       it would mislead future maintainers into believing
+       this file "is" a colored icon.
+
+    2. 24dp VIEWPORT.
+       Matches Material Design's standard 24dp icon grid.
+       The FAB renders at 24dp by default (fabSize=normal).
+       Using a smaller viewport (14dp, 18dp) would either
+       stretch or produce a visually smaller-than-expected
+       glyph inside the FAB. Using a larger viewport (32dp)
+       would force the FAB to scale it down, at which point
+       the stroke would no longer be pixel-aligned to the
+       FAB's standard grid.
+
+    3. STANDARD MATERIAL GLYPH.
+       This is the canonical Material Design plus icon —
+       two perpendicular 2-unit-wide strokes intersecting at
+       the center of a 24-unit viewport. It is NOT a custom
+       design. Users expect the FAB "+" to be exactly this
+       glyph; any deviation (thicker, thinner, different
+       length, different centering) reads as a rendering bug
+       rather than as a design choice.
+
+    4. STROKE THICKNESS OF 2 UNITS.
+       Google's own Material Icons use 2-unit strokes at a
+       24dp viewport. This produces a visual weight that
+       matches the FAB's visual weight precisely. Thinner
+       (1 unit) makes the plus look fragile and gets lost
+       against the FAB's colored background. Thicker (3-4
+       units) makes it look heavy-handed. The 2-unit stroke
+       is the standard and should not be tuned.
+
+    5. HORIZONTAL + VERTICAL STROKES, NOT A SINGLE PATH
+       WITH FILL-TYPE HACKS.
+       Two simple <path> elements (one horizontal bar, one
+       vertical bar) produce the correct cross. Attempting
+       to combine them into a single evenOdd path to "save
+       a path" is a false economy — the resulting anti-
+       aliasing at the intersection has a sub-pixel seam on
+       some GPU drivers that reads as a faint cross-shaped
+       glitch. Two overlapping rectangles painted in the
+       same color is the standard Material construction and
+       has no such artifact.
+
+    6. NO androidx.AutoMirrored.
+       A plus sign is not directional. Mirroring under RTL
+       produces no visible change. Do not add auto-mirroring
+       to this file.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Horizontal bar of the plus.
+        Position: y = 11 to 13 (2 units thick), x = 5 to 19
+        (14 units wide). Centered vertically (viewport center
+        is y=12, bar center is y=12). Extends 5 units from
+        each horizontal viewport edge, which is Google's
+        standard "safe zone" for the plus icon inside a FAB.
+
+        Path: a 14×2 rectangle. Corners are intentionally
+        square, not rounded — the Material "+" glyph has
+        crisp corners, not pill-rounded ends, because the
+        rounded look reads as a "pill button" not a "plus."
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M5,11 L19,11 L19,13 L5,13 Z" />
+
+    <!--
+        Vertical bar of the plus.
+        Position: x = 11 to 13 (2 units thick), y = 5 to 19
+        (14 units tall). Mirror of the horizontal bar.
+
+        The two rectangles overlap in the 2×2 square from
+        (11,11) to (13,13). Under the default nonZero fill
+        rule, both bars paint the same color, and the
+        intersection double-paints to the same color — no
+        seam, no artifact. This is exactly why the two-path
+        approach is preferred over the single-evenOdd-path
+        approach mentioned in the file header.
+
+        Path: a 2×14 rectangle. Same corner treatment as
+        the horizontal bar (square corners).
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M11,5 L13,5 L13,19 L11,19 Z" />
+
+</vector>

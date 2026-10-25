@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    menu_chat_message_actions.xml — message-action ID registry
+    ------------------------------------------------------------
+    This menu is NOT inflated as a visual menu anywhere in the
+    app. Its items exist purely to give each long-press action
+    a stable R.id.* constant that ChatActivity can compare
+    against.
+
+    Usage pattern in ChatActivity.onMessageLongPressed():
+
+        List<String> labels = new ArrayList<>();
+        List<Integer> ids    = new ArrayList<>();
+
+        labels.add(getString(R.string.msg_action_reply));
+        ids.add(R.id.action_reply);
+
+        if (message.getType() == TYPE_TEXT) {
+            labels.add(getString(R.string.msg_action_copy));
+            ids.add(R.id.action_copy);
+        }
+        // ... etc.
+        new MaterialAlertDialogBuilder(this)
+                .setItems(labels.toArray(new String[0]), (d, which) -> {
+                    int id = ids.get(which);
+                    if (id == R.id.action_reply) startReply(message);
+                    else if (id == R.id.action_copy) copyMessage(message);
+                    // ... etc.
+                })
+                .show();
+
+    Why not use ints or an enum instead of a menu resource?
+      - An int enum would need its own constants class — an
+        extra file for four constants, which the project
+        explicitly avoids.
+      - A Java enum would be cleaner, but enums produce
+        extra runtime overhead (class loading, valueOf
+        reflection) and cannot be used directly in
+        `setItems(...)`'s which-index pattern without an
+        extra mapping layer.
+      - A menu resource gets the R.id.* system for free: the
+        compiler verifies every reference, R8 can strip
+        unused IDs, and adding a new action later is a
+        one-line change here with zero impact on
+        ChatActivity's imports.
+      - The convention is idiomatic — Material apps
+        everywhere use menu resources as ID registries
+        even when the menu is never inflated.
+
+    IMPORTANT: these four IDs are REFERENCED from
+    ChatActivity.java. Do NOT rename them. If you ever add
+    new message actions (forward, message-info, pin, star),
+    add them here with new IDs — do not reuse or repurpose
+    an existing ID for a different action, because the
+    existing ID's semantics are baked into the current
+    action handlers and any repurposing would produce
+    silent behavior changes on the existing actions.
+    ============================================================
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ============================================================
+         action_reply — reply to the selected message
+         Always available (except on tombstones, handled in code).
+         ============================================================ -->
+    <item
+        android:id="@+id/action_reply"
+        android:title="@string/msg_action_reply" />
+
+    <!-- ============================================================
+         action_copy — copy the message text to clipboard
+         Only available for TYPE_TEXT messages (media captions
+         are handled through the same action — a media message
+         with a non-empty caption is copyable). The availability
+         check is in ChatActivity, not in this menu.
+         ============================================================ -->
+    <item
+        android:id="@+id/action_copy"
+        android:title="@string/msg_action_copy" />
+
+    <!-- ============================================================
+         action_edit — edit the message text in-place
+         Only available for own text messages within the edit
+         window (Message.EDIT_WINDOW_MS, 15 minutes). Availability
+         is enforced in ChatActivity via Message.isEditableBy(uid, now),
+         and again server-side by Firestore rules. This menu ID
+         does NOT grant edit permission — it is only the action
+         tag for "user tapped Edit".
+         ============================================================ -->
+    <item
+        android:id="@+id/action_edit"
+        android:title="@string/msg_action_edit" />
+
+    <!-- ============================================================
+         action_delete — open the delete-choice dialog
+         (delete-for-me vs. delete-for-everyone). Available for
+         any message the user can see. The two sub-choices are
+         built at runtime by ChatActivity.confirmDelete().
+         ============================================================ -->
+    <item
+        android:id="@+id/action_delete"
+        android:title="@string/msg_action_delete" />
+
+</menu>

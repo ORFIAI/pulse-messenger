@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    menu_bottom_nav.xml — bottom navigation items
+    ------------------------------------------------------------
+    Consumed by:
+      - activity_main.xml  (app:menu="@menu/menu_bottom_nav")
+      - MainActivity.java  (R.id.nav_chats / nav_people / nav_profile)
+
+    Three items, in this order:
+      1. Chats    → primary screen, default tab, chat list
+      2. People   → user search / start new conversation
+      3. Profile  → own profile, settings, logout
+
+    Constraints on this file:
+
+    1. STABLE IDS.
+       The three ids are referenced by name from MainActivity
+       via R.id.nav_chats / nav_people / nav_profile. They are
+       the fragment-switching keys. Renaming an id here requires
+       a matching rename in MainActivity — the compiler will
+       catch it, but the intent is to keep these stable for the
+       life of the app.
+
+    2. ICONS ARE 24dp MONOCHROME VECTORS.
+       The three icons are created next (ic_nav_chats.xml,
+       ic_nav_people.xml, ic_nav_profile.xml). They follow the
+       same template-fill + view-tint pattern as every other
+       icon in the project: fill is white, the BottomNavigationView
+       applies the theme's tint (colorPrimary for selected,
+       onSurfaceVariant for unselected) via its built-in state
+       list. Do NOT set android:iconTint here — BottomNavigationView
+       manages tinting internally.
+
+    3. THREE ITEMS, NO MORE.
+       Bottom navigation with >3 items becomes a "tab bar with
+       labels squeezed to 10sp." Material's recommendation is
+       3-5 items; with exactly 3, labels have plenty of room
+       and the pattern is at its most legible. Do not add a
+       fourth item ("Search" or "Settings") — search is
+       accessible from the Chats screen's search field, and
+       Settings is reachable from the Profile screen. Adding
+       either as a nav item would be redundant and would
+       crowd the bar.
+
+    4. CHECKABLE BEHAVIOR IS IMPLICIT.
+       android:checkable="true" is set on each item because
+       BottomNavigationView needs a checkable item group to
+       drive its "selected tab" state (the Material 3 pill
+       background, the primary-color icon tint). Without it,
+       the nav would render all items as "unselected" and the
+       selected-state styling would not appear.
+
+    5. NO android:iconTint OR app:itemIconTint.
+       BottomNavigationView applies its own state-list tint
+       based on the item's checked state and the theme's
+       colorPrimary / colorOnSurfaceVariant. Adding a per-item
+       tint would override that with a fixed color, breaking
+       the selected/unselected visual contrast.
+    ============================================================
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ============================================================
+         CHATS — default tab, first item
+         ============================================================ -->
+    <item
+        android:id="@+id/nav_chats"
+        android:icon="@drawable/ic_nav_chats"
+        android:title="@string/nav_chats"
+        android:checkable="true" />
+
+    <!-- ============================================================
+         PEOPLE — user search / start new conversation
+         ============================================================ -->
+    <item
+        android:id="@+id/nav_people"
+        android:icon="@drawable/ic_nav_people"
+        android:title="@string/nav_people"
+        android:checkable="true" />
+
+    <!-- ============================================================
+         PROFILE — own profile, settings, logout
+         ============================================================ -->
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_nav_profile"
+        android:title="@string/nav_profile"
+        android:checkable="true" />
+
+</menu>

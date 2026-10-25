@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    bg_unread_badge — pill/circle background for unread count
+    ------------------------------------------------------------
+    Referenced by:
+      - item_conversation.xml (tv_unread_badge)
+      - future: a "unread in conversation" floating pill in
+        ChatActivity (planned for Phase 5; same file reused)
+
+    Shape geometry:
+      The consumer view (tv_unread_badge in item_conversation.xml)
+      declares width="wrap_content", height="20dp",
+      minWidth="20dp", and 6dp of horizontal padding. With those
+      bounds:
+        - single digit  → width = 20dp = height → <corners> of
+                          10dp produces a perfect CIRCLE.
+        - two digits    → width = 24dp–28dp → capsule (pill) with
+                          10dp rounded ends.
+        - three chars   → width = 32dp–36dp → wider capsule.
+
+    Why <corners android:radius="10dp"> and not cornerSize="50%":
+      - "50%" corners ARE supported on <shape> in Android, but
+        they only produce a perfect circle when width == height.
+        For the two-digit pill state we actually want the corner
+        radius to remain fixed (10dp = half of 20dp height), so
+        the ends stay semicircular regardless of total width.
+        A 10dp fixed radius achieves that. "50%" of the *width*
+        would over-round wide badges into lens shapes.
+      - Do NOT switch to "50%" thinking it will "handle both
+        cases better" — it will produce a pill with pointed ends
+        (elliptical corners, not circular) for the multi-digit
+        case, which looks wrong next to WhatsApp/Messenger badges.
+
+    Why colorPrimary as the default solid:
+      - The badge's normal state is the brand accent — a prominent
+        visual cue for "you have unread messages." Using a fixed
+        @color/pulse_accent would work in light theme but would
+        clash with the darker dark-theme surface; using
+        ?attr/colorPrimary lets the theme decide (md_primary_light
+        in light mode, md_primary_dark in dark mode).
+      - ConversationAdapter overrides the tint at runtime ONLY
+        for muted conversations, applying colorSurfaceVariant
+        instead. For the normal (unmuted) case, NO tint call is
+        made — the drawable's default colorPrimary solid renders
+        as intended. This is why the tint call is conditional in
+        the adapter.
+      - Do NOT change the solid to white and rely on setBackgroundTintList
+        for both states. White would produce a broken badge in the
+        brief window between view inflation and the first tint
+        call (visible as a white flash on fast-scrolling
+        RecyclerViews on some devices), and the muted-state
+        override in the adapter would then require a second tint
+        pass for the normal state — extra complexity for no gain.
+
+    Why no <stroke>:
+      - A stroke would add visual weight to what is intentionally
+        a small, high-density element. The badge sits at the end
+        of a 72dp row and needs to read as a compact signal, not
+        as a bordered chip. Material 3 badges (used in the
+        BottomNavigationView selected-item indicator) also use
+        fill-only styling — matching this keeps the whole app
+        visually consistent.
+
+    Why height=20dp baked into the view, not this drawable:
+      - The drawable does not declare a <size>. It fills its
+        view bounds. The view declares height=20dp and the
+        corners are 10dp so the ends are perfectly semicircular
+        at that height. If a future variant wants a smaller
+        badge (say 18dp for a compact list mode), it must
+        override both height AND corners in its own drawable —
+        do not reuse this drawable with a different height, or
+        the corners will be under-rounded (looking rectangular)
+        or over-rounded (looking lens-shaped).
+    ============================================================
+-->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="?attr/colorPrimary" />
+
+    <corners android:radius="10dp" />
+
+</shape>

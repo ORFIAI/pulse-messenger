@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    fragment_chats.xml — chat list fragment layout
+    ------------------------------------------------------------
+    Consumed by ChatsFragment (next-next-next file — depends on
+    ConversationAdapter which is already created).
+
+    View IDs referenced by the fragment:
+      tv_chats_header         — "Chats" header title
+      til_search              — TextInputLayout wrapper for the search field
+      et_search_chats         — TextInputEditText (search input)
+      rv_chats                — RecyclerView (main content)
+      ll_empty_state          — empty-state container (icon + text)
+      iv_empty_chats          — empty-state icon
+      tv_empty_title          — empty-state title
+      tv_empty_subtitle       — empty-state subtitle
+      progress_chats          — centered loading indicator
+      fab_new_chat            — floating action button
+
+    Layout structure:
+      CoordinatorLayout (root — enables FAB dodge on Snackbar)
+        └── ConstraintLayout (main content)
+              ├── tv_chats_header   (top)
+              ├── til_search        (below header)
+              ├── rv_chats          (fills remaining space)
+              ├── ll_empty_state    (overlays rv_chats, centered)
+              └── progress_chats    (overlays everything, centered)
+        └── fab_new_chat            (bottom|end via layout_gravity)
+
+    The empty state and progress indicator are siblings of the
+    RecyclerView (ConstraintLayout overlaps them). The fragment
+    controls visibility — exactly one of {recycler, empty,
+    progress} is visible at a time.
+
+    Do NOT put the header in a MaterialToolbar. Chat lists in
+    modern messaging apps use a plain text header with a search
+    bar below it, not a chrome-heavy toolbar. The "toolbar" pattern
+    belongs on the chat detail screen (ChatActivity), not on the
+    list screen.
+    ============================================================
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_chats"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
+
+    <!-- ============================================================
+         MAIN CONTENT
+         ============================================================ -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/screen_padding_horizontal"
+        android:paddingEnd="@dimen/screen_padding_horizontal"
+        android:paddingTop="@dimen/space_md">
+
+        <!-- ---------- Header ---------- -->
+        <TextView
+            android:id="@+id/tv_chats_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_md"
+            android:text="@string/chats_title"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="28sp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="-0.02"
+            android:includeFontPadding="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- ---------- Search field ---------- -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_search"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/space_sm"
+            android:hint="@string/chats_search_hint"
+            app:boxBackgroundColor="?attr/colorSurfaceVariant"
+            app:boxCornerRadiusBottomEnd="@dimen/radius_lg"
+            app:boxCornerRadiusBottomStart="@dimen/radius_lg"
+            app:boxCornerRadiusTopEnd="@dimen/radius_lg"
+            app:boxCornerRadiusTopStart="@dimen/radius_lg"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:startIconDrawable="@drawable/ic_search"
+            app:startIconTint="?attr/colorOnSurfaceVariant"
+            app:layout_constraintTop_toBottomOf="@id/tv_chats_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_search_chats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="?attr/colorOnSurfaceVariant"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- ---------- Conversation list ---------- -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_chats"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingBottom="@dimen/space_xxxl"
+            android:scrollbars="vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/til_search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:listitem="@layout/item_conversation"
+            tools:visibility="visible" />
+
+        <!-- ============================================================
+             EMPTY STATE
+             ------------------------------------------------------------
+             Centered in the RecyclerView's bounds. The fragment
+             shows this when the conversation list is empty and no
+             search is active. When a search is active but returns
+             no results, the fragment replaces tv_empty_title /
+             tv_empty_subtitle text with "No results" variants —
+             the layout does not need a separate empty state for
+             that case.
+             ============================================================ -->
+        <LinearLayout
+            android:id="@+id/ll_empty_state"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/space_xl"
+            android:paddingEnd="@dimen/space_xl"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/til_search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_empty_chats"
+                android:layout_width="@dimen/icon_xxl"
+                android:layout_height="@dimen/icon_xxl"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_empty_chats"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+                android:id="@+id/tv_empty_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:text="@string/chats_empty_title"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:includeFontPadding="false"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/tv_empty_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/chats_empty_subtitle"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="14sp"
+                android:includeFontPadding="false"
+                android:gravity="center"
+                android:lineSpacingExtra="2dp" />
+
+        </LinearLayout>
+
+        <!-- ============================================================
+             LOADING INDICATOR
+             ------------------------------------------------------------
+             Centered. Shown only during initial chat-list load when
+             no cached data exists yet. Firestore's persistent cache
+             usually resolves in <100 ms on a warm start, so this
+             indicator is primarily for the first-ever open. The
+             fragment hides it as soon as the first LiveData emission
+             arrives (regardless of empty/non-empty).
+             ============================================================ -->
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_chats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:indicatorColor="?attr/colorPrimary"
+            app:indeterminate="true"
+            app:layout_constraintTop_toBottomOf="@id/til_search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ============================================================
+         FAB — New chat / New group
+         ------------------------------------------------------------
+         Bottom-right, above the bottom navigation bar (the fragment
+         is inside a FragmentContainerView that sits above the
+         BottomNavigationView in MainActivity, so the FAB's
+         layout_marginBottom needs to clear the bottom nav height
+         when the fragment is inflated. 88dp clears a 64dp
+         bottom nav plus a 24dp visual gap).
+
+         The icon is a "+" — Material's standard "create new"
+         metaphor. A long-press offers "New group" as an
+         alternative, handled in ChatsFragment via setOnLongClickListener.
+         ============================================================ -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_new_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/space_md"
+        android:layout_marginBottom="88dp"
+        android:contentDescription="@string/chats_action_new_chat"
+        app:backgroundTint="?attr/colorPrimary"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="?attr/colorOnPrimary"
+        app:fabSize="normal"
+        app:rippleColor="?attr/colorOnPrimary" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

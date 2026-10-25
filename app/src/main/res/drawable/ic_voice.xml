@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_voice — microphone glyph (voice messages, record button)
+    ------------------------------------------------------------
+    Referenced by:
+      - bottom_sheet_attach.xml (option_voice leading icon)
+      - future: voice message bubble type badge (Phase 7)
+      - future: composer mic button (Phase 7 — a mode of the
+        attach button that appears when the message field is
+        empty, allowing hold-to-record)
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF), tinted at the consumer
+       level (app:tint="?attr/colorOnSurface" in
+       bottom_sheet_attach.xml; or app:tint="?attr/colorPrimary"
+       for the composer mic button when we want it emphasized).
+       Do NOT set a brand color here — the fill is a template.
+
+    2. 24dp VIEWPORT.
+       Matches every other chrome icon in the app. The attach
+       sheet renders it at 24dp; the composer mic button
+       (Phase 7) renders it at 24dp; the voice bubble badge
+       (Phase 7) may render it at 16dp. The vector scales
+       losslessly.
+
+    3. STANDARD MATERIAL "MIC" GLYPH.
+       This is Google's canonical Material Design "mic" icon:
+       a capsule-shaped microphone head on a stand, with a
+       small base at the bottom and a small indicator arc.
+       It is NOT a custom design. Every audio-recording app
+       uses essentially this shape, and users recognize it
+       instantly as "microphone / voice."
+
+    4. DISTINCT FROM ic_audio.
+       ic_audio is a music note (audio file). ic_voice is a
+       microphone (voice recording). The two icons are
+       intentionally different glyphs even though both are
+       "audio" in a loose sense — the semantic distinction
+       between "a saved audio file someone sent" (music
+       note) and "a voice message recorded in the app"
+       (microphone) is meaningful and worth preserving.
+       Users of WhatsApp and Telegram expect this distinction
+       and would find it confusing if both types shared an
+       icon.
+
+    5. FILLED SHAPE, NOT OUTLINED.
+       The microphone is drawn as a solid filled shape
+       (capsule head + stand base). This matches the other
+       four icons in the attach sheet (all solid glyphs),
+       which is what makes the option row visually cohesive.
+       The "mic_none" variant (outlined) is used in some
+       Material apps for inactive/disabled states — not
+       applicable here.
+
+    6. NO androidx.AutoMirrored.
+       The microphone is vertically symmetric about the
+       stem's axis. Mirroring under RTL produces no visible
+       change. Do not add auto-mirroring.
+
+    Rendering result at 24dp:
+      A capsule-shaped microphone on a stand, with a small
+      base — instant recognition as "microphone / voice."
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Canonical Material Design "mic" path.
+
+        Breakdown:
+          M 12,14              the capsule head's bottom-center
+                               (start of the filled capsule)
+          c 1.66,0 2.99,-1.34 2.99,-3
+                               right curve at the bottom of
+                               the capsule
+          L 14.99,5            right edge of the capsule
+          c 0,-1.66 -1.34,-3 -3,-3
+                               right curve at the top of
+                               the capsule
+          c -1.66,0 -3,1.34 -3,3
+                               left curve back down
+          v 6                   left edge of the capsule
+          c 0,1.66 1.34,3 3,3  bottom-left curve
+          z                     close (implicit line back
+                                to start)
+
+          The capsule is 5.99 units wide (x=9.01 to
+          x=14.99) and 12 units tall (y=2 to y=14),
+          centered at x=12 — the standard Material
+          microphone capsule proportions.
+
+          M 17,11              start of the "cradle" arc
+                               (the curved line under the
+                               capsule that represents the
+                               mic's stand/holder)
+          c 0,2.76 -2.24,5 -5,5
+                               curve down the right side
+                               and across the bottom of
+                               the cradle
+          s -5,-2.24 -5,-5     mirror curve completing the
+                               cradle (left side)
+          h 2                   short horizontal step
+                               (the cradle's left foot)
+          ... (this is part of the second subpath in
+              Google's canonical asset — see below)
+
+        Canonical Material path data below produces the
+        full mic glyph including the capsule, cradle arc,
+        stem base, and the small "lip" at the bottom.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,14c1.66,0 2.99,-1.34 2.99,-3L15,5c0,-1.66 -1.34,-3 -3,-3S9,3.34 9,5v6c0,1.66 1.34,3 3,3zM17.3,11c0,3 -2.54,5.1 -5.3,5.1S6.7,14 6.7,11H5c0,3.41 2.72,6.23 6,6.72V21h2v-3.28c3.28,-0.48 6,-3.3 6,-6.72h-1.7z" />
+
+</vector>

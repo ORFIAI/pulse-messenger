@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_pause_circle — pause-button glyph (filled circle + 2 bars)
+    ------------------------------------------------------------
+    Companion to ic_play_circle.xml. Together they form the
+    play/pause toggle pair used in media playback controls:
+
+      - Idle / not playing → ic_play_circle
+      - Actively playing   → ic_pause_circle
+
+    Referenced by (Phase 8 — none yet):
+      - future: item_audio_preview.xml (inline play/pause
+        button in an audio/voice message bubble)
+      - future: item_video_preview.xml (overlay toggle on
+        the video thumbnail in a video message bubble)
+      - future: item_media_viewer_video.xml (overlay toggle
+        on the video page in the full-screen media viewer)
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF) with cutouts for the two
+       pause bars. The actual rendered color comes from the
+       consumer's tint:
+         - Inline audio-bubble button: ?attr/colorPrimary
+           or ?attr/colorOnSurfaceVariant.
+         - Centered video-overlay button: @android:color/white
+           on a semi-transparent black scrim.
+       Do NOT set a brand color here — the fill is a template.
+
+    2. 24dp VIEWPORT — MATCHES ic_play_circle.xml.
+       Same viewport, same outer circle geometry, same
+       rendering size. When the play/pause state toggles
+       at runtime, the visual transition is a swap of
+       internal details (triangle ↔ two bars) with an
+       identical outer circle. This is critical for a
+       smooth toggle — a play/pause pair with different
+       outer circle sizes or positions would produce a
+       visible "jump" on toggle that breaks the
+       affordance.
+
+    3. STANDARD MATERIAL "PAUSE_CIRCLE_FILLED" GLYPH.
+       This is Google's canonical Material Design
+       "pause_circle_filled" icon. It is the standard
+       pause counterpart to play_circle_filled and is
+       used by every media player on every platform.
+       Do NOT redesign it as a single centered vertical
+       bar, as a rotated play triangle, or as an "equals"
+       sign — those are all recognizable-but-wrong shapes
+       for a pause button.
+
+    4. FILLED CIRCLE, TWO CUT-OUT BARS (evenOdd).
+       The circle is filled, and the two vertical bars
+       are transparent regions cut out of the circle.
+       This mirrors ic_play_circle.xml's construction
+       exactly — one evenOdd path with the outer circle
+       plus interior cutout contours.
+
+       Do NOT switch to "pause_circle_outline"
+       (border-only circle) or "pause" (bars only, no
+       circle). Same reasoning as ic_play_circle's note:
+       the outline variant disappears on mid-tone
+       backgrounds; the bars-only variant is used for
+       inline video controls, not as the primary toggle
+       affordance.
+
+    5. TWO BARS, EQUAL WIDTH, EQUAL GAP.
+       The pause symbol is two vertical rectangles of
+       equal width (2 units each), separated by a gap
+       equal to their width (2 units). This is the
+       universal "pause" proportion — a wider gap reads
+       as "stop", a narrower gap reads as "equals sign",
+       and unequal bar widths read as broken. Do not
+       adjust the widths or gap without also adjusting
+       ic_play_circle's triangle to keep the toggle pair
+       visually balanced.
+
+    6. BAR HEIGHT IS INTENTIONALLY TALLER THAN THE
+       TRIANGLE.
+       The bars span y=8 to y=16 (8 units tall), while
+       ic_play_circle's triangle spans y=7.5 to y=16.5
+       (9 units tall, but only at the triangle's base —
+       the triangle's visual mass is smaller because it
+       tapers to a point). To compensate for the
+       triangle's tapering, the pause bars are drawn
+       slightly shorter in each dimension but read as
+       visually equivalent to the triangle's apparent
+       weight. This is the standard optical-balancing
+       adjustment used by Google's Material icons —
+       do not "correct" it by making the bars exactly
+       match the triangle's bounding box.
+
+    7. NO androidx.AutoMirrored.
+       The pause bars are vertically symmetric about the
+       circle's center. Mirroring under RTL produces no
+       visible change. Do not add auto-mirroring.
+
+    Rendering result at any size:
+      A solid circle with two vertical bars cut out of
+      the interior — instant recognition as "tap to
+      pause."
+
+    ============================================================
+    Runtime toggle pattern (Phase 8 — for reference only)
+    ============================================================
+      In the audio/video bubble binding code, the
+      implementation will look like:
+
+        boolean playing = player.isPlaying();
+        button.setImageResource(playing
+                ? R.drawable.ic_pause_circle
+                : R.drawable.ic_play_circle);
+
+      The two drawables share viewport and outer-circle
+      geometry, so the button's size and position are
+      preserved across the toggle. The only change is
+      the interior glyph. This is why both files use
+      identical outer-circle geometry — a mismatch would
+      produce a visible scale/position shift on toggle.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Canonical Material Design "pause_circle_filled" path.
+
+        Breakdown:
+          Subpath 1 — the outer circle (identical to
+          ic_play_circle.xml):
+            M 12,2               top of the circle
+            C 6.48,2 2,6.48 2,12
+                                 cubic from (12,2) to (2,12)
+                                 — left half
+            s 4.48,10 10,10      mirror cubic to (12,22)
+                                 — bottom half
+            s 10,-4.48 10,-10    mirror cubic to (22,12)
+                                 — right half
+            S 17.52,2 12,2       mirror cubic back to
+                                 (12,2) — completing the
+                                 circle
+            z                    close
+
+          Subpath 2 — left pause bar (cutout):
+            M 11,16              start at the bar's
+                                 bottom-right corner
+            H 9                  left 2 units (bar's
+                                 bottom-left corner)
+            V 8                  up 8 units (bar's
+                                 top-left corner)
+            h 2                  right 2 units (bar's
+                                 top-right corner)
+            V 16                 down 8 units (closing
+                                 the bar at its
+                                 bottom-right)
+            z                    close
+
+            Rectangle from (9,8) to (11,16) — 2 units
+            wide, 8 units tall, vertically centered
+            (y=12 is the midpoint).
+
+          Subpath 3 — right pause bar (cutout):
+            M 15,16              start at the bar's
+                                 bottom-right corner
+            h -2                 left 2 units (bar's
+                                 bottom-left corner)
+            V 8                  up 8 units (bar's
+                                 top-left corner)
+            h 2                  right 2 units (bar's
+                                 top-right corner)
+            V 16                 down 8 units (closing
+                                 the bar)
+            z                    close
+
+            Rectangle from (13,8) to (15,16) — 2 units
+            wide, 8 units tall. The gap between the two
+            bars is x=11 to x=13 (2 units), equal to each
+            bar's width.
+
+        Under evenOdd fill, the circle is filled (the
+        tint color) and the two bars are cut out
+        (transparent). The result is the standard
+        "pause button" glyph.
+
+        Do NOT change fillType to nonZero. The bars would
+        fill in the same color as the circle, producing
+        a solid circle with no visible pause symbol.
+        This is the same reasoning as ic_play_circle's
+        evenOdd note — the cutout depends on it.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM11,16H9V8h2V16zM15,16h-2V8h2V16z" />
+
+</vector>

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    item_message_received.xml — received message bubble
+    ------------------------------------------------------------
+    Consumed by MessageAdapter via ItemMessageReceivedBinding.
+
+    Binding IDs → MessageAdapter field:
+      bubble_received_root   → binding.bubbleReceivedRoot
+      tv_sender_name         → binding.tvSenderName (groups only)
+      ll_reply_preview       → binding.llReplyPreview
+      tv_reply_sender        → binding.tvReplySender
+      tv_reply_preview_text  → binding.tvReplyPreviewText
+      fl_media               → binding.flMedia          (NEW)
+      iv_media_thumbnail     → binding.ivMediaThumbnail (NEW)
+      tv_message_text        → binding.tvMessageText
+      tv_bubble_time         → binding.tvBubbleTime
+      tv_deleted             → binding.tvDeleted
+
+    Media container (fl_media):
+      - GONE for text-only messages. The message text
+        collapses up to the reply preview's bottom —
+        the layout is byte-identical to the pre-media
+        version for text messages.
+      - VISIBLE for image messages. A 200dp × 200dp rounded
+        thumbnail displays above the caption and timestamp.
+
+    Received-bubble flow when fl_media is VISIBLE:
+      [sender name — groups only]
+      [reply preview if any]
+      [200×200 image thumbnail]
+      [caption text (optional — GONE when empty)]
+      [time]
+
+    Received-bubble flow when fl_media is GONE (text):
+      [sender name — groups only]
+      [reply preview if any]
+      [text]
+      [time]
+
+    Received bubble differences vs. sent:
+      - No iv_status (received messages have no
+        delivery indicator).
+      - No tv_edited (only the original sender can edit,
+        and the edit label is currently not rendered on
+        received bubbles — Phase 8 refinement).
+      - tv_sender_name appears for the first message in a
+        run by the same sender in group chats. Hidden in
+        1:1 chats.
+      - Colors are the neutral received palette
+        (pulseBubbleReceivedText / pulseBubbleReceivedReply
+        / pulseBubbleMetaReceived) instead of the saturated
+        sent palette.
+
+    ShapeableImageView:
+      Same rounded-thumbnail approach as item_message_sent.xml
+      — 12dp corners via ShapeAppearance.Pulse.Medium,
+      centerCrop scale type. The thumbnail's placeholder
+      background is pulseBubbleReceivedReply (the same
+      slightly-deeper neutral as the reply strip in a
+      received bubble), so the empty state reads as "image
+      loading" rather than "blank hole."
+
+    Accessibility note:
+      contentDescription is @string/cd_message_sent_image
+      ("Sent image"). It is technically accurate from the
+      peer's perspective — the message was sent by them. A
+      Phase-8 cleanup will add a generic
+      cd_message_image string and use it here (and on the
+      sent bubble) for a cleaner neutral description. The
+      adapter will also override contentDescription per
+      bind with a per-message label; the XML description
+      is just a safe default for the preview editor and
+      for the brief window between inflation and first
+      bind.
+    ============================================================
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bubble_received_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/space_xs"
+    android:layout_marginTop="@dimen/space_xxxs"
+    android:layout_marginEnd="48dp"
+    android:layout_marginBottom="@dimen/space_xxxs"
+    android:background="@drawable/bg_bubble_received"
+    android:paddingStart="@dimen/space_sm"
+    android:paddingEnd="@dimen/space_sm"
+    android:paddingTop="@dimen/space_xs"
+    android:paddingBottom="@dimen/space_xxs"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    tools:ignore="UnusedAttribute">
+
+    <!-- ============================================================
+         SENDER NAME (group chats only, first in run)
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_sender_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Alex Rivera"
+        tools:visibility="visible" />
+
+    <!-- ============================================================
+         REPLY PREVIEW STRIP
+         ============================================================ -->
+    <LinearLayout
+        android:id="@+id/ll_reply_preview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="?attr/pulseBubbleReceivedReply"
+        android:paddingStart="@dimen/space_xs"
+        android:paddingEnd="@dimen/space_xs"
+        android:paddingTop="@dimen/space_xxs"
+        android:paddingBottom="@dimen/space_xxs"
+        android:layout_marginTop="@dimen/space_xxs"
+        android:layout_marginBottom="@dimen/space_xxs"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tv_sender_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <View
+            android:layout_width="@dimen/reply_preview_accent_width"
+            android:layout_height="match_parent"
+            android:background="?attr/colorPrimary" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/space_xxs"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_reply_sender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Alex Rivera" />
+
+            <TextView
+                android:id="@+id/tv_reply_preview_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/pulseBubbleMetaReceived"
+                android:textSize="12sp"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="The original message text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ============================================================
+         MEDIA CONTAINER (NEW)
+         ------------------------------------------------------------
+         GONE for text-only messages. VISIBLE for image (and
+         later video, audio, document, voice) messages. Same
+         shape and size as the sent-bubble media container for
+         visual consistency across the conversation.
+         ============================================================ -->
+    <FrameLayout
+        android:id="@+id/fl_media"
+        android:layout_width="@dimen/media_bubble_thumbnail"
+        android:layout_height="@dimen/media_bubble_thumbnail"
+        android:layout_marginTop="@dimen/space_xxs"
+        android:layout_marginBottom="@dimen/space_xxs"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/ll_reply_preview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_media_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/pulseBubbleReceivedReply"
+            android:contentDescription="@string/cd_message_sent_image"
+            android:scaleType="centerCrop"
+            app:shapeAppearance="@style/ShapeAppearance.Pulse.Medium" />
+
+    </FrameLayout>
+
+    <!-- ============================================================
+         MESSAGE TEXT (caption for media, body for text)
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/pulseBubbleReceivedText"
+        android:textSize="15sp"
+        android:lineSpacingExtra="2dp"
+        android:includeFontPadding="false"
+        android:textIsSelectable="false"
+        app:layout_constraintTop_toBottomOf="@id/fl_media"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Yes — see you at 10." />
+
+    <!-- ============================================================
+         DELETED TOMBSTONE
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_deleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/chat_message_deleted"
+        android:textColor="?attr/pulseBubbleMetaReceived"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        android:includeFontPadding="false"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/fl_media"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="gone" />
+
+    <!-- ============================================================
+         TIMESTAMP (no status indicator on received bubbles)
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_bubble_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textColor="?attr/pulseBubbleMetaReceived"
+        android:textSize="10sp"
+        android:includeFontPadding="false"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintTop_toBottomOf="@id/tv_message_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="14:32" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

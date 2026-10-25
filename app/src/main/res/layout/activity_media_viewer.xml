@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    activity_media_viewer.xml — full-screen media viewer
+    ------------------------------------------------------------
+    Consumed by MediaViewerActivity via ActivityMediaViewerBinding.
+
+    Binding IDs → MediaViewerActivity field:
+      root_viewer         → binding.rootViewer       (snackbar anchor)
+      viewer_pager        → binding.viewerPager      (ViewPager2)
+      btn_close           → binding.btnClose
+      btn_share           → binding.btnShare
+      btn_download        → binding.btnDownload
+      tv_viewer_counter   → binding.tvViewerCounter  ("2 of 5")
+      progress_viewer     → binding.progressViewer   (loading spinner)
+
+    Layout structure:
+      CoordinatorLayout (black background)
+        ├── ViewPager2 (fills screen, behind everything)
+        ├── LinearLayout (top overlay bar, semi-transparent black)
+        │     ├── btn_close       (48dp)
+        │     ├── tv_viewer_counter (centered, weight=1)
+        │     ├── btn_share       (48dp)
+        │     └── btn_download    (48dp)
+        └── CircularProgressIndicator (centered, shown while media
+                                        loads or downloads)
+
+    Design decisions:
+
+    1. BLACK background (@android:color/black).
+       Every full-screen media viewer (WhatsApp, Instagram,
+       Google Photos, iOS Photos) uses a black background so
+       the photo/video colors are not biased by a themed
+       surround. On OLED screens this also saves battery. Do
+       NOT use ?attr/colorSurface — the theme's surface would
+       produce a light-mode "white border" around the photo,
+       which is visually incorrect for a media viewer.
+
+    2. NO MaterialToolbar.
+       MaterialToolbar brings elevation, ripple positioning,
+       and menu-inflation machinery that we do not need here.
+       The viewer's top bar is a plain LinearLayout with three
+       ImageButtons — simpler XML, no menu file required, and
+       the overlay is a single clean semi-transparent strip.
+
+    3. SEMI-TRANSPARENT BLACK overlay (#CC000000 = 80% black).
+       The overlay must be visible against both light and dark
+       photos. 80% black provides enough contrast for the
+       white icons on any image, without completely hiding
+       the top of the photo. This is the standard Instagram /
+       Google Photos overlay opacity.
+
+    4. 48dp TOUCH TARGETS.
+       Each ImageButton is exactly 48dp × 48dp — Android's
+       minimum touch target. With 4dp horizontal padding from
+       the parent LinearLayout, the effective spacing between
+       buttons is 8dp. The close button (48dp) and the two
+       actions (48+48 = 96dp) leave a flexible center for the
+       counter.
+
+    5. COUNTER CENTERED, HIDDEN FOR SINGLE-ITEM VIEWS.
+       tv_viewer_counter is centered via layout_weight="1"
+       between the close button and the action buttons. It is
+       GONE by default — the activity toggles it to VISIBLE
+       only when the pager has more than one item. For
+       single-image viewing (the common case when tapping
+       one photo in a chat), no counter is shown — the "1 of
+       1" display would be visual noise. For multi-image
+       viewing (tapping a photo in a chat with several other
+       photos), the counter updates as the user swipes.
+
+    6. NO DRAG-TO-DISMISS.
+       The pager uses ViewPager2's default horizontal-swipe
+       behavior (standard for multi-item viewers). Some
+       viewers add a drag-to-dismiss gesture; that is a
+       Phase-8 polish item. For v1, the close button is the
+       only dismiss affordance, which is standard and
+       predictable.
+
+    7. STATUS/NOTIFICATION BARS.
+       This activity uses Theme.Pulse (no dedicated viewer
+       theme) — the system bars will match the app's normal
+       theme (light or dark). The semi-transparent top bar
+       keeps the icons visible regardless. A dedicated
+       Theme.Pulse.Viewer with windowLightStatusBar=true and
+       a black status bar would be more polished; that is a
+       Phase-8 refinement (adds one new theme and one
+       manifest attribute).
+
+    Missing drawable dependencies (created next):
+      @drawable/ic_download — download arrow icon
+      @drawable/ic_share   — share icon
+
+    Existing dependencies (already in place):
+      @drawable/ic_close, @string/cd_close,
+      @string/msg_action_forward, @string/media_downloading,
+      @string/cd_more_options
+
+    The activity code that will use this layout is
+    MediaViewerActivity.java, which is created after the two
+    missing drawables. Until MediaViewerActivity exists, this
+    layout is not reachable, but it compiles cleanly on its
+    own (modulo the two missing drawables).
+    ============================================================
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_viewer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:fitsSystemWindows="false"
+    tools:context=".ui.MediaViewerActivity">
+
+    <!-- ============================================================
+         PAGER (fills screen)
+         ============================================================ -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewer_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- ============================================================
+         TOP OVERLAY BAR
+         ============================================================ -->
+    <LinearLayout
+        android:id="@+id/viewer_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_gravity="top"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#CC000000"
+        android:paddingStart="@dimen/space_xs"
+        android:paddingEnd="@dimen/space_xs">
+
+        <!-- Close button (left) -->
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_close"
+            android:src="@drawable/ic_close"
+            app:tint="@android:color/white" />
+
+        <!-- Counter (center, hidden for single-item) -->
+        <TextView
+            android:id="@+id/tv_viewer_counter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="gone"
+            tools:text="2 of 5"
+            tools:visibility="visible" />
+
+        <!-- Share button (right, left of download) -->
+        <ImageButton
+            android:id="@+id/btn_share"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/msg_action_forward"
+            android:src="@drawable/ic_share"
+            app:tint="@android:color/white" />
+
+        <!-- Download button (right) -->
+        <ImageButton
+            android:id="@+id/btn_download"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/media_downloading"
+            android:src="@drawable/ic_download"
+            app:tint="@android:color/white" />
+
+    </LinearLayout>
+
+    <!-- ============================================================
+         LOADING SPINNER (centered)
+         ------------------------------------------------------------
+         Shown while the current page's media is loading. The
+         activity toggles this to VISIBLE during a Glide load
+         or an ExoPlayer prepare, and GONE once the media is
+         ready. Hidden by default.
+         ============================================================ -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_viewer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:indicatorColor="@android:color/white"
+        app:indeterminate="true" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

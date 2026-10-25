@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    Pulse — notification small icon
+    ------------------------------------------------------------
+    Rules this file follows and WHY (they are not obvious):
+
+    1. MONOCHROME SILHOUETTE ONLY.
+       Android does NOT render notification small icons as drawn.
+       It extracts the alpha channel, throws away RGB, and re-tints
+       the shape using "default_notification_color" (pulse_accent)
+       or the system default. Any icon with more than one color,
+       gradients, or fine internal detail collapses into an
+       unrecognizable blob in the status bar. So this file has ONE
+       path, ONE fill color (white), and a single clear silhouette.
+
+    2. 24dp × 24dp VIEWPORT, FILLED TO EDGES.
+       The system scales the small icon to ~24dp regardless of the
+       declared width/height, so designing on a 24dp grid with the
+       shape touching (2,2)–(22,22) is the standard approach. Icons
+       designed on a 48dp grid with generous margins appear tiny in
+       the status bar.
+
+    3. WHITE (#FFFFFFFF) FILL, TRANSPARENT BACKGROUND.
+       The fill color is irrelevant to what the user sees (Android
+       tints it), but using white matches Material Design's
+       notification icon guidelines and avoids "dark mode makes the
+       icon disappear" complaints when the icon is shown on a
+       preview or in-app test render.
+
+    4. NO android:tint="..." ON THE VECTOR.
+       Adding a tint would fight the system's automatic tint. Let
+       the system tint it. If a future non-notification use of this
+       drawable needs a tint, use a separate ImageView with
+       app:tint instead of changing this file.
+
+    5. VECTOR, NOT BITMAP.
+       Vectors render pixel-perfect at every density. A bitmap
+       would require one PNG per density bucket (mdpi/hdpi/xhdpi/
+       xxhdpi/xxxhdpi) — five files — and still look softer than
+       the vector at high DPI. On Termux with no image editor,
+       a vector is also the only practical option.
+
+    6. SHAPE = ROUNDED CHAT BUBBLE.
+       The universally recognized notification metaphor for
+       "message received". Alternatives considered:
+         - Stylized "P" letterform: loses legibility below 24dp.
+         - Waveform/pulse glyph: too abstract, ambiguous intent.
+         - Bubble with dots inside: too much detail at 24dp.
+       A clean bubble reads instantly at any size, in any color.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Single filled path: rounded chat bubble with a pointed tail
+        at the bottom-left.
+
+        Path breakdown (for future reference if this ever needs
+        editing — the coordinates are non-obvious from the shorthand):
+          M 20,2              → start at top-right
+          H 4                 → horizontal line to top-left
+          c -1.1,0 -2,0.9 -2,2   → curve into top-left corner, to (2,4)
+          v 18                → line down left edge to (2,22)
+          l 4,-4              → diagonal up-right to (6,18)  [tail]
+          h 14                → horizontal right to (20,18)
+          c 1.1,0 2,-0.9 2,-2 → curve into bottom-right corner, to (22,16)
+          V 4                 → line up right edge to (22,4)
+          c 0,-1.1 -0.9,-2 -2,-2  → curve into top-right corner, back to (20,2)
+          z                   → close
+
+        Net shape: a rounded rectangle spanning (2,4)–(22,16) with
+        a triangle tail descending to (2,22).
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M20,2H4c-1.1,0 -2,0.9 -2,2v18l4,-4h14c1.1,0 2,-0.9 2,-2V4c0,-1.1 -0.9,-2 -2,-2z" />
+
+</vector>

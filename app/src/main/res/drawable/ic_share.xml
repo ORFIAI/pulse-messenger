@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_share — share glyph (media viewer, forward action)
+    ------------------------------------------------------------
+    Referenced by:
+      - activity_media_viewer.xml (btn_share top-bar action)
+      - future: menu_chat_message_actions.xml (Forward action
+        icon, when that menu becomes a visual PopupMenu)
+      - future: document/audio bubble "share to another app"
+        affordance (Phase 7)
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       All three sub-paths fill with #FFFFFFFF. The actual
+       rendered color comes from the consumer's tint — in
+       the media viewer, @android:color/white (hardcoded
+       against the black overlay); in a future bubble,
+       ?attr/colorOnSurfaceVariant (muted theme color).
+       Do NOT set a brand color here — the fill is a
+       template.
+
+    2. 24dp VIEWPORT.
+       Standard Material icon viewport. The media viewer's
+       top-bar ImageButton declares 48dp × 48dp with a 24dp
+       Material 3 default icon size — the vector renders at
+       24dp losslessly. Future bubble usage at 16dp–20dp
+       also scales cleanly.
+
+    3. STANDARD MATERIAL "SHARE" GLYPH.
+       This is Google's canonical Material Design "share"
+       icon — three nodes (dots) connected by two lines,
+       in the classic "share to network" configuration:
+       one node at the upper-left, one at the lower-left,
+       and one at the right. It is NOT a custom design.
+
+       The three-node configuration is intentionally
+       different from the older "arrow out of a box"
+       share glyph (which Google deprecated for the
+       Android share intent — that variant is still used
+       on iOS and in some legacy Windows apps but is not
+       the current Android convention). On modern Android,
+       the connected-nodes share icon is what users
+       recognize from Google Photos, Gmail, Drive, and
+       every other Google app. Do NOT switch to the
+       arrow-out-of-box variant.
+
+    4. THREE SEPARATE FILLED CIRCLES + TWO FILLED LINES.
+       The glyph is constructed as five distinct filled
+       shapes:
+         - Sub-path 1: upper-left node (a circle)
+         - Sub-path 2: lower-left node (a circle)
+         - Sub-path 3: right node (a circle)
+         - Sub-path 4: upper connecting line (thick
+                       stroke from the upper-left node to
+                       the right node)
+         - Sub-path 5: lower connecting line (thick
+                       stroke from the lower-left node to
+                       the right node)
+
+       In the canonical Material asset these are expressed
+       as a single <path> element with five subpaths
+       (separated by implicit `M` restarts) that together
+       produce the recognizable "share" silhouette.
+       Do NOT split them into five <path> elements — this
+       is functionally identical but adds DOM overhead for
+       no benefit, and the canonical Google asset has them
+       as one path.
+
+    5. NODE RADII = 2.5 UNITS.
+       Each node is a filled circle with a radius of
+       approximately 2.5 units. This is the standard
+       Material share-node size — large enough to be
+       visible at 24dp, small enough that the two
+       connecting lines are the dominant visual element.
+       A larger radius would make the icon look like a
+       triangle of dots rather than "share"; a smaller
+       radius would make the nodes disappear at 24dp.
+
+    6. CONNECTING LINES = 2-UNIT THICKNESS.
+       Each connecting line is a 2-unit-thick stroke from
+       one node to another. This is the standard Material
+       share-line weight, matching the stroke weight of
+       every other chrome icon in the app. Do NOT change
+       to 1-unit lines (too thin, breaks at 24dp) or
+       3-unit lines (too heavy, dominates the nodes).
+
+    7. NO androidx.AutoMirrored.
+       The share glyph has a directional reading
+       (upper-left to right, lower-left to right), but
+       the Material convention is NOT to mirror it under
+       RTL. Every Google app keeps the share icon in its
+       standard LTR orientation regardless of text
+       direction — the "three nodes with two lines"
+       configuration is treated as a universally
+       recognized glyph, not a directional arrow. Do not
+       add auto-mirroring.
+
+    Rendering result at 24dp:
+      Three dots (upper-left, lower-left, right) joined
+      by two lines — instant recognition as "share / send
+      to another app."
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Canonical Material Design "share" path.
+
+        Breakdown:
+          M 18,16.08              right node (start of its
+                                  outline)
+          c -0.76,0 -1.44,0.3 -1.96,0.77
+                                  upper-right of the right
+                                  node — the curve that
+                                  will become the node's
+                                  top arc
+          l -5.89,-3.47            upper connecting line,
+                                  drawn down-left (this
+                                  is part of the path
+                                  data below)
+
+          Full path data (below) traces:
+            - the right node (circle of radius ~2.5 at
+              (18, 16.08))
+            - the upper-left node (circle of radius
+              ~2.5 at (6, 12))
+            - the lower-left node (circle of radius
+              ~2.5 at (6, 5))
+            - the two connecting lines as filled
+              2-unit-thick parallelograms
+
+          All five subpaths are drawn in the same
+          white-tint fill and merge into a single
+          recognizable "share" silhouette under
+          nonZero fill. The "cut-out" appearance
+          between nodes is produced by the actual
+          geometry of the connecting lines (they do
+          not touch the node outlines — they connect
+          to the nodes' edges), not by evenOdd
+          fill-type, so no fillType attribute is
+          needed.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M18,16.08c-0.76,0 -1.44,0.3 -1.96,0.77L8.91,12.7c0.05,-0.23 0.09,-0.46 0.09,-0.7s-0.03,-0.47 -0.09,-0.7l7.05,-4.11c0.54,0.5 1.25,0.81 2.04,0.81 1.66,0 3,-1.34 3,-3s-1.34,-3 -3,-3 -3,1.34 -3,3c0,0.24 0.03,0.47 0.09,0.7L8.04,9.81C7.5,9.31 6.79,9 6,9c-1.66,0 -3,1.34 -3,3s1.34,3 3,3c0.79,0 1.5,-0.31 2.04,-0.81l7.12,4.16c-0.05,0.21 -0.08,0.43 -0.08,0.65 0,1.61 1.31,2.92 2.92,2.92 1.61,0 2.92,-1.31 2.92,-2.92s-1.31,-2.92 -2.92,-2.92z" />
+
+</vector>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_empty_chats — chat-list empty-state illustration
+    ------------------------------------------------------------
+    Referenced by fragment_chats.xml:
+        iv_empty_chats (64dp × 64dp)
+        app:tint="?attr/colorOnSurfaceVariant"
+
+    This is an ORIGINAL design, not a Material Icons glyph.
+    Chrome icons (search, add, back, pin, mute, check) are
+    standard Material glyphs on purpose — users already know
+    them and any redesign reads as a bug. Empty-state
+    illustrations are the opposite: they are decorative rather
+    than functional, so they benefit from being distinctive.
+    The launcher icon and the Google "G" are the only other
+    "designed" artwork in the app; this is the third.
+
+    ============================================================
+    DESIGN RATIONALE
+    ============================================================
+
+    Metaphor:
+      An OUTLINED (hollow) chat bubble with three dots inside.
+      Both choices are meaningful and should not be changed in
+      isolation:
+
+        - OUTLINED not SOLID. A solid bubble reads as "you
+          have a message" (the notification-icon metaphor).
+          An outlined bubble reads as "a place where messages
+          will go, empty for now." That is exactly the mental
+          state we want: "start a conversation, there is
+          nothing here yet."
+
+        - THREE DOTS not blank. A blank outlined bubble can
+          be misread as a generic speech-bubble decoration or
+          as a broken image placeholder. Three dots inside
+          mirror the universal "typing…" indicator —
+          telegraphing "this is where conversations happen"
+          without over-specifying.
+
+        - TAIL at the bottom-LEFT. WhatsApp-style. Points at
+          the imagined sender of a message that hasn't been
+          sent yet — a subtle directional cue that the empty
+          state is a "waiting state," not a "dead state."
+
+    Geometry (64dp viewport):
+      - Bubble outer rect: (8,8) → (56,48), corner radius 8
+      - Bubble inner rect: (12,12) → (52,44), corner radius 4
+      - Stroke: uniform 4 units on all edges
+      - Tail: triangle from (16,48) → (24,48) → (16,56)
+        (extends 8 units below the bottom-left corner)
+      - Dots: 3 circles, radius 3, centered at
+        (22,28), (32,28), (42,28). Pattern centered at x=32
+        (bubble center). 4-unit gaps between dots. Margins
+        of 7 units on each side, inside the bubble.
+
+    Fill rule:
+      Two contours in the SAME <path> with evenOdd:
+        - Outer contour: bubble silhouette incl. tail
+        - Inner contour: rounded rect interior
+      Under evenOdd:
+        - Bubble stroke (between outer and inner): filled
+        - Bubble interior (inside inner): not filled
+        - Tail (inside outer, outside inner): FILLED
+          → the tail appears solid, which is standard
+            Material outlined-bubble behavior
+      The three dots are SEPARATE <path> elements with
+      default nonZero fill. They render as solid circles
+      inside the otherwise-transparent interior.
+      The dots are drawn AFTER the bubble path, so they
+      paint on top of the transparent interior — this is
+      why they are visible at all.
+
+    Rendering at 48dp:
+      This composition scales cleanly down to 48dp without
+      loss of legibility. The 4-unit stroke becomes ~3px
+      at 48dp, which is still crisp on all pixel densities.
+      Below 40dp, the dots begin to touch visually — do
+      not reuse this icon smaller than 48dp in any future
+      context without redesigning the dot radii.
+
+    ============================================================
+    TINT DISCIPLINE (same as every other monochrome icon)
+    ============================================================
+    - Fill = #FFFFFFFF (pure white template).
+    - The actual rendered color comes from
+      app:tint="?attr/colorOnSurfaceVariant" on the
+      ImageView, which resolves to md_on_surface_variant_light
+      (#47464F) in light mode and md_on_surface_variant_dark
+      (#C9C4D0) in dark mode. Both are deliberate
+      low-emphasis grays — the empty state should not compete
+      with the "Chats" header or the FAB for visual
+      attention.
+    - Do NOT set android:tint on the <vector> root. Double-
+      tinting produces a sub-pixel anti-aliasing fringe on
+      some GPU drivers.
+    - Do NOT use a colored fill. It would be overridden by
+      the tint and would mislead future maintainers.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <!--
+        Bubble outline (outer + inner contours, evenOdd).
+
+        Outer contour walks:
+          M 16,8             top-left corner start (8+8)
+          L 48,8             top edge (56-8)
+          Q 56,8 56,16       top-right corner (radius 8)
+          L 56,40            right edge (48-8)
+          Q 56,48 48,48      bottom-right corner
+          L 24,48            bottom edge (up to the tail)
+          L 16,56            tail tip, pointing down-left
+          L 16,48            back up to bottom edge
+          Q 8,48 8,40        bottom-left corner
+          L 8,16             left edge
+          Q 8,8 16,8         top-left corner close
+          Z
+
+        Inner contour (a pure rounded rectangle, no tail —
+        the tail is part of the outer contour only, so it
+        renders filled under evenOdd; see file header for
+        why this is correct):
+          M 16,12            top-left corner start (12+4)
+          L 48,12            top edge (52-4)
+          Q 52,12 52,16      top-right corner (radius 4)
+          L 52,40            right edge (44-4)
+          Q 52,44 48,44      bottom-right corner
+          L 16,44            bottom edge
+          Q 12,44 12,40      bottom-left corner
+          L 12,16            left edge
+          Q 12,12 16,12      top-left corner close
+          Z
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M16,8 L48,8 Q56,8 56,16 L56,40 Q56,48 48,48 L24,48 L16,56 L16,48 Q8,48 8,40 L8,16 Q8,8 16,8 Z M16,12 L48,12 Q52,12 52,16 L52,40 Q52,44 48,44 L16,44 Q12,44 12,40 L12,16 Q12,12 16,12 Z" />
+
+    <!--
+        Three dots (typing-indicator metaphor).
+        Each dot: quarter-circle-ish path using Q curves.
+
+        Dot 1 (left):   center (22,28), radius 3
+        Dot 2 (middle): center (32,28), radius 3
+        Dot 3 (right):  center (42,28), radius 3
+
+        Pattern width: 22-42 span + 3 radius on each side
+        = 26 units. Centered at x=32 (bubble center).
+        4-unit gaps between adjacent dots.
+
+        Default fillType (nonZero) is fine for solid circles
+        with no overlapping contours. These are drawn AFTER
+        the bubble path so they paint onto the transparent
+        interior.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M19,28 Q19,25 22,25 Q25,25 25,28 Q25,31 22,31 Q19,31 19,28 Z" />
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M29,28 Q29,25 32,25 Q35,25 35,28 Q35,31 32,31 Q29,31 29,28 Z" />
+
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M39,28 Q39,25 42,25 Q45,25 45,28 Q45,31 42,31 Q39,31 39,28 Z" />
+
+</vector>

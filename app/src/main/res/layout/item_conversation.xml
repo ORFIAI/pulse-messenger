@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    item_conversation.xml — chat-list row
+    ------------------------------------------------------------
+    Consumed by ConversationAdapter via ItemConversationBinding.
+
+    Binding IDs → adapter field:
+      tv_initials      → binding.tvInitials     (colored circle bg)
+      iv_avatar        → binding.ivAvatar       (photo overlay)
+      tv_name          → binding.tvName
+      ll_meta          → (container, not bound)
+      iv_pinned        → binding.ivPinned
+      iv_muted         → binding.ivMuted
+      tv_time          → binding.tvTime
+      tv_unread_badge  → binding.tvUnreadBadge
+      tv_preview       → binding.tvPreview
+
+    Layout structure:
+      [avatar]  [name....................] [pin][mute][time]
+                [preview..............] [badge]
+
+    The avatar column is a 40dp box containing two views stacked
+    identically. The initials TextView is always rendered; the photo
+    ImageView sits over it and is GONE until a photo loads. During
+    the Glide load, the initials are visible — no blank flash.
+
+    Ripple uses android:foreground so it draws over the avatar
+    without clipping it and without a background drawable that would
+    need a separate ripple selector file.
+
+    Row minHeight=72dp matches @dimen/chat_row_height. Content is
+    anchored top and bottom with 12dp margins; the min height kicks
+    in only when content is narrower than expected (e.g., empty
+    preview).
+
+    Do NOT add a bottom divider. Chat lists in modern messaging
+    apps rely on spacing rather than horizontal rules; adding one
+    produces a visually noisy, dated look.
+    ============================================================
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/chat_row_height"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:paddingStart="@dimen/chat_row_padding_horizontal"
+    android:paddingEnd="@dimen/chat_row_padding_horizontal"
+    tools:ignore="UnusedAttribute">
+
+    <!-- ============================================================
+         Initials circle — the ALWAYS-PRESENT avatar background.
+         Tinted at runtime via setBackgroundTintList with one of the
+         six @color/avatar_* palette colors chosen deterministically
+         from the UID.
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_initials"
+        android:layout_width="@dimen/avatar_md"
+        android:layout_height="@dimen/avatar_md"
+        android:background="@drawable/bg_avatar_initial"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false"
+        android:importantForAccessibility="no"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="A" />
+
+    <!-- ============================================================
+         Photo avatar — overlays the initials circle exactly.
+         Visibility is set to VISIBLE by the adapter only when a
+         photo URL exists; otherwise stays GONE and the initials are
+         shown through.
+         ============================================================ -->
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/avatar_md"
+        android:layout_height="@dimen/avatar_md"
+        android:visibility="gone"
+        android:contentDescription="@string/cd_profile_photo"
+        app:layout_constraintTop_toTopOf="@id/tv_initials"
+        app:layout_constraintBottom_toBottomOf="@id/tv_initials"
+        app:layout_constraintStart_toStartOf="@id/tv_initials"
+        app:layout_constraintEnd_toEndOf="@id/tv_initials"
+        tools:visibility="visible" />
+
+    <!-- ============================================================
+         Top-right metadata cluster: [pin] [mute] [time]
+         Lives in a horizontal LinearLayout because the three
+         elements are tightly coupled spatially and a constraint
+         chain would require four IDs for what is conceptually one
+         right-aligned group.
+         ============================================================ -->
+    <LinearLayout
+        android:id="@+id/ll_meta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginStart="@dimen/space_xs"
+        app:layout_constraintTop_toTopOf="@id/tv_name"
+        app:layout_constraintBottom_toBottomOf="@id/tv_name"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_pinned"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:visibility="gone"
+            android:contentDescription="@string/conversation_pinned_label"
+            android:src="@drawable/ic_pin_small"
+            app:tint="?attr/colorOnSurfaceVariant"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/iv_muted"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginStart="@dimen/space_xxs"
+            android:visibility="gone"
+            android:contentDescription="@string/conversation_muted_label"
+            android:src="@drawable/ic_muted_small"
+            app:tint="?attr/colorOnSurfaceVariant"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_xs"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="12sp"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            tools:text="3h" />
+
+    </LinearLayout>
+
+    <!-- ============================================================
+         Display name (or group name).
+         Width=0dp, constrained between avatar and metadata cluster.
+         ellipsize=end so long names truncate rather than wrapping.
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_sm"
+        android:layout_marginStart="@dimen/space_sm"
+        android:layout_marginEnd="@dimen/space_xs"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_initials"
+        app:layout_constraintEnd_toStartOf="@id/ll_meta"
+        tools:text="Alex Rivera" />
+
+    <!-- ============================================================
+         Unread badge.
+         Circular for single digits (minWidth=20dp + 6dp padding),
+         grows into a pill for "10".."99+".
+         Vertically centered with the preview line.
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_unread_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:minWidth="20dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:gravity="center"
+        android:background="@drawable/bg_unread_badge"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false"
+        android:visibility="gone"
+        android:importantForAccessibility="no"
+        app:layout_constraintTop_toTopOf="@id/tv_preview"
+        app:layout_constraintBottom_toBottomOf="@id/tv_preview"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="3"
+        tools:visibility="visible" />
+
+    <!-- ============================================================
+         Preview line.
+         ellipsize=end. Width=0dp, constrained between avatar and
+         unread badge. When badge is GONE, its zero-width anchor
+         effectively extends the preview to parent end (ConstraintLayout
+         resolves GONE views to a point at their anchor position).
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_preview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_sm"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="@dimen/space_xs"
+        android:layout_marginBottom="@dimen/space_sm"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="14sp"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintTop_toBottomOf="@id/tv_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_initials"
+        app:layout_constraintEnd_toStartOf="@id/tv_unread_badge"
+        tools:text="Hey — are we still on for tomorrow?" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

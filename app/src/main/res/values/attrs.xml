@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ============================================================
+         Custom theme attributes — message bubbles and chat surface
+         ------------------------------------------------------------
+         Why custom attributes instead of direct color references?
+
+         A <shape> drawable's <solid android:color="..."> can accept
+         either a fixed color resource (@color/...) or a theme
+         attribute (?attr/...). Only the theme-attribute form is
+         configuration-aware: the same drawable XML file will render
+         with the light color in light mode and the dark color in
+         dark mode, because the attribute itself resolves against
+         the currently active theme.
+
+         Using @color/bubble_sent_light in the drawable would force
+         us to create a second drawable file in drawable-night/ for
+         every bubble variant — roughly doubling the drawable count
+         for no maintainability gain. The attribute approach lets us
+         write each bubble shape exactly once.
+
+         Attribute naming:
+           - All prefixed with "pulse" to make them unambiguously
+             identifiable in themes and to prevent any future
+             collision with a Material or library attribute of the
+             same short name.
+
+         Each attribute is format="color" — it can only hold a color
+         value. It is populated in values/themes.xml with the
+         *_light tokens and in values-night/themes.xml with the
+         *_dark tokens.
+         ============================================================ -->
+
+    <!-- Background color for messages sent by the current user
+         (the right-aligned bubble). -->
+    <attr name="pulseBubbleSent" format="color" />
+
+    <!-- Text color for messages sent by the current user.
+         Must maintain WCAG AA contrast against pulseBubbleSent. -->
+    <attr name="pulseBubbleSentText" format="color" />
+
+    <!-- Background color for messages received from another user
+         (the left-aligned bubble). -->
+    <attr name="pulseBubbleReceived" format="color" />
+
+    <!-- Text color for messages received from another user.
+         Must maintain WCAG AA contrast against pulseBubbleReceived. -->
+    <attr name="pulseBubbleReceivedText" format="color" />
+
+    <!-- Background color for the "reply preview" strip nested
+         inside a sent bubble. Slightly deeper than pulseBubbleSent
+         so the strip is visible without a border. -->
+    <attr name="pulseBubbleSentReply" format="color" />
+
+    <!-- Background color for the "reply preview" strip nested
+         inside a received bubble. Slightly deeper than
+         pulseBubbleReceived so the strip is visible without a
+         border. -->
+    <attr name="pulseBubbleReceivedReply" format="color" />
+
+    <!-- Timestamp / "edited" / delivery-tick color inside a sent
+         bubble. Lighter than pulseBubbleSentText so meta info is
+         visually de-emphasized, but still readable on
+         pulseBubbleSent. -->
+    <attr name="pulseBubbleMetaSent" format="color" />
+
+    <!-- Timestamp / "edited" / sender-name color inside a received
+         bubble. Muted gray that reads as secondary against
+         pulseBubbleReceivedText. -->
+    <attr name="pulseBubbleMetaReceived" format="color" />
+
+    <!-- Background color of the chat message list itself. Slightly
+         warmer in light mode and slightly cooler/deeper in dark mode
+         than the general surface color, so bubbles read as raised
+         elements rather than blending in. This token is applied to
+         the RecyclerView background in ChatActivity's layout. -->
+    <attr name="pulseChatBackground" format="color" />
+
+</resources>

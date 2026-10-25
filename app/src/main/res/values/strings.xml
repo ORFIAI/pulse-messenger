@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ============================================================
+         Identity
+         ============================================================ -->
+    <string name="app_name" translatable="false">Pulse</string>
+
+
+    <!-- ============================================================
+         Authentication (Google only)
+         ============================================================ -->
+    <string name="auth_welcome_title">Welcome to Pulse</string>
+    <string name="auth_welcome_subtitle">Simple, private conversations.\nSign in with your Google account to get started.</string>
+    <string name="auth_continue_with_google">Continue with Google</string>
+    <string name="auth_terms_prefix">By continuing, you agree to our</string>
+    <string name="auth_terms">Terms of Service</string>
+    <string name="auth_and">and</string>
+    <string name="auth_privacy">Privacy Policy</string>
+    <string name="auth_signing_in">Signing in\u2026</string>
+
+    <string name="auth_error_cancelled">Sign-in cancelled</string>
+    <string name="auth_error_network">No internet connection. Check your connection and try again.</string>
+    <string name="auth_error_generic">Could not sign in. Please try again.</string>
+    <string name="auth_error_no_google_account">No Google account found on this device. Add one in system Settings and try again.</string>
+    <string name="auth_error_play_services">Google Play Services is unavailable or out of date.</string>
+    <string name="auth_error_credential">Could not complete sign-in. Please try again.</string>
+
+
+    <!-- ============================================================
+         Profile setup and edit
+         ============================================================ -->
+    <string name="profile_setup_title">Set up your profile</string>
+    <string name="profile_setup_subtitle">Choose how you appear to others on Pulse.</string>
+    <string name="profile_edit_title">Edit profile</string>
+    <string name="profile_hint_display_name">Display name</string>
+    <string name="profile_hint_username">Username</string>
+    <string name="profile_hint_bio">About</string>
+    <string name="profile_hint_bio_optional">About (optional)</string>
+    <string name="profile_change_photo">Change photo</string>
+    <string name="profile_save">Save</string>
+    <string name="profile_saved">Profile saved</string>
+    <string name="profile_save_failed">Could not save profile. Please try again.</string>
+    <string name="profile_username_taken">That username is already taken.</string>
+    <string name="profile_username_invalid">Username can only contain lowercase letters, numbers, and underscores.</string>
+    <string name="profile_username_too_short">Username must be at least 3 characters.</string>
+    <string name="profile_username_too_long">Username is too long.</string>
+    <string name="profile_display_name_required">Display name is required.</string>
+    <string name="profile_display_name_too_long">Display name is too long.</string>
+    <string name="profile_bio_too_long">About section is too long.</string>
+    <string name="profile_photo_uploading">Uploading photo\u2026</string>
+    <string name="profile_photo_upload_failed">Could not upload photo</string>
+    <string name="profile_photo_uploaded">Photo updated</string>
+    <string name="profile_email_private_note">Your Google email is never shown to other users.</string>
+    <string name="profile_username_note">Lowercase letters, numbers, and underscores only.</string>
+
+
+    <!-- ============================================================
+         Home navigation
+         ============================================================ -->
+    <string name="nav_chats">Chats</string>
+    <string name="nav_people">People</string>
+    <string name="nav_profile">Profile</string>
+
+
+    <!-- ============================================================
+         Chat list
+         ============================================================ -->
+    <string name="chats_title">Chats</string>
+    <string name="chats_empty_title">No conversations yet</string>
+    <string name="chats_empty_subtitle">Find someone in People and start chatting.</string>
+    <string name="chats_search_hint">Search chats</string>
+    <string name="chats_action_new_group">New group</string>
+    <string name="chats_action_new_chat">New chat</string>
+
+    <string name="conversation_menu_pin">Pin</string>
+    <string name="conversation_menu_unpin">Unpin</string>
+    <string name="conversation_menu_mute">Mute</string>
+    <string name="conversation_menu_unmute">Unmute</string>
+    <string name="conversation_menu_archive">Archive</string>
+    <string name="conversation_menu_unarchive">Unarchive</string>
+    <string name="conversation_menu_clear">Clear chat</string>
+    <string name="conversation_menu_delete">Delete conversation</string>
+
+    <string name="conversation_clear_confirm_title">Clear this chat?</string>
+    <string name="conversation_clear_confirm_message">This removes the messages from your device only. The other person will still see them.</string>
+    <string name="conversation_delete_confirm_title">Delete conversation?</string>
+    <string name="conversation_delete_confirm_message">This conversation will be removed from your chat list. You can start a new one at any time.</string>
+
+    <string name="conversation_muted_label">Muted</string>
+    <string name="conversation_pinned_label">Pinned</string>
+    <string name="conversation_you_prefix">You: </string>
+    <string name="conversation_draft_prefix">Draft: </string>
+    <string name="conversation_type_image">\U0001F4F7 Photo</string>
+    <string name="conversation_type_video">\U0001F3A5 Video</string>
+    <string name="conversation_type_audio">\U0001F3B5 Audio</string>
+    <string name="conversation_type_voice">\U0001F3A4 Voice message</string>
+    <string name="conversation_type_document">\U0001F4C4 Document</string>
+
+
+    <!-- ============================================================
+         People / user search
+         ============================================================ -->
+    <string name="people_title">Find people</string>
+    <string name="people_search_hint">Search by username or name</string>
+    <string name="people_empty_title">Find people on Pulse</string>
+    <string name="people_empty_subtitle">Search by username or display name.</string>
+    <string name="people_no_results">No people found</string>
+    <string name="people_search_too_short">Type at least 2 characters</string>
+    <string name="people_message_action">Message</string>
+    <string name="people_view_profile">View profile</string>
+    <string name="people_block">Block</string>
+    <string name="people_unblock">Unblock</string>
+    <string name="people_blocked_badge">Blocked</string>
+
+
+    <!-- ============================================================
+         Chat screen
+         ============================================================ -->
+    <string name="chat_hint_message">Message</string>
+    <string name="chat_send">Send</string>
+    <string name="chat_attach">Attach</string>
+    <string name="chat_camera">Camera</string>
+    <string name="chat_emoji">Emoji</string>
+
+    <string name="chat_typing">typing\u2026</string>
+    <string name="chat_online">Online</string>
+    <string name="chat_last_seen_just_now">Last seen just now</string>
+    <string name="chat_last_seen_recently">Last seen recently</string>
+    <string name="chat_offline">Offline</string>
+
+    <string name="chat_empty_title">No messages yet</string>
+    <string name="chat_empty_subtitle">Say hello to get things started.</string>
+    <string name="chat_loading_older">Loading older messages\u2026</string>
+    <string name="chat_scroll_to_bottom">Jump to latest</string>
+
+    <string name="chat_state_sending">Sending\u2026</string>
+    <string name="chat_state_sent">Sent</string>
+    <string name="chat_state_delivered">Delivered</string>
+    <string name="chat_state_seen">Seen</string>
+    <string name="chat_state_failed">Tap to retry</string>
+    <string name="chat_state_edited">edited</string>
+
+    <string name="chat_message_deleted">This message was deleted</string>
+    <string name="chat_message_deleted_placeholder">Message deleted</string>
+
+
+    <!-- ============================================================
+         Message actions (long press)
+         ============================================================ -->
+    <string name="msg_action_reply">Reply</string>
+    <string name="msg_action_copy">Copy</string>
+    <string name="msg_action_forward">Forward</string>
+    <string name="msg_action_edit">Edit</string>
+    <string name="msg_action_delete">Delete</string>
+    <string name="msg_action_delete_for_me">Delete for me</string>
+    <string name="msg_action_delete_for_everyone">Delete for everyone</string>
+    <string name="msg_action_info">Message info</string>
+
+    <string name="msg_reply_to">Reply to %1$s</string>
+    <string name="msg_editing">Editing message</string>
+    <string name="msg_cancel_reply">Cancel reply</string>
+    <string name="msg_cancel_edit">Cancel edit</string>
+
+    <string name="msg_delete_everyone_confirm_title">Delete for everyone?</string>
+    <string name="msg_delete_everyone_confirm_message">This message will be replaced with \"This message was deleted\" for all participants.</string>
+    <string name="msg_delete_for_me_confirm_title">Delete for me?</string>
+    <string name="msg_delete_for_me_confirm_message">This message will be removed from your device only.</string>
+    <string name="msg_deleted_toast">Message deleted</string>
+    <string name="msg_copied_toast">Copied to clipboard</string>
+    <string name="msg_edit_expired">This message is too old to edit.</string>
+
+    <string name="msg_forward_to">Forward to\u2026</string>
+    <string name="msg_forwarded">Forwarded</string>
+    <string name="msg_forward_success">Message forwarded</string>
+    <string name="msg_forward_failed">Could not forward message</string>
+
+
+    <!-- ============================================================
+         Attachments / media
+         ============================================================ -->
+    <string name="attach_image">Photo</string>
+    <string name="attach_video">Video</string>
+    <string name="attach_audio">Audio</string>
+    <string name="attach_document">Document</string>
+    <string name="attach_voice_recording">Voice message</string>
+
+    <string name="attach_uploading">Uploading\u2026 %1$d%%</string>
+    <string name="attach_upload_failed">Upload failed \u2014 tap to retry</string>
+    <string name="attach_cancelled">Upload cancelled</string>
+    <string name="attach_caption_hint">Add a caption\u2026</string>
+    <string name="attach_send">Send</string>
+    <string name="attach_preview_title">Preview</string>
+
+    <string name="media_downloading">Downloading\u2026</string>
+    <string name="media_download_failed">Download failed</string>
+    <string name="media_open_external_failed">No app found to open this file</string>
+    <string name="media_save_success">Saved to Downloads</string>
+    <string name="media_save_failed">Could not save file</string>
+
+    <string name="voice_record_start">Hold to record</string>
+    <string name="voice_recording">Recording\u2026</string>
+    <string name="voice_release_to_send">Release to send</string>
+    <string name="voice_slide_to_cancel">Slide to cancel</string>
+    <string name="voice_mic_permission_denied">Microphone permission is required to record voice messages.</string>
+    <string name="voice_recorder_unavailable">Voice recording is not available on this device.</string>
+    <string name="voice_recording_too_short">Recording too short</string>
+
+
+    <!-- ============================================================
+         Groups
+         ============================================================ -->
+    <string name="group_create_title">New group</string>
+    <string name="group_name_hint">Group name</string>
+    <string name="group_name_required">Group name is required</string>
+    <string name="group_add_members">Add members</string>
+    <string name="group_members_count">%1$d members</string>
+    <string name="group_create_action">Create group</string>
+    <string name="group_created">Group created</string>
+    <string name="group_create_failed">Could not create group</string>
+
+    <string name="group_info_title">Group info</string>
+    <string name="group_info_members">Members</string>
+    <string name="group_info_admins">Admins</string>
+    <string name="group_info_add_member">Add member</string>
+    <string name="group_info_leave">Leave group</string>
+    <string name="group_info_rename">Rename group</string>
+    <string name="group_info_change_photo">Change photo</string>
+    <string name="group_info_make_admin">Make admin</string>
+    <string name="group_info_remove_admin">Remove admin</string>
+    <string name="group_info_remove_member">Remove from group</string>
+    <string name="group_info_admin_badge">Admin</string>
+
+    <string name="group_leave_confirm_title">Leave group?</string>
+    <string name="group_leave_confirm_message">You will no longer receive messages from this group.</string>
+    <string name="group_leave_action">Leave</string>
+    <string name="group_left_toast">You left the group</string>
+    <string name="group_member_removed_toast">Member removed</string>
+    <string name="group_member_added_toast">Member added</string>
+    <string name="group_admin_granted_toast">Admin granted</string>
+    <string name="group_admin_revoked_toast">Admin removed</string>
+    <string name="group_action_not_allowed">Only group admins can do this</string>
+
+
+    <!-- ============================================================
+         Blocking
+         ============================================================ -->
+    <string name="block_confirm_title">Block %1$s?</string>
+    <string name="block_confirm_message">They will no longer be able to message you on Pulse.</string>
+    <string name="block_action">Block</string>
+    <string name="block_toast">User blocked</string>
+    <string name="unblock_toast">User unblocked</string>
+    <string name="blocked_users_title">Blocked users</string>
+    <string name="blocked_users_empty">You have not blocked anyone.</string>
+
+
+    <!-- ============================================================
+         Settings
+         ============================================================ -->
+    <string name="settings_title">Settings</string>
+
+    <string name="settings_section_account">Account</string>
+    <string name="settings_edit_profile">Edit profile</string>
+    <string name="settings_logout">Log out</string>
+    <string name="settings_logout_confirm_title">Log out?</string>
+    <string name="settings_logout_confirm_message">You will be returned to the sign-in screen.</string>
+    <string name="settings_delete_account">Delete account</string>
+    <string name="settings_delete_account_confirm_title">Delete your account?</string>
+    <string name="settings_delete_account_confirm_message">This will permanently delete your profile and messages. This action cannot be undone.</string>
+    <string name="settings_delete_account_action">Delete</string>
+    <string name="settings_delete_account_failed">Could not delete account</string>
+
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System default</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+
+    <string name="settings_section_notifications">Notifications</string>
+    <string name="settings_notifications_enabled">Enable notifications</string>
+    <string name="settings_notification_previews">Show message previews</string>
+    <string name="settings_notification_previews_desc">When off, notifications show only the sender name.</string>
+    <string name="settings_notification_sound">Play sound</string>
+
+    <string name="settings_section_privacy">Privacy</string>
+    <string name="settings_last_seen_visibility">Last seen</string>
+    <string name="settings_online_visibility">Online status</string>
+    <string name="settings_profile_photo_visibility">Profile photo</string>
+    <string name="settings_privacy_everyone">Everyone</string>
+    <string name="settings_privacy_contacts">Contacts</string>
+    <string name="settings_privacy_nobody">Nobody</string>
+    <string name="settings_blocked_users">Blocked users</string>
+
+    <string name="settings_section_storage">Storage and data</string>
+    <string name="settings_clear_cache">Clear cache</string>
+    <string name="settings_clear_cache_desc">Frees image and media cache. Messages are kept.</string>
+    <string name="settings_clear_cache_success">Cache cleared</string>
+    <string name="settings_clear_cache_failed">Could not clear cache</string>
+
+    <string name="settings_section_about">About</string>
+    <string name="settings_about_app">About Pulse</string>
+    <string name="settings_version">Version %1$s</string>
+
+
+    <!-- ============================================================
+         Notifications (FCM)
+         ============================================================ -->
+    <string name="channel_id_messages" translatable="false">pulse_messages</string>
+    <string name="channel_messages_name">Direct messages</string>
+    <string name="channel_messages_desc">Notifications for new direct messages</string>
+
+    <string name="channel_id_groups" translatable="false">pulse_groups</string>
+    <string name="channel_groups_name">Group messages</string>
+    <string name="channel_groups_desc">Notifications for new group messages</string>
+
+    <string name="default_notification_channel_id" translatable="false">pulse_messages</string>
+
+    <string name="notification_new_message">New message from %1$s</string>
+    <string name="notification_new_group_message">%1$s in %2$s</string>
+    <string name="notification_reply">Reply</string>
+    <string name="notification_mark_read">Mark as read</string>
+
+
+    <!-- ============================================================
+         Presence
+         ============================================================ -->
+    <string name="presence_online">Online</string>
+    <string name="presence_offline">Offline</string>
+    <string name="presence_last_seen_today">Last seen today at %1$s</string>
+    <string name="presence_last_seen_yesterday">Last seen yesterday at %1$s</string>
+    <string name="presence_last_seen_date">Last seen %1$s</string>
+
+
+    <!-- ============================================================
+         Common dialog buttons
+         ============================================================ -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_confirm">Confirm</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="dialog_retry">Retry</string>
+    <string name="dialog_close">Close</string>
+    <string name="dialog_save">Save</string>
+    <string name="dialog_done">Done</string>
+
+
+    <!-- ============================================================
+         Common errors and states
+         ============================================================ -->
+    <string name="error_no_internet">No internet connection</string>
+    <string name="error_network">Network error. Please try again.</string>
+    <string name="error_generic">Something went wrong</string>
+    <string name="error_try_again">Something went wrong. Please try again.</string>
+    <string name="error_permission_denied">You do not have permission to do that</string>
+    <string name="error_load_failed">Could not load</string>
+    <string name="error_send_failed">Message couldn\'t be sent</string>
+    <string name="error_not_signed_in">Please sign in again</string>
+    <string name="error_file_too_large">File is too large (max %1$s)</string>
+
+    <string name="state_loading">Loading\u2026</string>
+    <string name="state_empty">Nothing here yet</string>
+
+
+    <!-- ============================================================
+         Content descriptions (accessibility)
+         ============================================================ -->
+    <string name="cd_profile_photo">Profile photo</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_close">Close</string>
+    <string name="cd_more_options">More options</string>
+    <string name="cd_send">Send message</string>
+    <string name="cd_attachment">Open attachment menu</string>
+    <string name="cd_camera">Open camera</string>
+    <string name="cd_mic">Record voice message</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_message_status">Message status</string>
+    <string name="cd_message_sent_image">Sent image</string>
+    <string name="cd_message_sent_video">Sent video</string>
+    <string name="cd_message_sent_document">Sent document</string>
+    <string name="cd_message_sent_audio">Sent audio message</string>
+    <string name="cd_message_sent_voice">Sent voice message</string>
+    <string name="cd_play">Play</string>
+    <string name="cd_pause">Pause</string>
+    <string name="cd_typing_indicator">Typing indicator</string>
+
+</resources>

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    activity_settings.xml — Settings screen
+    ------------------------------------------------------------
+    Consumed by SettingsActivity via ActivitySettingsBinding.
+
+    Binding IDs → SettingsActivity field:
+      toolbar_settings             → binding.toolbarSettings
+      scroll_settings              → binding.scrollSettings
+
+      row_theme                    → binding.rowTheme
+      tv_theme_value               → binding.tvThemeValue
+
+      switch_notifications_enabled → binding.switchNotificationsEnabled
+      switch_notification_previews → binding.switchNotificationPreviews
+
+      row_last_seen                → binding.rowLastSeen
+      tv_last_seen_value           → binding.tvLastSeenValue
+      row_online_status            → binding.rowOnlineStatus
+      tv_online_status_value       → binding.tvOnlineStatusValue
+      row_profile_photo            → binding.rowProfilePhoto
+      tv_profile_photo_value       → binding.tvProfilePhotoValue
+
+      row_notifications            → binding.rowNotifications   (scroll anchor)
+      row_blocked_users            → binding.rowBlockedUsers
+      row_about                    → binding.rowAbout
+
+    Structure:
+      CoordinatorLayout
+        └── AppBarLayout
+              └── MaterialToolbar (back arrow + "Settings")
+        └── NestedScrollView
+              └── LinearLayout (vertical)
+                    ├── Section: Appearance
+                    │     └── row_theme (theme subtitle)
+                    ├── Section: Notifications
+                    │     ├── switch_notifications_enabled
+                    │     └── switch_notification_previews
+                    ├── Section: Privacy
+                    │     ├── row_last_seen
+                    │     ├── row_online_status
+                    │     └── row_profile_photo
+                    └── Section: About
+                          ├── row_blocked_users (deep-link anchor)
+                          └── row_about
+
+    Do NOT use a RecyclerView for the settings list. The list is
+    small (7 rows) and static — each row has different content and
+    is shown once. A RecyclerView would require an adapter, a
+    view-holder pattern, and dynamic row-type handling, all for a
+    list that never grows. NestedScrollView + LinearLayout is the
+    standard Material settings pattern for small screens and is
+    what Android's own Settings app uses for its first-level
+    screens.
+    ============================================================
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.SettingsActivity">
+
+    <!-- ============================================================
+         TOOLBAR
+         ============================================================ -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_settings"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorSurface"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="?attr/colorOnSurface"
+            app:title="@string/settings_title"
+            app:titleTextColor="?attr/colorOnSurface" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ============================================================
+         SETTINGS LIST
+         ============================================================ -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/space_xxl">
+
+            <!-- ============================================================
+                 SECTION: Appearance
+                 ============================================================ -->
+            <TextView
+                style="@style/SettingsSectionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_section_appearance" />
+
+            <LinearLayout
+                android:id="@+id/row_theme"
+                style="@style/SettingsRow"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/settings_theme"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp"
+                    android:includeFontPadding="false" />
+
+                <TextView
+                    android:id="@+id/tv_theme_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_xs"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp"
+                    android:includeFontPadding="false"
+                    tools:text="System default" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_sm"
+                    android:layout_height="@dimen/icon_sm"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
+
+            <!-- ============================================================
+                 SECTION: Notifications
+                 ============================================================ -->
+            <TextView
+                android:id="@+id/row_notifications"
+                style="@style/SettingsSectionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_section_notifications" />
+
+            <LinearLayout
+                style="@style/SettingsRow"
+                android:layout_width="match_parent"
+                android:layout_height="56dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_notifications_enabled"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="15sp"
+                        android:includeFontPadding="false" />
+
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_notifications_enabled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/SettingsRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingTop="@dimen/space_xs"
+                    android:paddingBottom="@dimen/space_xs">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_notification_previews"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="15sp"
+                        android:includeFontPadding="false" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_xxxs"
+                        android:text="@string/settings_notification_previews_desc"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="12sp"
+                        android:includeFontPadding="false"
+                        android:lineSpacingExtra="1dp" />
+
+                </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch_notification_previews"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <!-- ============================================================
+                 SECTION: Privacy
+                 ============================================================ -->
+            <TextView
+                style="@style/SettingsSectionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_section_privacy" />
+
+            <!-- Last seen -->
+            <LinearLayout
+                android:id="@+id/row_last_seen"
+                style="@style/SettingsRow"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/settings_last_seen_visibility"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp"
+                    android:includeFontPadding="false" />
+
+                <TextView
+                    android:id="@+id/tv_last_seen_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_xs"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp"
+                    android:includeFontPadding="false"
+                    tools:text="Everyone" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_sm"
+                    android:layout_height="@dimen/icon_sm"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
+
+            <!-- Online status -->
+            <LinearLayout
+                android:id="@+id/row_online_status"
+                style="@style/SettingsRow"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/settings_online_visibility"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp"
+                    android:includeFontPadding="false" />
+
+                <TextView
+                    android:id="@+id/tv_online_status_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_xs"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp"
+                    android:includeFontPadding="false"
+                    tools:text="Everyone" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_sm"
+                    android:layout_height="@dimen/icon_sm"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
+
+            <!-- Profile photo -->
+            <LinearLayout
+                android:id="@+id/row_profile_photo"
+                style="@style/SettingsRow"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/settings_profile_photo_visibility"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp"
+                    android:includeFontPadding="false" />
+
+                <TextView
+                    android:id="@+id/tv_profile_photo_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_xs"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp"
+                    android:includeFontPadding="false"
+                    tools:text="Everyone" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_sm"
+                    android:layout_height="@dimen/icon_sm"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
+
+            <!-- ============================================================
+                 SECTION: Account
+                 ============================================================ -->
+            <TextView
+                style="@style/SettingsSectionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_section_account" />
+
+            <!-- Blocked users -->
+            <LinearLayout
+                android:id="@+id/row_blocked_users"
+                style="@style/SettingsRow"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/settings_blocked_users"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp"
+                    android:includeFontPadding="false" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_sm"
+                    android:layout_height="@dimen/icon_sm"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
+
+            <!-- ============================================================
+                 SECTION: About
+                 ============================================================ -->
+            <TextView
+                style="@style/SettingsSectionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_section_about" />
+
+            <LinearLayout
+                android:id="@+id/row_about"
+                style="@style/SettingsRow"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/settings_about_app"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp"
+                    android:includeFontPadding="false" />
+
+                <ImageView
+                    android:layout_width="@dimen/icon_sm"
+                    android:layout_height="@dimen/icon_sm"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

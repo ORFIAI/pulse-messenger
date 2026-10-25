@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_block — blocked-user icon (circle with diagonal slash)
+    ------------------------------------------------------------
+    Referenced by:
+      - fragment_profile.xml (row_blocked leading affordance)
+      - future: ChatActivity overflow menu ("Block user")
+      - future: block-confirmation dialog icon
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF), tinted at the consumer
+       level (ImageView's app:tint="?attr/colorOnSurfaceVariant").
+       Do NOT set a brand color here — it would be tinted
+       away, but would mislead future maintainers.
+
+    2. 24dp VIEWPORT.
+       Matches every other chrome icon in the app.
+
+    3. UNIVERSAL "PROHIBITED" GLYPH.
+       A circle with a diagonal slash through it is the
+       universal "not allowed / blocked / prohibited" symbol
+       (same as a "no entry" traffic sign). It is instantly
+       recognized in every locale, including for RTL users
+       and users unfamiliar with English.
+
+       Do NOT redesign this as, for example, a user
+       silhouette with an X through it. While that is
+       semantically closer to "blocked user," it is a
+       custom composition that would not be recognized at
+       24dp and would look visually inconsistent with the
+       other Material-standard icons in the settings rows.
+       The circle-with-slash is the standard Material
+       `block` glyph and is the right choice for v1.
+
+    4. FILLED RING + FILLED SLASH, BOTH UNDER evenOdd.
+       The icon is composed of two contours in the SAME
+       <path> element with fillType="evenOdd":
+         - Outer circle (the ring's exterior)
+         - Inner circle (the ring's interior / hole)
+       This produces the hollow ring.
+       The slash is a SEPARATE <path> element (a filled
+       parallelogram rotated 45°) drawn AFTER the ring, so
+       it sits on top of the ring's hollow interior and
+       crosses both sides of the ring's stroke, extending
+       slightly beyond the outer circle.
+
+       The slash overlap with the ring's stroke does not
+       produce any visual seams because the slash is the
+       SAME fill color as the ring (and under the same
+       tint). This is the standard construction for the
+       Material `block` icon and produces a clean result
+       at any size.
+
+    5. NO androidx.AutoMirrored.
+       The circle-slash is not directional (a mirrored
+       circle-slash looks identical). Do not add
+       auto-mirroring.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        ============================================================
+        RING (outer circle minus inner circle, evenOdd)
+        ============================================================
+        Outer circle: center (12,12), radius 10 → spans (2,2)
+                      to (22,22)
+        Inner circle: center (12,12), radius 8  → spans (4,4)
+                      to (20,20)
+        Ring stroke:  2 units thick
+
+        The 2-unit stroke matches every other chrome icon's
+        stroke weight. The A-command (arc) syntax is used for
+        both circles (same as ic_nav_profile.xml's outer circle).
+
+        Path:
+          M 2,12 A10,10 0 1,0 22,12 A10,10 0 1,0 2,12 Z
+          M 4,12 A8,8 0 1,1 20,12 A8,8 0 1,1 4,12 Z
+
+        The two contours are both written as "double-arc
+        circles" (two A commands tracing a full circle). The
+        sweep direction is reversed between them (0 then 1)
+        which, combined with evenOdd, produces the ring
+        regardless of the source winding — the evenOdd rule
+        is winding-direction-agnostic. This is more robust
+        than relying on same-direction windings that could
+        be flipped by a build-tool optimization.
+        ============================================================
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M2,12 A10,10 0 1,0 22,12 A10,10 0 1,0 2,12 Z M4,12 A8,8 0 1,1 20,12 A8,8 0 1,1 4,12 Z" />
+
+    <!--
+        ============================================================
+        SLASH (diagonal parallelogram, drawn over the ring)
+        ============================================================
+        A rectangular strip rotated 45°, from the upper-right
+        to the lower-left of the icon. The slash extends from
+        approximately (2.5, 3.5) at the top-right to
+        (3.5, 2.5) — i.e., beyond the ring's outer edge on
+        both ends, so the slash clearly crosses the ring.
+
+        Slope: 45° (from upper-right to lower-left, matching
+               the "no entry" traffic sign's slash direction)
+
+        Width: 2 units (same as the ring stroke, so the
+               slash and the ring appear to have the same
+               line weight)
+
+        Construction: a filled parallelogram, not a stroked
+        line. Filled is more reliable across OEM renderers
+        at small sizes — a stroked diagonal at 24dp sometimes
+        renders with sub-pixel anti-aliasing artifacts on
+        older GPU drivers.
+
+        Path (parallelogram vertices):
+          Top-right corner:     (22.4, 3.6)
+          Top-left corner:      (20.4, 1.6)
+          Bottom-left corner:   (1.6, 20.4)
+          Bottom-right corner:  (3.6, 22.4)
+          Close back to top-right.
+
+        This produces a diagonal strip whose center-line
+        runs from (21.4, 2.6) to (2.6, 21.4), i.e., exactly
+        through the icon's center (12, 12).
+        ============================================================
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M22.4,3.6 L20.4,1.6 L1.6,20.4 L3.6,22.4 Z" />
+
+</vector>

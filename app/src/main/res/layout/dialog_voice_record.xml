@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    dialog_voice_record.xml — voice message recording overlay
+    ------------------------------------------------------------
+    Inflated into a BottomSheetDialog by ChatActivity when the
+    user picks the "Voice message" option from the attach sheet.
+
+    Binding IDs → ChatActivity field:
+      voice_record_root      → the outer LinearLayout (hint visibility)
+      btn_voice_cancel       → the X button (dismiss + cancel recording)
+      tv_voice_timer         → MM:SS elapsed timer (updates every 100ms)
+      tv_voice_hint          → "Hold to record" / "Release to send · Slide up to cancel"
+      btn_voice_record       → the big circular mic button (touch target for
+                               hold-to-record, slide-to-cancel, release-to-send)
+
+    Layout structure:
+      BottomSheetDialog content
+        └── LinearLayout (vertical, padding 24dp, minHeight 360dp)
+              ├── Top row: [X] [timer] [spacer]
+              ├── Weighted spacer (weight=1)
+              ├── Hint text
+              ├── Small spacer
+              ├── Big mic button (96dp circular)
+              └── Bottom padding
+
+    Design decisions:
+
+    1. BottomSheetDialog, not a full-screen dialog.
+       A full-screen dialog would feel heavy — the user is
+       recording a short message, not entering a multi-step
+       form. A bottom sheet feels lightweight and dismissible,
+       and it leaves the chat visible above (giving the user
+       context about the conversation they're recording into).
+
+       The sheet's default `setCancelable(true)` allows the
+       user to drag it down or tap outside to dismiss. The
+       ChatActivity's onDismiss listener cancels any in-flight
+       recording so a mid-recording drag-down does not leave
+       a stuck MediaRecorder. During upload (after release-
+       to-send), the ChatActivity sets setCancelable(false)
+       to prevent the sheet from being dismissed while the
+       message is being sent.
+
+    2. TIMER AT TOP-CENTER.
+       The timer is the most important piece of information
+       during recording. Putting it at the top-center of the
+       sheet, next to the cancel X, matches the layout of
+       every voice recorder (WhatsApp, Telegram, Instagram
+       DMs). The 20sp size makes it readable without being
+       dominating; the monospace-style `sans-serif-medium`
+       keeps the digits aligned as they change (the
+       proportional variant would make the whole label
+       jitter by a pixel every second when a narrow "1"
+       becomes a wide "8").
+
+    3. HINT TEXT SWITCHES VIA THE ACTIVITY.
+       Initially reads "Hold to record". When the user
+       presses down on the mic button, the ChatActivity
+       sets text to "Release to send · Slide up to cancel".
+       When the user slides into the cancel zone, it becomes
+       "Release to cancel" with the error color. The layout
+       does not hardcode any of these states; it just
+       provides the TextView and lets the activity set the
+       text via `setText(...)`. This keeps all the recording
+       state logic in one place (the activity) rather than
+       split between the layout and the activity.
+
+    4. BIG CIRCULAR MIC BUTTON.
+       96dp diameter — large enough that holding it for
+       several seconds is comfortable, small enough to fit
+       in a portrait phone's sheet without scrolling on a
+       short screen. The `?attr/colorPrimary` background
+       with `?attr/colorOnPrimary` icon tint is the Material
+       3 "prominent action" color — the user instantly knows
+       this is the main control.
+
+       The button has no `android:onClick` — the ChatActivity
+       attaches an OnTouchListener (not OnClickListener)
+       because the gesture is hold-to-record, not tap-to-
+       record. A touch listener lets us distinguish ACTION_DOWN
+       (start recording) from ACTION_MOVE (slide-to-cancel)
+       from ACTION_UP (stop and send) from ACTION_CANCEL
+       (system interrupts — treat as cancel).
+
+    5. NO EXPLICIT HEIGHT.
+       The sheet's `layout_height="wrap_content"` is
+       appropriate — the sheet grows to fit its content,
+       which is ~360dp (top row ~48dp + weighted spacer
+       + hint text ~40dp + button 96dp + padding 48dp ≈
+       360dp on a typical font scale). The weighted spacer
+       (layout_weight="1") ensures the hint text and mic
+       button are pushed toward the bottom when the sheet
+       is taller than the content, giving the sheet a
+       "grounded" feel rather than "floating in the middle
+       of a tall sheet". On shorter screens (landscape),
+       the sheet would exceed the max peek height and
+       scroll internally — acceptable but not the primary
+       orientation; Phase-9 will add landscape-specific
+       tuning if needed.
+
+    6. CANCEL X VISIBLE AT ALL TIMES.
+       The X button is always visible during the recording
+       sheet (including during an active recording). Tapping
+       it cancels the recording and dismisses the sheet.
+       This is the "I changed my mind" escape hatch — even
+       if the user is holding the mic button, they can lift
+       their finger and tap X (or drag the sheet down) to
+       discard. No recording is sent on cancel.
+    ============================================================
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/voice_record_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/screen_padding_horizontal"
+    android:paddingEnd="@dimen/screen_padding_horizontal"
+    android:paddingTop="@dimen/space_md"
+    android:paddingBottom="@dimen/space_lg"
+    android:minHeight="360dp">
+
+    <!-- ============================================================
+         TOP ROW: cancel X + timer + spacer
+         ============================================================ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btn_voice_cancel"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/dialog_cancel"
+            android:src="@drawable/ic_close"
+            app:tint="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/tv_voice_timer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            tools:text="0:00" />
+
+        <!-- 48dp spacer to balance the X button and keep the
+             timer centered. Empty View, no visual content. -->
+        <View
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+
+    </LinearLayout>
+
+    <!-- ============================================================
+         WEIGHTED SPACER (pushes hint + button toward bottom)
+         ============================================================ -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- ============================================================
+         HINT TEXT (changes with recording state)
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_voice_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/voice_record_start"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="14sp"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="2dp"
+        android:maxLines="2"
+        tools:text="Hold to record" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_md" />
+
+    <!-- ============================================================
+         BIG CIRCULAR MIC BUTTON
+         ------------------------------------------------------------
+         The primary touch target for the hold-to-record gesture.
+         Uses a plain MaterialButton with icon (rather than a
+         FloatingActionButton) because we want a strictly circular
+         shape with no elevation shadow — FAB draws a drop shadow
+         that fights the bottom sheet's own elevation.
+         ============================================================ -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_voice_record"
+        style="@style/Widget.Material3.Button.IconButton.Filled"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_gravity="center_horizontal"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:contentDescription="@string/cd_mic"
+        app:backgroundTint="?attr/colorPrimary"
+        app:cornerRadius="48dp"
+        app:icon="@drawable/ic_voice"
+        app:iconSize="40dp"
+        app:iconTint="?attr/colorOnPrimary"
+        app:rippleColor="?attr/colorOnPrimary" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/space_lg" />
+
+</LinearLayout>

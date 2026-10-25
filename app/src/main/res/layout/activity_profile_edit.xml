@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    activity_profile_edit.xml — Edit / first-time profile setup
+    ------------------------------------------------------------
+    Consumed by ProfileEditActivity via ActivityProfileEditBinding.
+
+    Binding IDs → ProfileEditActivity field:
+      toolbar_profile_edit  → binding.toolbarProfileEdit
+      progress_load         → binding.progressLoad
+      scroll_content        → binding.scrollContent
+
+      iv_avatar             → binding.ivAvatar
+      tv_initials           → binding.tvInitials
+      btn_change_photo      → binding.btnChangePhoto
+      progress_photo        → binding.progressPhoto
+
+      et_display_name       → binding.etDisplayName
+      et_username           → binding.etUsername
+      et_bio                → binding.etBio
+
+      btn_save              → binding.btnSave
+      progress_save         → binding.progressSave
+
+    Layout structure:
+      CoordinatorLayout
+        └── AppBarLayout
+              └── MaterialToolbar (back arrow + title, both set in code)
+        └── NestedScrollView (scroll_content)
+              └── LinearLayout (vertical)
+                    ├── Avatar (initials + photo) — 128dp
+                    ├── Button: "Change photo"
+                    ├── progress_photo (overlays avatar area)
+                    ├── TextInputLayout: Display name
+                    ├── TextInputLayout: Username
+                    ├── TextInputLayout: Bio (multiline)
+                    └── Button: "Save" (with progress_save overlay)
+        └── progress_load (centered, overlays everything)
+
+    The toolbar title and navigationIcon are set programmatically
+    (not in XML) because the activity switches between "Set up your
+    profile" (no back arrow) and "Edit profile" (with back arrow)
+    depending on first-time-setup mode. The XML declares the toolbar
+    with no title/navigationIcon, and the activity fills them in
+    after the Firestore load resolves.
+
+    The Save button's progress_save indicator is an overlay on the
+    button itself (same constraints), not a separate row — this is
+    the standard "show a spinner inside the button while the
+    network operation runs" pattern. The button is disabled and
+    hidden (INVISIBLE) while saving; the spinner replaces it in the
+    same visual slot so there is no layout jump.
+    ============================================================
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.ProfileEditActivity">
+
+    <!-- ============================================================
+         TOOLBAR
+         ============================================================ -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_profile_edit"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorSurface"
+            app:navigationIconTint="?attr/colorOnSurface"
+            app:titleTextColor="?attr/colorOnSurface" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ============================================================
+         FORM
+         ============================================================ -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/screen_padding_horizontal"
+            android:paddingEnd="@dimen/screen_padding_horizontal"
+            android:paddingTop="@dimen/space_lg"
+            android:paddingBottom="@dimen/space_xxl">
+
+            <!-- ============================================================
+                 AVATAR
+                 ============================================================ -->
+            <FrameLayout
+                android:layout_width="@dimen/avatar_profile"
+                android:layout_height="@dimen/avatar_profile"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/tv_initials"
+                    android:layout_width="@dimen/avatar_profile"
+                    android:layout_height="@dimen/avatar_profile"
+                    android:background="@drawable/bg_avatar_initial"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="48sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:includeFontPadding="false"
+                    android:importantForAccessibility="no"
+                    tools:text="A" />
+
+                <ImageView
+                    android:id="@+id/iv_avatar"
+                    android:layout_width="@dimen/avatar_profile"
+                    android:layout_height="@dimen/avatar_profile"
+                    android:contentDescription="@string/cd_profile_photo"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </FrameLayout>
+
+            <!-- ============================================================
+                 CHANGE PHOTO BUTTON
+                 ============================================================ -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_change_photo"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_xs"
+                android:text="@string/profile_change_photo"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <!-- ============================================================
+                 PHOTO UPLOAD PROGRESS
+                 ------------------------------------------------------------
+                 Centered under the avatar area, visible only while the
+                 photo is uploading. Shows a determinate progress bar
+                 driven by StorageHelper.ProgressCallback.
+                 ============================================================ -->
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progress_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xs"
+                android:visibility="gone"
+                app:indicatorColor="?attr/colorPrimary"
+                app:trackColor="?attr/colorSurfaceVariant"
+                app:trackThickness="@dimen/progress_bar_height" />
+
+            <!-- ============================================================
+                 DISPLAY NAME
+                 ============================================================ -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xl"
+                android:hint="@string/profile_hint_display_name"
+                app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius"
+                app:boxCornerRadiusBottomStart="@dimen/input_corner_radius"
+                app:boxCornerRadiusTopEnd="@dimen/input_corner_radius"
+                app:boxCornerRadiusTopStart="@dimen/input_corner_radius">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_display_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName|textCapWords"
+                    android:maxLength="40"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- ============================================================
+                 USERNAME
+                 ------------------------------------------------------------
+                 The username field is intentionally single-line,
+                 no suggestions, no autocorrect. Lowercase input is
+                 enforced by the activity's TextWatcher / setError;
+                 the field itself accepts any character (to give the
+                 activity full control over the error message).
+                 ============================================================ -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:hint="@string/profile_hint_username"
+                app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius"
+                app:boxCornerRadiusBottomStart="@dimen/input_corner_radius"
+                app:boxCornerRadiusTopEnd="@dimen/input_corner_radius"
+                app:boxCornerRadiusTopStart="@dimen/input_corner_radius"
+                app:helperText="@string/profile_username_note"
+                app:helperTextEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textNoSuggestions|textVisiblePassword"
+                    android:maxLength="20"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- ============================================================
+                 BIO
+                 ============================================================ -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:hint="@string/profile_hint_bio_optional"
+                app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius"
+                app:boxCornerRadiusBottomStart="@dimen/input_corner_radius"
+                app:boxCornerRadiusTopEnd="@dimen/input_corner_radius"
+                app:boxCornerRadiusTopStart="@dimen/input_corner_radius">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_bio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:maxLength="200"
+                    android:minLines="3"
+                    android:maxLines="6"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- ============================================================
+                 SAVE BUTTON + PROGRESS
+                 ============================================================ -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:layout_marginTop="@dimen/space_xl">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:text="@string/profile_save"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-medium"
+                    app:cornerRadius="@dimen/radius_md" />
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:id="@+id/progress_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:indicatorColor="?attr/colorOnPrimary"
+                    app:trackThickness="3dp" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ============================================================
+         INITIAL LOAD SPINNER
+         ============================================================ -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        app:indicatorColor="?attr/colorPrimary"
+        app:indeterminate="true" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

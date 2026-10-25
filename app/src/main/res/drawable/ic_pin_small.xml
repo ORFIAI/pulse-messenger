@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_pin_small — chat-list "pinned conversation" indicator
+    ------------------------------------------------------------
+    Referenced by item_conversation.xml's iv_pinned, in the
+    top-right metadata cluster next to the mute icon and the
+    timestamp.
+
+    Constraints this file honors:
+
+    1. MONOCHROME. A single path, single fill color (white).
+       The consumer layout applies app:tint="?attr/colorOnSurfaceVariant"
+       to render it in the correct theme color. If you add a
+       second path with a different fill, the app:tint will
+       flatten both to the same theme color — which is fine, but
+       defeats the point of a second path. Everything is one
+       path on purpose.
+
+    2. WHITE FILL. Same "tint template" logic used by
+       ic_notification: the fill color is not what the user sees.
+       The ImageView's app:tint resolves the actual rendered
+       color at runtime from the current theme. Do NOT change
+       the fill to a fixed brand color — the pin should read as
+       a low-emphasis metadata glyph (like the timestamp and
+       mute icon), not as a colored accent.
+
+    3. 14dp VIEWPORT. The consumer view declares 14x14dp.
+       Designing on a 24dp viewport (as Material Icons do) and
+       relying on scaling-down produces slightly blurry or
+       aliased results at 14dp on some rendering paths. A
+       native 14dp viewport designed at 14dp is the cleanest
+       result at the actual display size.
+
+    4. SIMPLIFIED SILHOUETTE. A real pushpin has a head, a
+       shaft, and a tip. At 14dp, three sub-elements would turn
+       into visual noise. This glyph uses a single rotated shape
+       that reads as "angled pin" at any size — same visual
+       language as Telegram and Signal's pin indicator, but
+       distinct (this one has a shorter, more angular shaft than
+       either).
+
+    Do NOT reuse this icon outside the chat list. The pin icon
+    inside a message bubble (Phase 5, "pinned message" strip in
+    ChatActivity) is a separate, larger (16dp) icon because the
+    message-bubble context has a different visual weight.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="14dp"
+    android:height="14dp"
+    android:viewportWidth="14"
+    android:viewportHeight="14">
+
+    <!--
+        Single filled path — an angled pushpin silhouette.
+
+        Path breakdown (for future reference — the shorthand is
+        not obvious from the raw data):
+
+          M 9,1      → top of the pin head, upper-right
+          L 13,5     → the pin head's diagonal edge,
+                       descending right to (13,5)
+          L 9.5,5.5  → inward and down to the head's
+                       bottom-right corner
+          L 5,10     → the shaft, descending to lower-left
+          L 6.5,11.5 → the pin tip, slightly offset
+          L 6,12     → a small step (visual nub)
+          L 5,11     → back up along the tip
+          L 4.5,11.5 → another small step (visual nub)
+          L 3.5,10.5 → another nub (this creates the
+                       "serrated" tip silhouette visible at
+                       14dp — the same visual trick Signal
+                       uses to indicate the pin's point)
+          L 1,13     → bottom-left corner
+          L 4,10     → up along the shaft's lower edge
+          L 3.5,9.5  → the head's bottom-left corner
+          L 1,9      → the head's diagonal edge, back up
+          L 5,1      → the pin head's top-left corner
+          z          → close back to (9,1)
+
+        The shape is essentially a rotated rounded rectangle
+        (head) with a tapered shaft extending to the lower-left
+        corner of the canvas. The "nub" coordinates along the
+        tip are tiny 0.5-unit steps that produce the pin-point
+        silhouette at 14dp without needing a curve command.
+        At sizes larger than ~24dp those nubs would read as
+        jagged artifacts; this icon is intentionally designed
+        for 14dp only and should not be scaled up. If a larger
+        pin is ever needed, create a separate ic_pin.xml at
+        viewport 24 and use a proper rounded tip.
+
+        Rendered result: a diagonal pushpin pointing to the
+        lower-left, with a compact head at the upper-right and
+        a sharp tip. Universal "pinned" metaphor.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M9,1 L13,5 L9.5,5.5 L5,10 L6.5,11.5 L6,12 L5,11 L4.5,11.5 L3.5,10.5 L1,13 L4,10 L3.5,9.5 L1,9 L5,1 Z" />
+
+</vector>

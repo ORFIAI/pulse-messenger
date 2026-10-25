@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    bg_brand_dot — circular brand-accent dot
+    ------------------------------------------------------------
+    A simple oval filled with ?attr/colorPrimary.
+
+    Why a theme attribute and not a fixed color resource:
+      - @color/pulse_accent would be correct in the current
+        Phase-1 placeholder screen, but would break the moment
+        the dot is reused on a dark surface where the accent
+        indigo (#6D5EF5) reads as too heavy.
+      - ?attr/colorPrimary resolves through the active theme:
+        #6D5EF5 (md_primary_light) on light, #9A91FF
+        (md_primary_dark) on dark. Same file, both themes,
+        correct color in each.
+
+    Why <shape android:shape="oval">:
+      - The parent View in activity_main.xml has fixed
+        width=height=12dp. An oval shape in a square bounds
+        renders as a perfect circle. If the width and height
+        were unequal (say 12dp × 20dp), the oval would render
+        as an ellipse — for pills we would use
+        <corners android:radius="50dp"> on a rectangle
+        instead. Keep this drawable consumed only by square
+        bounds; anything non-square should use a separate
+        drawable with a pill shape.
+
+    No stroke, no padding, no gradient:
+      - Adding a stroke would produce a ring, not a dot.
+        The dot is meant to read as a single colored element.
+      - A gradient at 12dp is invisible on most screens and
+        adds render cost for zero visual benefit — solid color
+        is the correct choice at this size.
+    ============================================================
+-->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="?attr/colorPrimary" />
+
+</shape>

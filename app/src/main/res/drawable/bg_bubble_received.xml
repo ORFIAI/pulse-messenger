@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    bg_bubble_received — background for received message bubbles
+    ------------------------------------------------------------
+    Referenced by:
+      - item_message_received.xml (root container background)
+
+    Sibling of bg_bubble_sent.xml. The two files differ in
+    exactly three attributes:
+
+      | aspect          | bg_bubble_sent       | bg_bubble_received  |
+      |-----------------|----------------------|---------------------|
+      | fill attribute  | pulseBubbleSent      | pulseBubbleReceived |
+      | tail corner     | bottom-right (4dp)   | bottom-left  (4dp)  |
+      | resolved light  | #6D5EF5 (indigo)     | #F1EEF6 (light gray)|
+      | resolved dark   | #4E42D1 (deep indigo)| #2A2831 (dark gray) |
+
+    Every other attribute is identical: rounded corners (18dp)
+    on the three non-tail corners, no stroke, no gradient, no
+    <size> element. If you ever change one of the shared
+    properties, change both files in the same commit.
+
+    Constraints this file honors:
+
+    1. THEME ATTRIBUTE FILL, NOT COLOR RESOURCE.
+       ?attr/pulseBubbleReceived resolves through the active
+       theme:
+         - light theme → @color/bubble_received_light (#F1EEF6)
+         - dark theme  → @color/bubble_received_dark (#2A2831)
+       One drawable file, both themes. Do NOT hardcode either
+       color value here.
+
+    2. TAIL CORNER AT BOTTOM-LEFT.
+       Received bubbles are left-aligned in the chat. The
+       small-radius corner is therefore bottom-LEFT — the
+       side facing the screen edge on the receiver's side.
+       This is the directional mirror of the sent bubble,
+       and the two bubbles visually "point" toward their
+       respective senders.
+
+       Do NOT put the tail on the bottom-right for this file.
+       A received message with a bottom-right tail would
+       look like it is "about to be sent" instead of
+       "received." The whole visual distinction between
+       sent and received bubbles is:
+         - alignment (right vs. left)
+         - color (saturated vs. neutral)
+         - tail corner (bottom-right vs. bottom-left)
+       Getting any of these three wrong flips the bubble's
+       meaning.
+
+    3. NEUTRAL COLOR.
+       Sent bubbles use a saturated brand color (indigo) so
+       that the user's own messages visually "pop." Received
+       bubbles use a neutral surface-variant color (light
+       gray in light mode, dark gray in dark mode) so they
+       recede — the user's eye is naturally drawn to their
+       own messages first when scanning a conversation.
+       This is the standard messaging color convention used
+       by WhatsApp, Telegram, iMessage, and every other
+       messaging app. Do NOT make received bubbles saturated
+       (e.g., a second brand color) — that would produce a
+       visually noisy conversation where every message
+       competes for attention.
+
+    4. NO STROKE, NO GRADIENT, NO SHADOW.
+       Same rationale as bg_bubble_sent.xml: flat-filled,
+       contrast-by-color-not-by-decoration. Do not add
+       embellishments here.
+
+    No <size> element is declared. Shape drawables size to
+    their consumer View's bounds — adding <size> would
+    force an intrinsic width that the view would have to
+    override, producing inconsistent bubble widths. Omit
+    <size> and let the view drive the shape's dimensions.
+    ============================================================
+-->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="?attr/pulseBubbleReceived" />
+
+    <corners
+        android:topLeftRadius="@dimen/bubble_radius"
+        android:topRightRadius="@dimen/bubble_radius"
+        android:bottomLeftRadius="@dimen/bubble_tail_radius"
+        android:bottomRightRadius="@dimen/bubble_radius" />
+
+</shape>

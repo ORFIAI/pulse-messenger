@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    item_user.xml — user row (People search / Group member picker)
+    ------------------------------------------------------------
+    Consumed by UserAdapter via ItemUserBinding.
+
+    Two display modes, controlled by UserAdapter.mode:
+
+      MODE_MESSAGE (default, People tab search results):
+        - btn_message visible
+        - cb_selected hidden
+        - Tapping the row OR the Message button triggers
+          onUserTap(user) → starts a private conversation.
+
+      MODE_SELECT (GroupCreateActivity member picker):
+        - btn_message hidden
+        - cb_selected visible, showing whether the user is
+          currently selected for the group
+        - Tapping the row toggles selection (onUserTap(user) is
+          called in both modes; the adapter/activity interprets
+          it based on mode). The checkbox is disabled for direct
+          touch — it is a visual indicator only, not an
+          interactive control. Row-tap is the interaction.
+
+    Binding IDs → UserAdapter field:
+      tv_initials   → binding.tvInitials   (colored circle bg)
+      iv_avatar     → binding.ivAvatar     (photo overlay)
+      tv_name       → binding.tvName
+      tv_username   → binding.tvUsername
+      btn_message   → binding.btnMessage   (MODE_MESSAGE only)
+      cb_selected   → binding.cbSelected   (MODE_SELECT only)
+
+    Layout structure:
+      [avatar] [name @username ...] [Message button OR Checkbox]
+
+    Both btn_message and cb_selected are anchored to the same
+    position (end of row, vertically centered). In each mode,
+    exactly one is VISIBLE — this gives the row a natural
+    right-edge affordance in both modes without two separate
+    layouts. The TextViews (name / username) are constrained
+    end-to-startOf btn_message; when btn_message is GONE and
+    cb_selected is VISIBLE, ConstraintLayout resolves
+    end_toStartOf to cb_selected's position (both are anchored
+    at end=parent, so their start edges coincide).
+
+    Checkbox touch behavior:
+      cb_selected has android:clickable="false" and
+      android:focusable="false". The row's own click listener
+      handles toggling. This avoids a common double-tap bug
+      where the row click and the checkbox click both fire,
+      producing a select-then-deselect on a single tap.
+
+    Do NOT use MaterialCheckBox with checkable in the row's
+    XML — the adapter sets the checked state programmatically.
+    Do NOT add android:text to the checkbox — the label is
+    the row's own display name.
+    ============================================================
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/chat_row_height"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:paddingStart="@dimen/chat_row_padding_horizontal"
+    android:paddingEnd="@dimen/chat_row_padding_horizontal"
+    tools:ignore="UnusedAttribute">
+
+    <!-- ============================================================
+         INITIALS CIRCLE (always rendered)
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_initials"
+        android:layout_width="@dimen/avatar_md"
+        android:layout_height="@dimen/avatar_md"
+        android:background="@drawable/bg_avatar_initial"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false"
+        android:importantForAccessibility="no"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="A" />
+
+    <!-- ============================================================
+         PHOTO OVERLAY
+         ============================================================ -->
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/avatar_md"
+        android:layout_height="@dimen/avatar_md"
+        android:visibility="gone"
+        android:contentDescription="@string/cd_profile_photo"
+        app:layout_constraintTop_toTopOf="@id/tv_initials"
+        app:layout_constraintBottom_toBottomOf="@id/tv_initials"
+        app:layout_constraintStart_toStartOf="@id/tv_initials"
+        app:layout_constraintEnd_toEndOf="@id/tv_initials"
+        tools:visibility="visible" />
+
+    <!-- ============================================================
+         "Message" chip (MODE_MESSAGE only)
+         ============================================================ -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_message"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingStart="@dimen/space_sm"
+        android:paddingEnd="@dimen/space_sm"
+        android:paddingTop="@dimen/space_xs"
+        android:paddingBottom="@dimen/space_xs"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/people_message_action"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        app:cornerRadius="@dimen/radius_sm"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- ============================================================
+         Selection checkbox (MODE_SELECT only)
+         ------------------------------------------------------------
+         Anchored to the same end position as btn_message — both
+         cannot be visible simultaneously (the adapter toggles
+         visibility per mode). When btn_message is GONE and
+         cb_selected is VISIBLE, the TextViews' end_toStartOf
+         constraint resolves to cb_selected's left edge. The two
+         controls are mutually exclusive so there is never an
+         overlapping render.
+
+         clickable=false / focusable=false are essential — see
+         the file header for why.
+         ============================================================ -->
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/cb_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone"
+        android:importantForAccessibility="no"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:checked="true"
+        tools:visibility="visible" />
+
+    <!-- ============================================================
+         DISPLAY NAME
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_sm"
+        android:layout_marginStart="@dimen/space_sm"
+        android:layout_marginEnd="@dimen/space_xs"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_initials"
+        app:layout_constraintEnd_toStartOf="@id/btn_message"
+        tools:text="Alex Rivera" />
+
+    <!-- ============================================================
+         USERNAME SUB-LABEL
+         ============================================================ -->
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_sm"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="@dimen/space_xs"
+        android:layout_marginBottom="@dimen/space_sm"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textSize="13sp"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintTop_toBottomOf="@id/tv_name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_initials"
+        app:layout_constraintEnd_toStartOf="@id/btn_message"
+        tools:text="@alexr" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

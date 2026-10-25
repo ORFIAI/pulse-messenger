@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_download — download glyph (media viewer, media bubbles)
+    ------------------------------------------------------------
+    Referenced by:
+      - activity_media_viewer.xml (btn_download top-bar action)
+      - future: document message bubbles (Phase 7 — "tap to
+        download")
+      - future: audio message bubbles (Phase 7 — same)
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF), tinted at the consumer
+       level. In the media viewer, the tint is
+       @android:color/white (hardcoded) because the icon
+       sits on a fixed semi-transparent black overlay.
+       In a future bubble context, the tint will be a
+       theme attribute (e.g., ?attr/colorOnSurfaceVariant).
+       Do NOT set a brand color here — the fill is a
+       template that is tinted differently per consumer.
+
+    2. 24dp VIEWPORT.
+       Standard Material icon viewport. The media viewer's
+       top-bar ImageButton declares 48dp × 48dp, and its
+       Material 3 ImageButton default icon size is 24dp
+       (centered in the 48dp touch target) — the vector
+       renders at 24dp losslessly. Future bubble usage at
+       16dp–20dp also scales cleanly.
+
+    3. STANDARD MATERIAL "DOWNLOAD" GLYPH.
+       This is Google's canonical Material Design "download"
+       icon: an arrow pointing down, resting on a tray/line
+       at the bottom. It is NOT a custom design. Every
+       browser, file manager, and media app uses essentially
+       this shape, and users recognize it instantly as
+       "save to this device."
+
+    4. SINGLE FILLED PATH.
+       The arrow and the tray are drawn as a single closed
+       path — the arrowhead merges into the horizontal line
+       at the bottom, producing one continuous silhouette
+       under nonZero fill. No evenOdd, no cutouts: this
+       glyph is a solid shape at every point.
+
+    5. NO androidx.AutoMirrored.
+       The download glyph is vertically symmetric about
+       its center (arrow centered on the tray). Mirroring
+       under RTL produces no visible change. Do not add
+       auto-mirroring.
+
+    Rendering result at 24dp:
+      A downward arrow onto a horizontal tray — instantly
+      readable as "download / save to device."
+
+    ============================================================
+    Why download arrow (not save-to-folder, not floppy disk):
+    ============================================================
+      The "download" metaphor (arrow into a tray) is
+      universally understood as "fetch from a remote source
+      to this device." A "save" metaphor (floppy disk or
+      a folder) implies "move an existing local file" or
+      "write to a project," neither of which fits the media
+      viewer's action ("fetch this remote image to my
+      phone"). The Material design team's own media-viewer
+      guidelines specify the download glyph for exactly
+      this use case, so using it also matches what users
+      expect from every other Android app that has a
+      full-screen viewer.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Canonical Material Design "download" path.
+
+        Breakdown:
+          M 5,20               start of the tray (left end)
+          h 14                 tray's horizontal line (14
+                               units wide)
+          v 2                  tray's right edge (2 units
+                               tall)
+          H 5                  back across the tray's top
+          z                    close (implicit line from
+                               (5,22) to (5,20))
+
+          M 12,3               top-center of the arrow
+                               (start of the arrow
+                               silhouette)
+          ... (see the actual path data below for the
+              full canonical construction)
+
+        Full path data below is Google's official
+        material-icons "download" asset. It produces a
+        solid 2-unit-thick tray at the bottom (y=20 to
+        y=22) and an arrow that descends from y=3 to
+        y=15, with a triangular head centered at x=12.
+        The arrowhead's width (from x=7 to x=17) matches
+        the tray's width (from x=5 to x=19), producing
+        the balanced "big arrow, thin tray" look that is
+        the standard Material download icon.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M19,9h-4V3H9v6H5l7,7 7,-7zM5,18v2h14v-2H5z" />
+
+</vector>

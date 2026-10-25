@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    activity_chat.xml — conversation screen
+    ------------------------------------------------------------
+    Consumed by ChatActivity via ActivityChatBinding.
+
+    Binding IDs → ChatActivity field:
+      toolbar_chat              → binding.toolbarChat
+      iv_header_avatar          → binding.ivHeaderAvatar
+      tv_header_initials        → binding.tvHeaderInitials
+      tv_chat_title             → binding.tvChatTitle
+      tv_chat_subtitle          → binding.tvChatSubtitle
+
+      rv_messages               → binding.rvMessages
+      ll_empty_state            → binding.llEmptyState
+
+      ll_reply_strip            → binding.llReplyStrip
+      tv_reply_sender           → binding.tvReplySender
+      tv_reply_text             → binding.tvReplyText
+      btn_cancel_reply          → binding.btnCancelReply
+
+      btn_attach                → binding.btnAttach     (PHASE_7 hookup)
+      et_message                → binding.etMessage
+      btn_send                  → binding.btnSend
+
+    Structure (CoordinatorLayout root):
+      CoordinatorLayout
+        └── LinearLayout (vertical, fills screen)
+              ├── AppBarLayout / MaterialToolbar (header)
+              ├── FrameLayout (weight=1)
+              │     ├── RecyclerView (rv_messages)
+              │     └── LinearLayout (ll_empty_state, overlays)
+              └── Composer container
+                    ├── ll_reply_strip (hidden by default)
+                    └── horizontal composer row
+
+    Why CoordinatorLayout root:
+      Snackbar.make(root, ...) uses the CoordinatorLayout to push
+      the composer + everything above it upward during the Snackbar's
+      short lifetime, so the message being displayed is not covered
+      by a failed-send error. A ConstraintLayout root would still
+      show the Snackbar, but it would overlay the composer (covering
+      the input field the user needs).
+
+    The composer row is anchored to the bottom of the content column
+    (weight=1 above it), so the RecyclerView fills available space
+    and the composer is always at the bottom, above the system
+    keyboard (adjustResize on the activity handles that).
+
+    Do NOT set android:windowSoftInputMode on this layout — it is
+    set on the activity's manifest entry (adjustResize), which is
+    the correct place. Setting it in a layout has no effect.
+    ============================================================
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_chat"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/pulseChatBackground"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.ChatActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- ============================================================
+             HEADER (toolbar)
+             ============================================================ -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_chat"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorSurface"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="?attr/colorOnSurface"
+            app:titleTextColor="?attr/colorOnSurface">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Header avatar -->
+                <FrameLayout
+                    android:layout_width="@dimen/avatar_sm"
+                    android:layout_height="@dimen/avatar_sm"
+                    android:layout_marginStart="0dp">
+
+                    <TextView
+                        android:id="@+id/tv_header_initials"
+                        android:layout_width="@dimen/avatar_sm"
+                        android:layout_height="@dimen/avatar_sm"
+                        android:background="@drawable/bg_avatar_initial"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:includeFontPadding="false"
+                        android:importantForAccessibility="no"
+                        tools:text="A" />
+
+                    <ImageView
+                        android:id="@+id/iv_header_avatar"
+                        android:layout_width="@dimen/avatar_sm"
+                        android:layout_height="@dimen/avatar_sm"
+                        android:contentDescription="@string/cd_profile_photo"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                </FrameLayout>
+
+                <!-- Title / subtitle column -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="@dimen/space_xs"
+                    android:paddingEnd="@dimen/space_xs">
+
+                    <TextView
+                        android:id="@+id/tv_chat_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        tools:text="Alex Rivera" />
+
+                    <TextView
+                        android:id="@+id/tv_chat_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="12sp"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:visibility="gone"
+                        tools:text="Last seen today at 14:32"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <!-- ============================================================
+             MESSAGE LIST SLOT
+             ============================================================ -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_messages"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingTop="@dimen/space_xs"
+                android:paddingBottom="@dimen/space_xs"
+                android:scrollbars="vertical" />
+
+            <!-- Empty state -->
+            <LinearLayout
+                android:id="@+id/ll_empty_state"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/space_xl"
+                android:paddingEnd="@dimen/space_xl"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chat_empty_title"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:includeFontPadding="false"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xs"
+                    android:text="@string/chat_empty_subtitle"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="14sp"
+                    android:includeFontPadding="false"
+                    android:gravity="center"
+                    android:lineSpacingExtra="2dp" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <!-- ============================================================
+             COMPOSER
+             ============================================================ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="?attr/colorSurface"
+            android:paddingTop="@dimen/space_xxs"
+            android:paddingBottom="@dimen/space_xxs">
+
+            <!-- ---------- Reply / edit strip ---------- -->
+            <LinearLayout
+                android:id="@+id/ll_reply_strip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="?attr/colorSurfaceVariant"
+                android:paddingStart="@dimen/space_md"
+                android:paddingEnd="@dimen/space_xs"
+                android:paddingTop="@dimen/space_xs"
+                android:paddingBottom="@dimen/space_xs"
+                android:layout_marginStart="@dimen/space_xs"
+                android:layout_marginEnd="@dimen/space_xs"
+                android:layout_marginTop="@dimen/space_xxs"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <View
+                    android:layout_width="@dimen/reply_preview_accent_width"
+                    android:layout_height="match_parent"
+                    android:background="?attr/colorPrimary" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/space_sm"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_reply_sender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        tools:text="Alex Rivera" />
+
+                    <TextView
+                        android:id="@+id/tv_reply_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="13sp"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        tools:text="The original message text" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_cancel_reply"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/msg_cancel_reply"
+                    android:src="@drawable/ic_close"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+            </LinearLayout>
+
+            <!-- ---------- Composer row ---------- -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom"
+                android:paddingStart="@dimen/space_xs"
+                android:paddingEnd="@dimen/space_xs"
+                android:paddingTop="@dimen/space_xxs"
+                android:paddingBottom="@dimen/space_xxs">
+
+                <!-- Attach button (PHASE_7 hooks this to the media menu) -->
+                <ImageButton
+                    android:id="@+id/btn_attach"
+                    android:layout_width="@dimen/composer_attach_button_size"
+                    android:layout_height="@dimen/composer_attach_button_size"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/chat_attach"
+                    android:src="@drawable/ic_add"
+                    app:tint="?attr/colorOnSurfaceVariant" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/space_xxs"
+                    android:layout_marginEnd="@dimen/space_xxs"
+                    app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                    app:boxCornerRadiusBottomEnd="@dimen/radius_xxl"
+                    app:boxCornerRadiusBottomStart="@dimen/radius_xxl"
+                    app:boxCornerRadiusTopEnd="@dimen/radius_xxl"
+                    app:boxCornerRadiusTopStart="@dimen/radius_xxl"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:counterEnabled="false"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/chat_hint_message"
+                        android:imeOptions="actionDefault"
+                        android:inputType="textCapSentences|textMultiLine|textShortMessage"
+                        android:maxLines="5"
+                        android:minLines="1"
+                        android:paddingTop="@dimen/space_xs"
+                        android:paddingBottom="@dimen/space_xs"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Send button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_send"
+                    style="@style/Widget.Material3.Button.IconButton.Filled"
+                    android:layout_width="@dimen/composer_send_button_size"
+                    android:layout_height="@dimen/composer_send_button_size"
+                    android:enabled="false"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:contentDescription="@string/chat_send"
+                    app:icon="@drawable/ic_send"
+                    app:iconPadding="0dp"
+                    app:iconSize="20dp"
+                    app:iconTint="?attr/colorOnPrimary" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

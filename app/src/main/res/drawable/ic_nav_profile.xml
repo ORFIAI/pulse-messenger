@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_nav_profile — bottom-nav Profile tab icon
+    ------------------------------------------------------------
+    Referenced by menu_bottom_nav.xml:
+        android:icon="@drawable/ic_nav_profile"
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       All paths fill with #FFFFFFFF. BottomNavigationView
+       applies the selected/unselected tint from the theme
+       (colorPrimary when selected, colorOnSurfaceVariant
+       when not). Do NOT set a brand color here.
+
+    2. 24dp VIEWPORT.
+       Matches ic_nav_chats.xml and ic_nav_people.xml.
+       All three nav icons must be the same viewport and
+       stroke weight, or the nav bar looks visually
+       inconsistent.
+
+    3. SINGLE FIGURE INSIDE A CIRCLE.
+       The circle is what distinguishes this icon from
+       ic_nav_people (two figures, no circle). Together
+       these read as:
+         - ic_nav_people  → "other people" (plural)
+         - ic_nav_profile → "me" (singular, framed)
+       This is the same visual language used by WhatsApp,
+       Telegram, Signal, Instagram, and every other app
+       with both a "People" and a "Profile" destination.
+       Without the circle, the single-figure icon would be
+       nearly indistinguishable from one of the two figures
+       in ic_nav_people at 24dp — a real usability problem.
+
+    4. OUTLINED STROKE WEIGHT (~2 units).
+       Same stroke weight as the two sibling icons. Do not
+       mix filled and outlined styles in the nav bar.
+
+    5. THREE OVERLAPPING CONTOURS, THREE PATHS.
+       - Circle outline (head-of-circle metaphor container):
+         outer + inner circle with evenOdd → ring
+       - Head silhouette: solid-filled inner head shape
+         (a small circle positioned near the top-center of
+         the outer circle's interior)
+       - Shoulders silhouette: solid half-circle extending
+         from the bottom half of the outer circle's interior
+
+       Why solid head and shoulders (not outlined):
+         At 24dp, three nested outlines (circle outline,
+         head outline, shoulder outline) produce visual
+         clutter — the head and shoulders would read as
+         "another circle inside a circle" and lose their
+         person-silhouette meaning. The solid head and
+         solid shoulders against the outlined container
+         circle is the standard Material construction for
+         "account_circle" and "person_in_circle" icons,
+         and it reads instantly at small sizes.
+
+    6. NO android:autoMirrored.
+       The composition is fully symmetric. Mirroring under
+       RTL produces no visible change.
+
+    Rendering result at 24dp:
+      A circle outline (like a coin or badge) containing
+      a simple person silhouette (round head + shoulder
+      arch). Instant "this is my account" recognition.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- ============================================================
+         OUTER CIRCLE (the "avatar frame")
+         ------------------------------------------------------------
+         Drawn as an evenOdd ring: outer circle minus inner
+         circle, producing a hollow outline ~1.5 units thick.
+         The inner circle defines the visual boundary that
+         the head and shoulders are drawn INSIDE — this is
+         why the head and shoulder paths below stay in the
+         y-range 5–18 and x-range 5–19.
+
+         Outer circle: center (12,12), radius 10 → spans (2,2)
+                       to (22,22)
+         Inner circle: center (12,12), radius 9 → spans (3,3)
+                       to (21,21)
+         Stroke:       1 unit thick (outer - inner)
+
+         A 1-unit stroke is slightly thinner than the 2-unit
+         stroke of the sibling nav icons, but because this
+         outline is circular (a single continuous curve) the
+         visual weight reads as equivalent — the eye perceives
+         curvature as more weight than straight lines. Using
+         a 2-unit stroke here would make the circle look heavy
+         and would compete with the head/shoulder silhouettes
+         inside it.
+         ============================================================ -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M2,12 A10,10 0 1,0 22,12 A10,10 0 1,0 2,12 Z M3,12 A9,9 0 1,1 21,12 A9,9 0 1,1 3,12 Z" />
+
+    <!-- ============================================================
+         HEAD SILHOUETTE (solid filled circle)
+         ------------------------------------------------------------
+         Center (12, 9.5), radius 2.8 → spans (9.2, 6.7) to
+         (14.8, 12.3).
+
+         Positioned in the upper portion of the outer circle,
+         leaving a small gap (~1.5 units) between the top of
+         the head and the circle outline. This gap is what
+         makes the head read as "inside the frame" rather
+         than "breaking out of the frame."
+
+         Solid fill (nonZero, default) — no inner contour,
+         no evenOdd. The head is a solid disk, not a ring.
+         See file header constraint #5 for why.
+         ============================================================ -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,6.7 A2.8,2.8 0 1,0 12,12.3 A2.8,2.8 0 1,0 12,6.7 Z" />
+
+    <!-- ============================================================
+         SHOULDER SILHOUETTE (solid filled arch)
+         ------------------------------------------------------------
+         A semicircle / arch starting at (7, 17.5), curving
+         up to a flat top at y=12.5 and back down to (17, 17.5).
+         The arch represents the person's shoulders and upper
+         torso.
+
+         Traced:
+           M 7,17.5                  left shoulder base
+           Q 7,12.5 12,12.5          up to top-center (curve)
+           Q 17,12.5 17,17.5         down to right shoulder
+           L 7,17.5                  close (flat bottom edge)
+           Z
+
+         The flat bottom edge at y=17.5 is intentional — it
+         visually anchors the shoulders "inside" the circle.
+         If the shoulders extended below the circle's inner
+         edge (y=21), they would break out of the frame. The
+         4-unit bottom gap (17.5 → 21) is deliberate breathing
+         room.
+
+         Solid fill (nonZero, default). See file header
+         constraint #5.
+         ============================================================ -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M7,17.5 Q7,12.5 12,12.5 Q17,12.5 17,17.5 Z" />
+
+</vector>

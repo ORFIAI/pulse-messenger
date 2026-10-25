@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    Pulse — FileProvider path scoping
+    ------------------------------------------------------------
+    Every <cache-path>, <files-path>, etc. here opens a
+    specific subdirectory of the app's private storage as a
+    content:// export namespace. NOTHING outside these declared
+    paths can be handed to another app — FileProvider rejects
+    any getUriForFile() call pointing outside its configured
+    roots with IllegalArgumentException. That is the security
+    property: the app sandbox stays closed except for the exact
+    folders we name.
+
+    We use ONLY cache-path (context.getCacheDir()), never
+    external-cache-path, because:
+      - Internal cache is private to the app and physically
+        scoped to the app's UID.
+      - External cache on modern Android is also app-scoped, but
+        it lives on shared storage and some vendors' file
+        managers expose it in the Files app, which is noise the
+        user didn't ask for.
+      - We do not need to survive uninstall — anything we put
+        here is transient (uploaded to Firebase Storage, or
+        downloaded on demand).
+
+    Each name= is a namespace tag used only for logging and for
+    distinguishing FileProvider roots internally. The actual
+    on-disk folder is determined by path="".
+    ============================================================
+-->
+<paths>
+
+    <!-- ============================================================
+         Camera captures
+         ------------------------------------------------------------
+         When the user sends a photo by taking a new one, we
+         create a temp file at:
+             getCacheDir()/camera/<timestamp>.jpg
+         pass its content:// URI to the system camera via
+         EXTRA_OUTPUT, and read it back after capture.
+
+         The camera app (a separate process, often a different
+         package) must be able to WRITE to this URI — that is
+         why we need FileProvider at all. A raw file:// URI would
+         trigger FileUriExposedException on API 24+.
+
+         Files here are deleted after the upload completes.
+         ============================================================ -->
+    <cache-path
+        name="camera"
+        path="camera/" />
+
+
+    <!-- ============================================================
+         Media previews
+         ------------------------------------------------------------
+         Photos/videos/audio/documents selected by the user for
+         sending pass through here only when we need to process
+         them (compress, generate thumbnail, extract duration,
+         transcode). The original content:// URI from the picker
+         is generally used directly for upload — this cache is
+         only for derived artifacts.
+
+         Subfolder layout:
+             cache/media/thumb_<id>.jpg      (generated thumbnails)
+             cache/media/transcoded_<id>.mp4 (future-proofing)
+         ============================================================ -->
+    <cache-path
+        name="media"
+        path="media/" />
+
+
+    <!-- ============================================================
+         Voice message recordings
+         ------------------------------------------------------------
+         MediaRecorder writes the in-progress recording here:
+             cache/voice/<timestamp>.m4a
+         After stop() we read duration, upload to Firebase
+         Storage, then delete.
+
+         If the user cancels recording (slides to cancel, presses
+         back, or the app is killed), the file is deleted in
+         onDestroy(). Nothing persists.
+         ============================================================ -->
+    <cache-path
+        name="voice"
+        path="voice/" />
+
+
+    <!-- ============================================================
+         Exports for external opening
+         ------------------------------------------------------------
+         When the user taps a document or media message that has
+         not yet been downloaded locally, we:
+           1. Download from Firebase Storage to cache/exports/
+           2. Build a content:// URI from this FileProvider root
+           3. Fire ACTION_VIEW with that URI and FLAG_GRANT_READ_URI_PERMISSION
+
+         The receiving app (PDF viewer, gallery, video player)
+         can READ the file but cannot see anything else in the
+         app's sandbox. The grant is one-shot and revoked when
+         the receiving activity finishes.
+
+         Exports are cleared on app restart and via the
+         "Clear cache" setting.
+         ============================================================ -->
+    <cache-path
+        name="exports"
+        path="exports/" />
+
+</paths>

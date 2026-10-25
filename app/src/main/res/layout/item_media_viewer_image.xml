@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    item_media_viewer_image.xml — one page in the image viewer
+    ------------------------------------------------------------
+    Consumed by MediaViewerActivity's ViewPager2 adapter.
+    Each pager page inflates this layout once and binds it to
+    a single image URL (the current page's media download URL).
+
+    Binding IDs consumed by the adapter:
+      iv_viewer_image    → the ImageView (Glide target)
+      progress_image     → CircularProgressIndicator
+      tv_image_error     → error text ("Couldn't load image")
+      ll_image_error     → the error container (tap to retry)
+
+    Layout structure:
+      FrameLayout (full page, black)
+        ├── ImageView (match_parent, centerCrop or fitCenter
+        │              depending on zoom state — v1 uses
+        │              fitCenter)
+        ├── progress_image (centered, visible while loading)
+        └── ll_image_error (centered, hidden until load fails)
+
+    Design decisions:
+
+    1. BLACK PAGE BACKGROUND.
+       Same reasoning as the viewer root — the page must
+       not have a light/theme-colored border around the
+       photo. @android:color/black on the FrameLayout
+       ensures the entire page is black (the ImageView may
+       be smaller than the page if the image aspect ratio
+       does not match the screen).
+
+    2. ImageView scaleType = fitCenter, not centerCrop.
+       fitCenter scales the image to fit entirely within
+       the page (letterboxed as needed). centerCrop would
+       clip the image, which is the wrong default for a
+       photo viewer — the user wants to see the whole
+       photo, not a cropped version. WhatsApp and Google
+       Photos both default to fitCenter in full-screen
+       mode. Pinch-to-zoom (Phase 8) can change the
+       effective scale interactively, but the initial state
+       is always "see the whole photo."
+
+       Do NOT switch to centerCrop — the letterboxing
+       that fitCenter produces is the correct "photo
+       viewer" look; centerCrop would silently drop the
+       edges of portrait photos on landscape screens
+       (and vice versa).
+
+    3. IMAGEVIEW HAS NO BACKGROUND COLOR.
+       The ImageView is a Glide target — its content is
+       the image itself. Setting android:background on it
+       would produce a visible rectangle behind the image
+       in the moments before the image loads, which
+       contradicts the black page background. The
+       ImageView's background is transparent; the black
+       page background shows through until the image
+       loads.
+
+    4. Loading spinner and error message are VISIBILITY
+       states, not separate pages. The adapter toggles:
+         - Loading:  progress_image VISIBLE, image
+                     optionally INVISIBLE (not GONE — keep
+                     the ImageView's bounds stable for
+                     Glide), error GONE.
+         - Loaded:   progress_image GONE, image VISIBLE,
+                     error GONE.
+         - Error:    progress_image GONE, image GONE,
+                     error VISIBLE.
+
+       The three states are mutually exclusive and cover
+       every reachable state — no fourth "placeholder"
+       state is needed.
+
+    5. Error text is centered and tappable.
+       The error container (ll_image_error) has
+       android:clickable="true" with a
+       ?attr/selectableItemBackgroundBorderless ripple.
+       The adapter wires the click to a retry — Glide's
+       load is retried from the same URL with the same
+       request. Phase 8 may add "open in external app"
+       as a secondary affordance for images that
+       consistently fail to load (e.g., corrupt file);
+       v1 only offers retry.
+
+    Missing drawable dependencies:
+      None — this layout uses no icons. The error state
+      shows text only (no icon), which is sufficient for
+      a load failure (the text is the primary message).
+
+    The white text color for the error is hardcoded
+    (@android:color/white) because the page background is
+    a fixed black — same reasoning as the viewer top-bar
+    icons in activity_media_viewer.xml.
+    ============================================================
+-->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <!-- ============================================================
+         IMAGE
+         ------------------------------------------------------------
+         Full-bleed ImageView. Content is set by Glide at bind
+         time (load(downloadUrl)). scaleType=fitCenter ensures
+         the whole image is visible.
+         ============================================================ -->
+    <ImageView
+        android:id="@+id/iv_viewer_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/cd_message_sent_image"
+        android:scaleType="fitCenter" />
+
+    <!-- ============================================================
+         LOADING SPINNER
+         ============================================================ -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        app:indicatorColor="@android:color/white"
+        app:indeterminate="true"
+        tools:visibility="visible" />
+
+    <!-- ============================================================
+         ERROR STATE (tap to retry)
+         ============================================================ -->
+    <LinearLayout
+        android:id="@+id/ll_image_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:paddingStart="@dimen/space_xl"
+        android:paddingEnd="@dimen/space_xl"
+        android:paddingTop="@dimen/space_md"
+        android:paddingBottom="@dimen/space_md"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_image_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/media_download_failed"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:maxLines="2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xxs"
+            android:text="@string/dialog_retry"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:includeFontPadding="false"
+            android:alpha="0.7" />
+
+    </LinearLayout>
+
+</FrameLayout>

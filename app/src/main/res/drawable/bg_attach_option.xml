@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    bg_attach_option — circular option-tile background
+    ------------------------------------------------------------
+    Referenced by:
+      - bottom_sheet_attach.xml (5 × FrameLayout circles,
+        one per media type)
+
+    Constraints this file honors:
+
+    1. THEME ATTRIBUTE FILL.
+       The <solid> uses "?attr/colorSurfaceVariant", which
+       resolves through the active theme:
+         - light theme → @color/md_surface_variant_light
+                         (#EFECF4, a very light lavender-gray)
+         - dark theme  → @color/md_surface_variant_dark
+                         (#2A2831, a deep desaturated purple)
+
+       Both values are the "surface variant" token from our
+       color palette — the standard Material 3 role for
+       "container backgrounds that hold grouped content."
+       A single drawable file serves both themes with zero
+       drawable-night/ duplication.
+
+       Do NOT change to a fixed @color/... reference. The
+       surface-variant color is designed to sit one elevation
+       step above the surface (which is the sheet's own
+       background) — using a fixed color would break that
+       relationship in one of the two themes.
+
+    2. OVAL SHAPE.
+       android:shape="oval" — the consumer FrameLayout declares
+       56dp × 56dp, so the oval renders as a perfect circle
+       (an oval in a square bounds is a circle). This is the
+       same construction as bg_avatar_initial and
+       bg_brand_dot — three files, same shape, different
+       purposes. Do NOT try to consolidate them into a single
+       "bg_circle.xml" with a theme attribute fill — the three
+       need different fills, and a single shape with a fixed
+       fill would need to be tinted at each consumer, which
+       would add a runtime tint call for a static property.
+
+    3. NO STROKE, NO GRADIENT, NO PADDING.
+       The circle is a flat-filled shape. Adding a stroke
+       would make it look like a radio button or a selected
+       state. Adding a gradient at 56dp is invisible on most
+       screens. Adding <padding> would shrink the circle
+       within its bounds, producing a smaller-diameter
+       circle than the icon inside it — which would look
+       wrong.
+
+    4. NO <size>.
+       Shape drawables are sized by their consumer View's
+       bounds. Adding <size android:width="56dp"
+       android:height="56dp" /> would set an intrinsic size
+       that the FrameLayout would then have to override,
+       producing subtle inconsistencies on some OEMs.
+       The FrameLayout's own 56dp × 56dp declaration is
+       the single source of truth for the circle's size.
+
+    5. NO android:tint ON THE DRAWABLE.
+       Same discipline as every shape drawable in the
+       project: the fill is set via ?attr/colorSurfaceVariant
+       (resolved through the theme), NOT via a runtime
+       setBackgroundTintList. A tint would layer on top of
+       the themed color, producing a slightly different hue
+       than the theme intends.
+
+    Rendering result at 56dp on a surface background:
+      A subtle, low-contrast circular tile that holds the
+      icon, visually grouping the icon into a tappable
+      affordance without competing with the icon's own
+      color.
+    ============================================================
+-->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="?attr/colorSurfaceVariant" />
+
+</shape>

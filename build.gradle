@@ -1,0 +1,27 @@
+// Root project build file.
+// Toolchain: Gradle 8.10.2, AGP 8.7.3, JDK 17+ (JDK 21 recommended on Termux),
+// compileSdk 35, minSdk 24, targetSdk 35.
+// Versions pinned deliberately for Termux/ARM64 stability.
+// Do NOT bump AGP or google-services without verifying the matching Gradle wrapper.
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.7.3'
+        classpath 'com.google.gms:google-services:4.4.2'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDirectory
+}

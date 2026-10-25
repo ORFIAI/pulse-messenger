@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    Pulse — adaptive launcher icon (API 26+)
+
+    Android 8.0 introduced adaptive icons to solve two problems:
+      1. Different launchers use different icon shapes (circle,
+         rounded square, squircle, teardrop, etc.). Pre-26 icons
+         had to be pre-shaped, which meant they looked wrong on
+         launchers with a different mask.
+      2. Icon masking, shadow, and animation are launcher-owner
+         decisions. Pre-26 apps couldn't participate.
+
+    An adaptive icon delegates both problems to the launcher by
+    splitting the artwork into two layers:
+
+      <background>  — a full-bleed fill. This layer is NOT masked
+                      to the icon shape until the system composes
+                      the final image. It should extend edge to
+                      edge (108dp × 108dp viewport) because it
+                      will be cropped to the launcher's mask shape.
+
+      <foreground>  — the logo mark. Also drawn on a 108dp × 108dp
+                      viewport, but the launcher may crop or scale
+                      it. Standard safe zone is a 66dp centered
+                      circle; anything outside may be masked off
+                      on aggressive launchers. We keep the mark
+                      inside the 66dp circle.
+
+      <monochrome>  — optional third layer (API 33+). Used by
+                      "Themed Icons" — Android recolors it with
+                      the system palette. Providing this makes
+                      the app adopt Material You theming on
+                      Pixel/Samsung launchers without any other
+                      code changes.
+
+    Viewport math:
+      - Both layers declare width=108dp, height=108dp.
+      - The system applies the launcher mask (diameter ≈72dp for
+        a circle) as a crop.
+      - Any pixel outside the visible mask on a given launcher
+        disappears. So the foreground mark lives in the central
+        ~66dp to survive all shapes.
+
+    This file is under mipmap-anydpi-v26, so it is selected
+    ONLY on API 26+. API 24-25 devices fall back to the bitmap
+    PNGs under mipmap-*dpi/ (created in a later step).
+    ============================================================
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Background layer: solid brand color.
+
+        Pointing at a color resource works because Android
+        auto-generates a <color> drawable from any @color
+        reference. If we later want a gradient background, we
+        would swap this for a drawable (e.g.
+        @drawable/ic_launcher_background) and remove the color
+        reference — but a solid brand color is the correct choice
+        for a modern icon: gradients turn muddy at small sizes,
+        and the Pulse brand accent reads distinctly against
+        both light and dark home-screen wallpapers.
+    -->
+    <background android:drawable="@color/pulse_accent" />
+
+    <!--
+        Foreground layer: white "P" monogram.
+
+        Deliberately minimal. At 66dp effective size the mark
+        must be recognizable in under a second while scrolling
+        through a home screen. A stylized "P" in a geometric
+        sans-serif weight reads instantly at every size, in
+        every launcher mask, on every wallpaper — which is the
+        entire job of a launcher icon.
+
+        Artwork is in drawable/ic_launcher_foreground.xml
+        (created next).
+    -->
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+
+    <!--
+        Monochrome layer: API 33+ Material You themed icon.
+
+        Same vector as the foreground, but referenced with an
+        android:tintless background so the system can apply its
+        own palette. On launchers that support Themed Icons
+        (Pixel default, Samsung OneUI 5+, most AOSP-based), the
+        user sees the Pulse "P" tinted to match their wallpaper
+        palette — while the actual icon stays branded on
+        launchers that don't.
+
+        If you ever change the foreground artwork, mirror the
+        change here. This is the one place where two references
+        to the same file is not duplication — it is required
+        because the two layers serve different purposes (one is
+        full-color artwork, one is a monochrome template).
+    -->
+    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+
+</adaptive-icon>

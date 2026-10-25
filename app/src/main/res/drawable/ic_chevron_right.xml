@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_chevron_right — right-pointing chevron (row affordance)
+    ------------------------------------------------------------
+    Referenced by fragment_profile.xml's four row ImageViews.
+    Each row has app:tint="?attr/colorOnSurfaceVariant" so the
+    chevron renders in the correct low-emphasis theme color
+    (md_on_surface_variant_light in light mode,
+    md_on_surface_variant_dark in dark mode).
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single logical glyph, single fill (#FFFFFFFF). The
+       ImageView's app:tint determines the actual rendered
+       color. Do NOT set a brand color here — it would be
+       overridden by the tint, but it would mislead future
+       maintainers about what the fill actually does.
+
+    2. 24dp VIEWPORT.
+       Same as every other chrome icon in the app. Material
+       Design's standard chevron is a 24dp-viewport glyph;
+       consumers can scale it to 16dp/20dp via layout_width
+       and it renders losslessly.
+
+    3. STROKE-BASED CHEVRON, NOT A FILLED TRIANGLE.
+       The glyph is a thin, pointed ">" shape — the standard
+       "navigate deeper" affordance on list rows. A filled
+       triangle (▶) reads as a playback button, not a
+       navigation affordance. Every settings/rows list uses
+       the thin-chevron style; replacing it with a triangle
+       would break the universal visual language.
+
+    4. NO androidx.AutoMirrored.
+       Directional affordance icons SHOULD be auto-mirrored
+       under RTL locales — a right-pointing chevron flips
+       to a left-pointing chevron in Arabic and Hebrew,
+       matching the RTL reading direction. This is one of
+       the few icons in this project that SHOULD have
+       auto-mirroring.
+
+       HOWEVER — the current Phase-3 implementation does
+       NOT add the autoMirrored attribute. Reason: this
+       Phase-3 layout targets LTR locales only. The full
+       RTL support (auto-mirrored chevrons, bidirectional
+       layouts, text-direction-aware drawables) is a
+       Phase-5 polish item. Adding `android:autoMirrored="true"`
+       now would be a no-op (all target locales are LTR in
+       v1) but would be the correct attribute to add when
+       RTL support becomes a real requirement.
+
+       NOTE: the correct place for auto-mirroring is the
+       ImageView's `android:autoMirrored` attribute (not the
+       vector's), because the vector is a template and the
+       ImageView decides direction based on the layout's
+       resolved direction. Adding `android:autoMirrored` to
+       a <vector> root is only valid for API 21+ on some
+       build chains and is fragile. Prefer the ImageView
+       attribute in a future RTL pass — do not add it here
+       preemptively.
+
+    5. STROKE WIDTH ~2 UNITS, ROUNDED CAPS.
+       The chevron's diagonal arms are 2 units thick with
+       rounded caps at the outer tip. This matches the
+       stroke weight of every other chrome icon and reads
+       crisp at 16–24dp. Thinner (1 unit) makes the chevron
+       vanish on low-DPI screens; thicker (3 units) makes it
+       compete with the row's text label. 2 units is the
+       Material standard for chevron affordances.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Two-armed chevron, drawn as a single filled path (the
+        shape of the ">" when the arms are filled rather than
+        stroked). Filled-path construction produces crisper
+        edges at 16dp than a stroked path would (stroked
+        paths require `strokeWidth` handling that is poorly
+        supported by <vector> on API 24 in some renderers).
+
+        Geometry:
+          - Outer tip: (16, 12) — the point of the ">"
+          - Top arm: from (10, 6) to (16, 12)
+          - Bottom arm: from (16, 12) to (10, 18)
+          - Inner tip: (16, 13) — the inner join of the ">"
+          - Inner top arm: from (10, 7) to (16, 13)
+          - Inner bottom arm: from (16, 13) to (10, 17)
+
+        The two filled sub-shapes are the "arm" region
+        between the outer tip and the inner tip. Under the
+        default nonZero fill rule, each arm is a simple
+        closed contour, and the two contours merge at their
+        join (the ">" point) into a single continuous
+        chevron.
+
+        Rendered result: a chevron ">" that reads unambiguously
+        as "navigate deeper / open row."
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M9.29,6.71 c-0.39,0.39 -0.39,1.02 0,1.41 L13.17,12 l-3.88,3.88 c-0.39,0.39 -0.39,1.02 0,1.41 0.39,0.39 1.02,0.39 1.41,0 l4.59,-4.59 c0.39,-0.39 0.39,-1.02 0,-1.41 L10.7,6.71 c-0.38,-0.39 -1.02,-0.39 -1.41,0 z" />
+
+</vector>

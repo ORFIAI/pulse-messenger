@@ -1,0 +1,21 @@
+// Project module discovery and plugin repository configuration.
+// Gradle 8.10.2 / AGP 8.7.3 compatible.
+
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "PulseMessenger"
+include ':app'

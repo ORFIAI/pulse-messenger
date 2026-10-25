@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_muted_small — chat-list "muted conversation" indicator
+    ------------------------------------------------------------
+    Referenced by item_conversation.xml's iv_muted, in the
+    top-right metadata cluster (next to the pin and timestamp).
+
+    Constraints this file honors:
+
+    1. MONOCHROME. Both <path> elements fill with #FFFFFFFF.
+       The consuming ImageView applies
+       app:tint="?attr/colorOnSurfaceVariant" at layout time,
+       which is what determines the actual rendered color (a
+       low-emphasis gray in both light and dark themes). Do NOT
+       set a colored fill here — it would be tinted away by the
+       ImageView's app:tint, so the fill value would have zero
+       effect but would mislead future maintainers into thinking
+       the file has a color.
+
+    2. 14dp VIEWPORT, matching ic_pin_small.xml exactly. Both
+       indicators render side-by-side in the same metadata
+       cluster; if one were 12dp or 16dp, they would visually
+       clash. Any future change to the metadata cluster's icon
+       size must update BOTH files simultaneously.
+
+    3. "CUT-THROUGH" SLASH, not a stripe ON TOP. The bell is
+       a solid silhouette and the slash is a HOLE in it, not a
+       line drawn over it. This is achieved with two contours
+       in the SAME <path> element, using fillType="evenOdd":
+
+         - Outer contour: bell silhouette
+         - Inner contour: the slash rectangle
+
+       With evenOdd, a point inside both contours has crossing
+       number 2 (even) → NOT filled (the hole). A point inside
+       only the slash (i.e., the parts of the slash that extend
+       beyond the bell) has crossing number 1 → filled. The
+       result is a bell shape with a clean diagonal cut through
+       it, plus visible diagonal lines where the slash extends
+       beyond the bell's edges.
+
+       If you were to switch to fillType="nonZero" (or remove
+       fillType entirely), the slash contour would fill IN
+       ADDITION to the bell, and the visible result would be a
+       normal notification bell with an extra diagonal line
+       sitting on top of it — which reads as "bell with a
+       stripe" not "bell with a slash." Do NOT change the
+       fillType.
+
+    4. CLAPPER as a SEPARATE <path>. The little rounded nub
+       below the bell body is a second <path> with default
+       nonZero fill. It sits below the bell base with a small
+       gap; both shapes are independent. This avoids one subtle
+       problem: if the clapper were part of the same evenOdd
+       path, its interior would have crossing number 2 whenever
+       it overlapped the bell base by even a fraction of a unit,
+       creating a 1-pixel hole at the top of the clapper on
+       some GPU implementations. Keeping it separate and using
+       nonZero avoids that class of artifact entirely.
+
+    Do NOT reuse this icon at a different size. The clapper's
+    gap and the slash's width have both been tuned for 14dp.
+    At 24dp, the slash would look thin relative to the bell;
+    at 18dp it would feel cramped. If a larger mute icon is
+    ever needed (e.g., in a settings row), create a new
+    ic_muted.xml at 24dp with recalibrated proportions rather
+    than scaling this one.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="14dp"
+    android:height="14dp"
+    android:viewportWidth="14"
+    android:viewportHeight="14">
+
+    <!--
+        ============================================================
+        Path 1 — bell body + diagonal slash (as hole via evenOdd)
+        ============================================================
+
+        Bell outer contour:
+            M 7,1.5                          → top-center of dome
+            C 5.9,1.5 5,2.4 5,3.5            → curve into left
+                                               shoulder (control
+                                               points (5.9,1.5)
+                                               and (5,2.4))
+            V 3.8                            → tiny step down
+            C 3.2,4.3 2,6 2,8                → curve out to the
+                                               left side and
+                                               down to (2,8)
+            V 9.5                            → straight down
+            L 1,10.5                         → flare out-left
+            V 11.5                           → down to base
+            H 13                             → flat base
+            V 10.5                           → up
+            L 12,9.5                         → flare in-right
+            V 8                              → up
+            C 12,6 10.8,4.3 9,3.8            → curve up-right
+            V 3.5                            → tiny step up
+            C 9,2.4 8.1,1.5 7,1.5            → curve back to
+                                               top-center
+            Z                                → close
+
+        Slash inner contour (uses evenOdd to cut through bell):
+            M 12.5,1    → top-right end, outside bell
+            L 2.5,12    → bottom-left end, same side
+            L 1.5,13    → bottom-left end, opposite side
+            L 11.5,2    → top-right end, opposite side
+            Z           → close
+
+        With evenOdd, the intersection region (slash inside
+        bell) is a hole; the parts of the slash outside the
+        bell are filled as thin diagonal lines. That produces
+        the classic "notifications off" look.
+        ============================================================
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M7,1.5C5.9,1.5 5,2.4 5,3.5V3.8C3.2,4.3 2,6 2,8V9.5L1,10.5V11.5H13V10.5L12,9.5V8C12,6 10.8,4.3 9,3.8V3.5C9,2.4 8.1,1.5 7,1.5ZM12.5,1L2.5,12L1.5,13L11.5,2Z" />
+
+    <!--
+        ============================================================
+        Path 2 — clapper (nub below the bell base)
+        ============================================================
+
+        M 7,13.5                             → bottom-center
+        C 6.1,13.5 5.4,12.8 5.4,11.9        → curve up-left
+        H 8.6                                → top edge
+        C 8.6,12.8 7.9,13.5 7,13.5          → curve back to
+                                               bottom-center
+        Z
+
+        Default fillType (nonZero) is intentional for this path
+        — see the file comment above. This is a self-contained
+        shape with no overlapping contours, so nonZero treats it
+        as filled, which is what we want.
+        ============================================================
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M7,13.5C6.1,13.5 5.4,12.8 5.4,11.9H8.6C8.6,12.8 7.9,13.5 7,13.5Z" />
+
+</vector>

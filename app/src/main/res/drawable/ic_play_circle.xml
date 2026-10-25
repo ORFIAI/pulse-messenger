@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_play_circle — play-button glyph (filled circle + triangle)
+    ------------------------------------------------------------
+    Referenced by (Phase 8 — none yet):
+      - future: item_video_preview.xml (overlay on the video
+        thumbnail in a video message bubble)
+      - future: item_audio_preview.xml (inline play button in
+        an audio/voice message bubble)
+      - future: item_media_viewer_video.xml (overlay on the
+        video page in the full-screen media viewer)
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF) with a cutout for the
+       triangle. The actual rendered color comes from the
+       consumer's tint:
+         - Inline audio-bubble button: ?attr/colorPrimary or
+           ?attr/colorOnSurfaceVariant (theme color).
+         - Centered video-overlay button: @android:color/white
+           on a semi-transparent black scrim, for legibility
+           over any thumbnail.
+       Do NOT set a brand color here — the fill is a template.
+
+    2. 24dp VIEWPORT.
+       Matches every other chrome icon in the app. Renders
+       losslessly at any size the consumer requests:
+         - 32dp–40dp in an inline audio bubble button.
+         - 56dp–64dp in a centered video overlay.
+         - 48dp on the media viewer's video page.
+       The triangle remains crisp at all these sizes because
+       the glyph is designed for legibility at chrome sizes.
+
+    3. STANDARD MATERIAL "PLAY_CIRCLE_FILLED" GLYPH.
+       This is Google's canonical Material Design
+       "play_circle_filled" icon — a solid circle with a
+       triangular play head cut out of its interior. It is
+       NOT a custom design. Every media player on every
+       platform uses essentially this shape, and users
+       recognize it instantly as "tap to play."
+
+    4. FILLED CIRCLE, CUT-OUT TRIANGLE (evenOdd).
+       The circle is filled (the tint color), and the
+       triangle is a transparent region cut out of the
+       circle. This is the standard Material construction
+       and reads clearly against any background — the
+       circle provides the "button" affordance, and the
+       cut-out triangle shows the background through,
+       making the icon feel integrated with whatever it
+       sits on (thumbnail, scrim, player chrome).
+
+       Do NOT switch to "play_circle_outline" (border-only
+       circle) or "play_arrow" (triangle only, no circle).
+       - play_circle_outline reads as "play button outline"
+         on a light background but disappears against
+         mid-tone thumbnails.
+       - play_arrow (no circle) reads as a small triangular
+         arrow, which is used for inline video controls,
+         not as the primary "tap to play" affordance.
+       The filled-circle-with-cutout-triangle is the
+       correct "primary play button" glyph.
+
+    5. SINGLE PATH, evenOdd.
+       The path data is a single <path> with the circle and
+       the triangle expressed as opposite-winding contours
+       (circle CW, triangle CCW in Google's canonical
+       asset). fillType="evenOdd" is set explicitly so the
+       cutout is robust against any tooling that might
+       normalize winding directions in the future. This is
+       the same pattern used by ic_check_double, ic_block,
+       and ic_nav_profile for their "ring" or "cutout"
+       shapes.
+
+    6. NO androidx.AutoMirrored.
+       The play triangle points right. The universal
+       convention is NOT to mirror it under RTL — every
+       video player, every streaming app, and every
+       messaging app keeps the play triangle pointing
+       right regardless of text direction. The triangle
+       direction is a video-player convention, not a
+       reading-direction affordance. Do not add
+       auto-mirroring.
+
+    Rendering result at any size:
+      A solid circle with a triangular cut-out play head
+      — instant recognition as "tap to play."
+
+    ============================================================
+    Companion icon (future): ic_pause_circle.xml
+    ============================================================
+      When the media player is actively playing, the button
+      should toggle from play to pause. That requires a
+      separate ic_pause_circle.xml (a filled circle with two
+      vertical bars cut out of the interior). Do NOT repurpose
+      this file or overlay two vertical bars on top of it via
+      runtime transforms — create a proper companion icon
+      in Phase 8 when the playback toggles are wired. The two
+      files will share viewport and general construction, so
+      the play/pause state swap is a subtle icon change, not
+      a jarring visual shift.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Canonical Material Design "play_circle_filled" path.
+
+        Breakdown:
+          Subpath 1 — the outer circle:
+            M 12,2               top of the circle
+            C 6.48,2 2,6.48 2,12
+                                 cubic curve from (12,2) to
+                                 (2,12) — the left half of
+                                 the circle
+            s 4.48,10 10,10      mirror cubic from (2,12) to
+                                 (12,22) — the bottom-left
+                                 quarter and part of the
+                                 bottom half
+            s 10,-4.48 10,-10    mirror cubic continuing to
+                                 (22,12) — the bottom-right
+                                 quarter and start of the
+                                 right half
+            S 17.52,2 12,2       mirror cubic back to (12,2)
+                                 — completing the circle
+            z                    close the outer contour
+
+          Subpath 2 — the triangle (play head):
+            M 10,16.5            bottom-left corner of the
+                                 triangle (tip base)
+            v -9                 up 9 units to (10,7.5) —
+                                 the triangle's top-left
+                                 corner
+            l 6,4.5              diagonal down-right to
+                                 (16,12) — the triangle's
+                                 apex (the "play point")
+            l -6,4.5             diagonal down-left back
+                                 to (10,16.5) — closing
+                                 the triangle
+            z                    close the triangle
+
+        Under evenOdd fill, the circle is filled and the
+        triangle is a transparent cut-out. The triangle's
+        apex points right (toward "play forward" — the
+        universal convention), with the flat edge on the
+        left (the "back" of the play head).
+
+        Triangle geometry:
+          - Base (flat edge) spans y=7.5 to y=16.5 (9 units
+            tall) at x=10.
+          - Apex is at (16, 12) — 6 units right of the base,
+            vertically centered.
+          - The triangle occupies roughly 25% of the circle's
+            area — large enough to be visible at 24dp, small
+            enough to leave a substantial "ring" of the
+            circle visible for the button affordance.
+
+        Do NOT resize the triangle to fill more of the circle
+        (it would look like a filmstrip "play" button, not a
+        general play button), and do NOT shrink it (it would
+        become a dot at small sizes). Google's proportions are
+        tuned for legibility at every rendering size.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM10,16.5v-9l6,4.5 -6,4.5z" />
+
+</vector>

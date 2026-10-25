@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    Pulse — adaptive icon foreground ("P" monogram)
+
+    Design constraints (all driven by Android's adaptive-icon
+    rendering model — see mipmap-anydpi-v26/ic_launcher.xml):
+
+      1. Viewport is 108dp × 108dp, not 72dp. This is the
+         ADAPTIVE ICON canvas size. The visible icon is
+         approximately the inner 72dp circle, but the outer
+         18dp "bleed" ring on each side is composited for
+         launchers that add parallax, shadows, or their own
+         decoration.
+
+      2. The mark lives inside the central 66dp circle
+         (radius ≈33dp from the icon center at (54,54)).
+         This is the "safe zone" guaranteed visible on every
+         launcher mask that follows the adaptive icon spec.
+         Anything outside radius 33 is cropped by some
+         launchers and shown by others — visually
+         inconsistent, so we avoid it.
+
+      3. Single white path. The system tints this layer
+         however the launcher chooses (white for a default
+         icon, wallpaper-palette-tinted when the user enables
+         Material You Themed Icons on API 33+). Do not add
+         color to the foreground — it is a template, not a
+         picture.
+
+      4. Two contours in ONE path, using fillType="evenOdd"
+         to cut the bowl's counter (the hole inside the "P")
+         out of the filled silhouette. Splitting the counter
+         into a separate <path> would require the counter to
+         be drawn in the background color, which is not
+         portable (the foreground layer has a transparent
+         background, not a color).
+
+    Geometry summary (for anyone editing this later — the
+    path data is opaque without this reference):
+
+        STEM          x: 38→50  (width 12dp)
+        STEM          y: 28→82  (height 54dp)
+        BOWL TOP      y: 28
+        BOWL BOTTOM   y: 60
+        BOWL RIGHT    curve apex ≈ (70, 44)
+        COUNTER LEFT  x: 50     (coincides with stem right edge)
+        COUNTER TOP   y: 40
+        COUNTER BOTTOM y: 52
+        COUNTER RIGHT curve apex ≈ (62, 46)
+
+    The counter's left edge sits exactly on the stem's right
+    edge (both at x=50) — that adjacency is what makes the
+    shape read as a single continuous "P" rather than a stem
+    with a detached bowl attached to it.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!--
+        Outer contour (the "P" silhouette):
+            M 38,28         → start top-left of the stem
+            L 58,28         → top edge, right to where the
+                              bowl begins its curve
+            C 74,28 74,60 58,60
+                            → outer bowl curve: cubic bezier
+                              from (58,28) to (58,60) with
+                              control points (74,28) and
+                              (74,60). Produces a smooth
+                              rightward bulge. Apex is
+                              approximately (70, 44).
+            L 50,60         → bottom edge of the bowl,
+                              returning left to the stem
+            L 50,82         → stem continues down to the
+                              bottom of the icon canvas
+            L 38,82         → bottom of the stem
+            Z               → close back to (38,28) —
+                              implicit left edge of the stem
+
+        Inner contour (bowl counter / hole):
+            M 50,40         → top-left of the counter
+            L 56,40         → top of the counter, straight
+            C 62,40 62,52 56,52
+                            → inner bowl curve, matching the
+                              outer curve's shape but scaled
+                              down to leave a uniform stroke
+                              thickness around the counter
+            L 50,52         → bottom of the counter
+            Z               → close back to (50,40) —
+                              implicit left edge of the
+                              counter, coincident with the
+                              stem's right edge
+
+        With android:fillType="evenOdd" on this single <path>,
+        the two contours produce a solid "P" with a hole in
+        the bowl.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M 38,28 L 58,28 C 74,28 74,60 58,60 L 50,60 L 50,82 L 38,82 Z M 50,40 L 56,40 C 62,40 62,52 56,52 L 50,52 Z" />
+
+</vector>

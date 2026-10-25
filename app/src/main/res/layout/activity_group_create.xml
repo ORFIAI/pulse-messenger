@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    activity_group_create.xml — New group creation screen
+    ------------------------------------------------------------
+    Consumed by GroupCreateActivity via ActivityGroupCreateBinding.
+
+    Binding IDs → GroupCreateActivity field:
+      toolbar_group_create    → binding.toolbarGroupCreate
+      et_group_name           → binding.etGroupName
+      cg_selected_members     → binding.cgSelectedMembers
+      et_group_member_search  → binding.etGroupMemberSearch
+      rv_group_members        → binding.rvGroupMembers
+      ll_empty_state          → binding.llEmptyState
+      tv_empty_title          → binding.tvEmptyTitle
+      tv_empty_subtitle       → binding.tvEmptySubtitle
+      progress_group          → binding.progressGroup
+      btn_create_group        → binding.btnCreateGroup
+      progress_create_group   → binding.progressCreateGroup
+
+    Layout structure:
+      CoordinatorLayout
+        └── LinearLayout (vertical)
+              ├── MaterialToolbar (back arrow + "New group")
+              └── NestedScrollView (scroll_container)
+                    └── LinearLayout (vertical form)
+                          ├── TextInputLayout: group name
+                          ├── ChipGroup: selected members
+                          ├── TextInputLayout: member search
+                          ├── FrameLayout (results area)
+                          │     ├── RecyclerView (wrap_content, max ~360dp)
+                          │     ├── ll_empty_state (overlay)
+                          │     └── progress_group (overlay)
+                          └── FrameLayout (Create button + progress)
+
+    Scroll architecture:
+      The form scrolls as one NestedScrollView so the Create
+      button is always reachable on a small screen with a keyboard
+      open. The RecyclerView is wrap_content (NOT 0dp+weight) —
+      it grows with its results, up to a max height of 360dp to
+      prevent a long result set from pushing the Create button off
+      the scroll. With a wrap_content recycler inside a scrollview,
+      we must call setNestedScrollingEnabled(false) on the
+      RecyclerView at runtime, or the two scrolls fight each other;
+      this is done in GroupCreateActivity via
+      binding.rvGroupMembers.setNestedScrollingEnabled(false).
+
+    States (exactly one visible at a time in the results area):
+      ll_empty_state  → no query / no results (invite or empty)
+      progress_group  → search in flight
+      rv_group_members → results available
+
+    Do NOT put the RecyclerView inside a fixed-height container
+    like layout_height="0dp" with layout_weight="1" — that would
+    fight the NestedScrollView and produce a "two scrollbars"
+    bug on Android 24-25. The wrap_content + max-height approach
+    is the correct pattern for a "small in-form list" inside a
+    scrolling form.
+
+    Do NOT add a FloatingActionButton. The Create button is the
+    primary action and lives at the bottom of the form, not
+    floating over it. This matches the standard "create" flow
+    of modern apps (new post, new event, new group) where the
+    primary action is part of the form itself.
+    ============================================================
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.GroupCreateActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- ============================================================
+             TOOLBAR
+             ============================================================ -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_group_create"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorSurface"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="?attr/colorOnSurface"
+            app:title="@string/group_create_title"
+            app:titleTextColor="?attr/colorOnSurface" />
+
+        <!-- ============================================================
+             SCROLLABLE FORM
+             ============================================================ -->
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/screen_padding_horizontal"
+                android:paddingEnd="@dimen/screen_padding_horizontal"
+                android:paddingTop="@dimen/space_md"
+                android:paddingBottom="@dimen/space_xl">
+
+                <!-- ============================================================
+                     GROUP NAME
+                     ============================================================ -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/group_name_hint"
+                    app:boxCornerRadiusBottomEnd="@dimen/input_corner_radius"
+                    app:boxCornerRadiusBottomStart="@dimen/input_corner_radius"
+                    app:boxCornerRadiusTopEnd="@dimen/input_corner_radius"
+                    app:boxCornerRadiusTopStart="@dimen/input_corner_radius">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_group_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapSentences"
+                        android:maxLength="60"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- ============================================================
+                     SELECTED MEMBERS CHIPS
+                     ------------------------------------------------------------
+                     Hidden when no members have been selected. GroupCreateActivity
+                     populates it programmatically — one Chip per selected user,
+                     each with a close icon for removal.
+                     ============================================================ -->
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cg_selected_members"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_sm"
+                    android:visibility="gone"
+                    app:chipSpacingHorizontal="@dimen/space_xxs"
+                    app:chipSpacingVertical="@dimen/space_xxs"
+                    app:singleLine="false"
+                    tools:visibility="visible">
+
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.Material3.Chip.Person"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="false"
+                        android:clickable="false"
+                        android:text="Alex Rivera"
+                        app:chipIconVisible="false"
+                        app:closeIconVisible="true" />
+
+                    <com.google.android.material.chip.Chip
+                        style="@style/Widget.Material3.Chip.Person"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checkable="false"
+                        android:clickable="false"
+                        android:text="Sam Chen"
+                        app:chipIconVisible="false"
+                        app:closeIconVisible="true" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+                <!-- ============================================================
+                     MEMBER SEARCH
+                     ============================================================ -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_md"
+                    android:hint="@string/people_search_hint"
+                    app:boxBackgroundColor="?attr/colorSurfaceVariant"
+                    app:boxCornerRadiusBottomEnd="@dimen/radius_lg"
+                    app:boxCornerRadiusBottomStart="@dimen/radius_lg"
+                    app:boxCornerRadiusTopEnd="@dimen/radius_lg"
+                    app:boxCornerRadiusTopStart="@dimen/radius_lg"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:startIconDrawable="@drawable/ic_search"
+                    app:startIconTint="?attr/colorOnSurfaceVariant">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_group_member_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textColorHint="?attr/colorOnSurfaceVariant"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- ============================================================
+                     RESULTS AREA (recycler + empty + progress overlay)
+                     ============================================================ -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_xs">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_group_members"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxHeight="360dp"
+                        android:minHeight="120dp"
+                        android:clipToPadding="false"
+                        android:paddingTop="@dimen/space_xxs"
+                        android:paddingBottom="@dimen/space_xxs"
+                        android:scrollbars="vertical"
+                        android:visibility="gone"
+                        tools:listitem="@layout/item_user"
+                        tools:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_empty_state"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="120dp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingTop="@dimen/space_lg"
+                        android:paddingBottom="@dimen/space_lg"
+                        android:paddingStart="@dimen/space_md"
+                        android:paddingEnd="@dimen/space_md"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/tv_empty_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/people_empty_title"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="16sp"
+                            android:fontFamily="sans-serif-medium"
+                            android:includeFontPadding="false"
+                            android:gravity="center" />
+
+                        <TextView
+                            android:id="@+id/tv_empty_subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_xxs"
+                            android:text="@string/people_empty_subtitle"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="13sp"
+                            android:includeFontPadding="false"
+                            android:gravity="center"
+                            android:lineSpacingExtra="2dp" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/progress_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:layout_marginBottom="@dimen/space_md"
+                        android:visibility="gone"
+                        app:indicatorColor="?attr/colorPrimary"
+                        app:indeterminate="true" />
+
+                </FrameLayout>
+
+                <!-- ============================================================
+                     CREATE BUTTON + PROGRESS
+                     ============================================================ -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginTop="@dimen/space_lg">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_create_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:enabled="false"
+                        android:insetTop="0dp"
+                        android:insetBottom="0dp"
+                        android:text="@string/group_create_action"
+                        android:textAllCaps="false"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-medium"
+                        app:cornerRadius="@dimen/radius_md" />
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/progress_create_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        app:indicatorColor="?attr/colorOnPrimary"
+                        app:trackThickness="3dp" />
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

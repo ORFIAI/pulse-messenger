@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    bottom_sheet_attach.xml — attach-media bottom sheet
+    ------------------------------------------------------------
+    Consumed by ChatActivity via BottomSheetDialog:
+        BottomSheetDialog sheet = new BottomSheetDialog(this);
+        sheet.setContentView(R.layout.bottom_sheet_attach);
+        // find option_photo, option_video, ... and set
+        // click listeners that launch the respective pickers.
+        sheet.show();
+
+    Binding IDs consumed by ChatActivity:
+      option_photo
+      option_video
+      option_audio
+      option_document
+      option_voice
+
+    Layout structure:
+      LinearLayout (vertical root)
+        ├── Section title ("Send")
+        └── LinearLayout (horizontal, 5 equal-weight items)
+              ├── Photo    (circle icon + "Photo")
+              ├── Video    (circle icon + "Video")
+              ├── Audio    (circle icon + "Audio")
+              ├── Document (circle icon + "Document")
+              └── Voice    (circle icon + "Voice message")
+
+    Why a horizontal row, not a grid:
+      Five options. A 2x3 grid (Messenger style) would leave one
+      empty cell — visually awkward. A 3x2 grid with six options
+      would require inventing a sixth option (location, contact,
+      poll) that is not in scope for v1. Five equal-weight items
+      in a single horizontal row is the cleanest layout that fits
+      all five without inventing scope.
+
+      On a 360dp-wide phone, each item gets ~72dp — the 56dp
+      circle centers within that, leaving 8dp on each side. The
+      labels fit at 12sp: "Photo", "Video", "Audio", "Document"
+      all fit within 72dp. "Voice message" is ~78dp at 12sp and
+      will ellipsize to "Voice mes..." on narrow screens — a
+      Phase-7 polish item to shorten via a `attach_voice_short`
+      string resource. The ellipsize is cosmetic, not a bug;
+      users understand from the mic icon.
+
+    Why no drag handle:
+      Material 3's BottomSheetDialog draws its own top corners
+      (rounded), and the swipe-down-to-dismiss gesture works
+      without a visible handle. A drag handle would be a small
+      rounded pill at the top — a 30dp × 4dp View with a shape
+      drawable. Skipping it saves one drawable file (a
+      `bg_drag_handle.xml`) for zero UX loss, since the sheet's
+      rounded top + gesture affordance is already enough. If a
+      future design wants a visible handle, add `bg_drag_handle`
+      as a separate drawable and insert a View above the title.
+
+    Why no explicit android:background on the root:
+      BottomSheetDialog with the Material 3 theme applies
+      ?attr/colorSurface to the sheet container automatically
+      AND applies rounded top corners via its own shape. Setting
+      android:background on the root LinearLayout would override
+      the rounded shape with a flat rectangle (losing the top
+      corner rounding). The default is correct.
+
+    Option container structure:
+      Each option is a LinearLayout (vertical, gravity="center_horizontal")
+      containing:
+        - A FrameLayout (56dp circle, background = bg_attach_option)
+          with an ImageView (24dp icon) centered inside it.
+        - A TextView (12sp label) below the circle.
+      The option is clickable as a whole (android:clickable="true",
+      android:foreground="?attr/selectableItemBackground") so the
+      entire ~72dp × 90dp block is a tap target — well above the
+      48dp minimum.
+
+    Icons needed (created in subsequent files):
+      @drawable/ic_photo     — image/photo glyph
+      @drawable/ic_video     — video camera glyph
+      @drawable/ic_audio     — music note glyph
+      @drawable/ic_document  — document/file glyph
+      @drawable/ic_voice     — microphone glyph
+      @drawable/bg_attach_option — circle shape (colorSurfaceVariant)
+    ============================================================
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/attach_sheet_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/space_sm"
+    android:paddingBottom="@dimen/space_xl">
+
+    <!-- ============================================================
+         SECTION TITLE
+         ============================================================ -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/screen_padding_horizontal"
+        android:paddingEnd="@dimen/screen_padding_horizontal"
+        android:layout_marginBottom="@dimen/space_md"
+        android:text="@string/chat_attach"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false" />
+
+    <!-- ============================================================
+         OPTIONS ROW (5 equal-weight items)
+         ============================================================ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:paddingStart="@dimen/space_xs"
+        android:paddingEnd="@dimen/space_xs">
+
+        <!-- ---------- Photo ---------- -->
+        <LinearLayout
+            android:id="@+id/option_photo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingBottom="@dimen/space_xs">
+
+            <FrameLayout
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_attach_option">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_photo"
+                    app:tint="?attr/colorOnSurface" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xxs"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/attach_image"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="12sp"
+                android:includeFontPadding="false" />
+
+        </LinearLayout>
+
+        <!-- ---------- Video ---------- -->
+        <LinearLayout
+            android:id="@+id/option_video"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingBottom="@dimen/space_xs">
+
+            <FrameLayout
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_attach_option">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_video"
+                    app:tint="?attr/colorOnSurface" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xxs"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/attach_video"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="12sp"
+                android:includeFontPadding="false" />
+
+        </LinearLayout>
+
+        <!-- ---------- Audio ---------- -->
+        <LinearLayout
+            android:id="@+id/option_audio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingBottom="@dimen/space_xs">
+
+            <FrameLayout
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_attach_option">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_audio"
+                    app:tint="?attr/colorOnSurface" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xxs"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/attach_audio"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="12sp"
+                android:includeFontPadding="false" />
+
+        </LinearLayout>
+
+        <!-- ---------- Document ---------- -->
+        <LinearLayout
+            android:id="@+id/option_document"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingBottom="@dimen/space_xs">
+
+            <FrameLayout
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_attach_option">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_document"
+                    app:tint="?attr/colorOnSurface" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xxs"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/attach_document"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="12sp"
+                android:includeFontPadding="false" />
+
+        </LinearLayout>
+
+        <!-- ---------- Voice ---------- -->
+        <LinearLayout
+            android:id="@+id/option_voice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingBottom="@dimen/space_xs">
+
+            <FrameLayout
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_attach_option">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_voice"
+                    app:tint="?attr/colorOnSurface" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xxs"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@string/attach_voice_recording"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="12sp"
+                android:includeFontPadding="false"
+                tools:text="Voice" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

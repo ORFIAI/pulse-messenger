@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    item_audio_preview.xml — audio/voice message preview card
+    ------------------------------------------------------------
+    Consumed by MessageAdapter (Phase-9 modification) for
+    Message.TYPE_AUDIO and Message.TYPE_VOICE.
+
+    Binding IDs (for the future adapter):
+      audio_preview_root    → the card (rarely needed directly)
+      btn_audio_play        → ImageButton (ic_play_circle ↔ ic_pause_circle toggle)
+      progress_audio        → LinearProgressIndicator (determinate 0..100)
+      tv_audio_elapsed      → current position text ("0:12")
+      tv_audio_duration     → total duration text ("0:45")
+
+    Layout structure:
+      MaterialCardView (fills parent — typically the bubble's
+                        200×200 fl_media container)
+        └── LinearLayout (horizontal, centered vertically)
+              ├── ImageButton (48dp, play/pause)
+              └── LinearLayout (vertical, weight=1)
+                    ├── LinearProgressIndicator (thin bar)
+                    └── LinearLayout (horizontal)
+                          ├── TextView elapsed (start-aligned)
+                          └── TextView duration (end-aligned)
+
+    Design decisions:
+
+    1. MATERIALCARDVIEW, NOT FRAMELAYOUT.
+       The card provides the rounded corners + solid
+       background that distinguish the audio controls from
+       the surrounding bubble. A plain FrameLayout would
+       need a shape drawable background file, which is an
+       extra asset for a rounded rectangle that Material
+       already ships. cardElevation=0dp produces a flat,
+       modern look — no drop shadow.
+
+    2. CARD BACKGROUND = ?attr/colorSurfaceVariant.
+       This is the key decision that makes ONE file work on
+       BOTH sent (indigo) and received (light gray / dark
+       gray) bubbles:
+         - On the indigo sent bubble, the near-white card
+           (light theme) or dark card (dark theme) stands
+           out as a distinct "audio content" region.
+         - On the light-gray received bubble, the same card
+           blends slightly but its rounded corners and
+           internal controls still read as the audio block.
+         - The card's contents (play icon, progress bar,
+           time labels) use theme colors that are
+           guaranteed to contrast with colorSurfaceVariant
+           — see notes 3–5.
+       If the card had no background (rendered directly on
+       the bubble background), the play icon and progress
+       bar would need different tints for sent vs.
+       received bubbles, requiring two separate layout
+       files. The card background is what makes the single
+       file viable.
+
+    3. PLAY ICON TINT = ?attr/colorPrimary.
+       On colorSurfaceVariant (light #EFECF4 / dark
+       #2A2831), colorPrimary (#6D5EF5 / #9A91FF) has
+       strong contrast (WCAG AA pass in both themes). This
+       is the standard Material 3 "action button on a card"
+       styling.
+
+    4. PROGRESS BAR:
+       - indicatorColor = ?attr/colorPrimary (matches the
+         play button's tint — the "this is the audio"
+         color).
+       - trackColor = ?attr/colorOutline (a medium gray in
+         both themes) — clearly visible against the card
+         background, unlike colorSurfaceVariant which would
+         blend into the card.
+       - trackThickness = 4dp (Material standard; 3dp looks
+         spindly at bubble scale).
+       - trackCornerRadius = 2dp (half of the thickness —
+         produces pill-shaped ends).
+
+    5. TIME LABELS = ?attr/colorOnSurfaceVariant.
+       Muted gray in both themes. Standard "secondary text
+       on surface-variant card" color. The elapsed/duration
+       pair is the standard "current / total" audio
+       presentation (Spotify, Apple Music, every podcast
+       app).
+
+    6. MATCH_PARENT WIDTH + HEIGHT, NOT WRAP_CONTENT.
+       The card fills whatever its parent gives it. In the
+       current bubble layouts, that is fl_media's 200dp ×
+       200dp square — so the card is a 200dp × 200dp
+       rounded card with audio controls centered inside.
+       This is the "audio media card" pattern used by
+       Signal and several other apps, and it avoids
+       requiring any modification to the two bubble
+       layouts (which would be a separate file change).
+       If a future design wants a compact horizontal strip
+       (like WhatsApp's audio bubbles), the follow-up
+       change is: (a) make fl_media wrap_content height,
+       (b) change this card's layout_height to a fixed
+       value (e.g., 64dp), (c) adjust the internal padding.
+       The current file is designed to look correct in
+       EITHER configuration.
+
+    7. CONTENT CENTERED VERTICALLY.
+       The inner LinearLayout has layout_gravity=center_vertical,
+       which produces a vertically centered audio strip
+       inside the (possibly tall) card. In a 64dp strip
+       configuration, this is a no-op (the content fills
+       the height anyway). In the current 200dp card, this
+       produces a centered "audio controls row" with equal
+       empty space above and below — visually clean.
+
+    8. TIME LABELS ARE PLACEHOLDERS VIA tools:text.
+       tools:text="0:00" shows in the layout editor only.
+       At runtime, the TextViews start empty and the
+       adapter populates them on bind. This avoids
+       hardcoded string literals in the layout (lint) and
+       makes it obvious that the value comes from the
+       adapter.
+    ============================================================
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/audio_preview_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="?attr/colorSurfaceVariant"
+    app:cardCornerRadius="@dimen/radius_md"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="@dimen/space_sm">
+
+        <!-- ============================================================
+             PLAY / PAUSE BUTTON
+             ------------------------------------------------------------
+             Starts with the play icon. The adapter swaps to
+             ic_pause_circle when playback is active, and back
+             to ic_play_circle when paused or stopped.
+             ============================================================ -->
+        <ImageButton
+            android:id="@+id/btn_audio_play"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/cd_play"
+            android:src="@drawable/ic_play_circle"
+            app:tint="?attr/colorPrimary" />
+
+        <!-- ============================================================
+             PROGRESS + TIME
+             ============================================================ -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/space_xs"
+            android:orientation="vertical">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progress_audio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:indicatorColor="?attr/colorPrimary"
+                app:trackColor="?attr/colorOutline"
+                app:trackThickness="4dp"
+                app:trackCornerRadius="2dp"
+                tools:progress="30" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_xxs"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_audio_elapsed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:includeFontPadding="false"
+                    tools:text="0:12" />
+
+                <TextView
+                    android:id="@+id/tv_audio_duration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:includeFontPadding="false"
+                    android:gravity="end"
+                    tools:text="0:45" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

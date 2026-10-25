@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_audio — music note glyph (attach menu, audio bubble badge)
+    ------------------------------------------------------------
+    Referenced by:
+      - bottom_sheet_attach.xml (option_audio leading icon)
+      - future: audio message bubble type badge (Phase 7)
+      - future: audio player controls in an audio bubble
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF), tinted at the consumer
+       level (app:tint="?attr/colorOnSurface" in
+       bottom_sheet_attach.xml). Do NOT set a brand color
+       here — the fill is a template.
+
+    2. 24dp VIEWPORT.
+       Matches every other chrome icon in the app. The
+       attach sheet renders it at 24dp; the audio-bubble
+       badge (Phase 7) will render it at 16dp in a corner
+       — the vector scales losslessly.
+
+    3. STANDARD MATERIAL "MUSIC_NOTE" GLYPH.
+       This is Google's canonical Material Design
+       "music_note" icon: a single note with a filled
+       note-head (oval) at the bottom-left, an ascending
+       vertical stem on the right, and a short flag at
+       the top. It is NOT a custom design. Every music
+       and audio app uses essentially this shape, and any
+       deviation would read as a rendering error.
+
+    4. SINGLE NOTE, NOT A DOUBLE NOTE.
+       The "library_music" variant has two notes side by
+       side and is used to signal "a collection of audio."
+       For a single audio-file affordance, the single-note
+       "music_note" variant is the correct choice — a
+       double-note icon would suggest "playlist" or
+       "music library," not "send an audio file."
+
+       Do NOT switch to the "library_music" variant for
+       this file. If a future UI ever needs a "music
+       library" affordance (e.g., a menu item for browsing
+       audio files), create a separate `ic_music_library.xml`
+       then. Keep this one as the single-note "music_note".
+
+    5. SOLID, NOT OUTLINED.
+       The note-head is filled solid, and the stem/flag are
+       solid strokes. This matches the other four icons in
+       the attach sheet (all solid glyphs), which is what
+       makes the option row visually cohesive.
+
+    6. SINGLE PATH.
+       The note-head, stem, and flag are drawn as a single
+       closed path — the note-head's ellipse flows directly
+       into the stem, which flows into the flag, producing
+       one continuous silhouette. This is the standard
+       Material construction. Do NOT split into three
+       sub-paths (head + stem + flag) — that would produce
+       visible seams at the joins, and the three shapes
+       would not merge into a single recognizable "note"
+       silhouette.
+
+    7. NO androidx.AutoMirrored.
+       The music note is not directional in a way that
+       benefits from mirroring. Every music app on every
+       platform uses the "note-head bottom-left, stem
+       ascending, flag pointing right" orientation
+       regardless of text direction. Mirroring under RTL
+       would produce a non-standard orientation that
+       users would misread. Do not add auto-mirroring.
+
+    Rendering result at 24dp:
+      A note-head with an ascending stem and a small flag
+      at the top — instant recognition as "audio / music
+      note."
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Canonical Material Design "music_note" path.
+
+        Breakdown:
+          M 12,3                top of the stem (note head
+                                is at the bottom-left, below
+                                this point)
+          v 10.55               stem down to just above
+                                the note-head
+          c -0.59,-0.34 -1.27,-0.55 -2,-0.55
+                                curve into the note-head's
+                                upper-right (control points
+                                express the elliptical
+                                top of the note-head)
+          c -2.21,0 -4,1.79 -4,4
+                                large curve tracing the
+                                note-head's left side
+                                (radius ~4 units, centered
+                                around (6, 14))
+          s 1.79,4 4,4          mirror curve tracing the
+                                note-head's right side
+          s 4,-1.79 4,-4        mirror curve completing the
+                                note-head (bottom)
+          V 7                   stem back up to y=7
+          h 4                   short flag horizontally
+                                right (4 units)
+          V 3                   flag top edge
+          h -6                  back to the top of the stem
+          z                     close (implicit line from
+                                flag top back to stem top)
+
+        Rendered: a filled note-head (ellipse) at the
+        bottom-left, an ascending stem, and a rectangular
+        flag at the top-right. Standard music note.
+
+        The 4-unit horizontal width of the flag (from
+        x=12 to x=16) is what visually separates this
+        glyph from a "bell" or an "antenna" — it is the
+        short horizontal extension at the top-right that
+        reads as "the flag of a music note."
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,3v10.55c-0.59,-0.34 -1.27,-0.55 -2,-0.55 -2.21,0 -4,1.79 -4,4s1.79,4 4,4 4,-1.79 4,-4V7h4V3h-6z" />
+
+</vector>

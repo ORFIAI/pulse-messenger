@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_send — paper-plane / send-arrow icon
+    ------------------------------------------------------------
+    Referenced by:
+      - activity_chat.xml (btn_send, via app:icon)
+      - future: msg_forward_to dialog (send action)
+      - future: attach-preview dialog (send action)
+
+    Constraints this file honors:
+
+    1. MONOCHROME TEMPLATE.
+       Single fill color (#FFFFFFFF), tinted at the consumer
+       level (MaterialButton's app:iconTint="?attr/colorOnPrimary"
+       in activity_chat.xml, resolving to white in light mode
+       and the deep primary-on-dark indigo in dark mode). Do
+       NOT set a brand color here — the fill is a template.
+
+    2. 24dp VIEWPORT.
+       Matches every other chrome icon in the app.
+       MaterialButton's app:iconSize="20dp" scales this
+       losslessly to 20dp — the send button's declared icon
+       size — while the vector's stroke weight and proportions
+       remain crisp.
+
+    3. STANDARD MATERIAL GLYPH.
+       This is the canonical Material Design "send" icon:
+       a filled arrowhead pointing up-and-to-the-right, with
+       a small triangular notch at the lower-left (the
+       "fold" that suggests a paper plane). The notched
+       construction is what distinguishes it from a plain
+       arrow — a simple arrow would read as "forward" or
+       "navigate," not "send."
+
+       Do NOT redesign this as a full paper-plane outline
+       (Telegram style), a filled arrow with a tail (iOS
+       arrow style), or an envelope icon. The Material send
+       glyph is what users of every Material app recognize,
+       and it is what fits the filled MaterialButton
+       context best.
+
+    4. SINGLE FILLED PATH.
+       The send glyph is a solid shape, not an outlined one.
+       At 20dp inside a filled button, an outlined send icon
+       would appear visually thin and "floating." The Material
+       standard for filled buttons is a solid icon. The
+       fill-type is default (nonZero), not evenOdd — there
+       are no interior holes in this shape.
+
+    5. NO androidx.AutoMirrored.
+       The send glyph points up-and-to-the-right. In RTL
+       locales, the standard Material convention is NOT to
+       mirror it — the "send = up-right" direction is
+       universally understood as "dispatch," and mirroring
+       to "up-left" would confuse users who have been trained
+       by every other app that up-right means send. Do not
+       add auto-mirroring (unlike the back arrow, which does
+       need it).
+
+    Rendering result at 20dp (send-button icon size):
+      A crisp up-right-pointing arrow with a notched tail,
+      immediately readable as "send this message."
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!--
+        Canonical Material Design "send" path.
+
+        Geometry:
+          - Arrow tip: (2, 21) — the lower-left origin
+          - Upper-right corner: (23, 12) — the arrowhead's
+            upper-right edge
+          - Lower-right corner: (2, 3) — the arrowhead's
+            lower-right edge, mirrored vertically
+          - Notch point: (6, 12) — the "fold" that creates
+            the paper-plane look
+
+        The path traces the outline of the shape:
+          M2,21       start at lower-left
+          L23,12      diagonal up-right to the tip's
+                      upper-right corner
+          L2,3        diagonal down-left to the tip's
+                      lower-right corner
+          L6,12       up-right to the notch
+          Z           close back to start
+
+        Rendered: a filled arrowhead with a notched tail
+        — the standard Material "send" glyph. The 6,12 notch
+        is the "fold" and produces the paper-plane
+        silhouette without requiring a separate stroke.
+    -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M2,21 L23,12 L2,3 L2,10 L17,12 L2,14 Z" />
+
+</vector>

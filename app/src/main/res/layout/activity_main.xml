@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    activity_main.xml — app shell (bottom navigation)
+    ------------------------------------------------------------
+    Consumed by MainActivity via ActivityMainBinding.
+
+    Binding IDs → MainActivity field:
+      fragment_container → R.id.fragment_container (used in transactions)
+      bottom_nav         → binding.bottomNav
+
+    Structure:
+      CoordinatorLayout (root)
+        ├── FragmentContainerView (fills screen above the bottom nav)
+        └── BottomNavigationView   (pinned at the bottom)
+
+    The CoordinatorLayout root is deliberate:
+      - It gives the bottom nav the material behavior of shifting up
+        when a Snackbar appears (CoordinatorLayout detects the
+        bottom-anchored view and pushes it up).
+      - It gives future additions (a BottomAppBar, an extended FAB
+        anchored to the nav) a place to live without restructuring.
+
+    Edge-to-edge / system bars:
+      The bottom nav is inside the app bar area managed by
+      fitsSystemWindows="true" on the root. On API 24–25, the
+      navigation bar area (home/back/recents) is drawn separately;
+      without fitsSystemWindows the bottom nav would be partially
+      covered by the system nav bar on 3-button nav devices.
+      On API 26+ (gesture nav on modern devices), the system nav
+      gesture pill area is transparent and the app draws behind it
+      — fitsSystemWindows correctly insets the bottom nav above
+      the gesture pill.
+
+      Phase 3 does NOT yet use androidx.activity.EdgeToEdge; that is
+      a Phase-5 polish pass. For the current phase, fitsSystemWindows
+      gives correct visuals across all API levels with zero extra
+      code.
+
+    Do NOT add a toolbar here. Each fragment provides its own header
+    (tv_chats_header in fragment_chats.xml, an equivalent in the
+    People and Profile fragments). The bottom-nav shell is
+    deliberately toolbar-free — this is what WhatsApp, Telegram, and
+    Messenger all do.
+    ============================================================
+-->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.MainActivity">
+
+    <!-- ============================================================
+         FRAGMENT CONTAINER
+         ------------------------------------------------------------
+         Fills everything above the BottomNavigationView.
+         Use FragmentContainerView (not FrameLayout):
+           - Correct fragment transition z-ordering (no visual
+             artifacts during enter/exit animations).
+           - Enforces that fragments are added via FragmentManager
+             transactions (which is what MainActivity does).
+         ------------------------------------------------------------
+         The container's bottom is constrained by the BottomNavigationView
+         via app:layout_behavior? No — CoordinatorLayout does not
+         auto-constrain. Instead, the container's height is match_parent
+         and the bottom nav overlays it at the bottom. Each fragment is
+         expected to account for the bottom nav's height in its own
+         layout (e.g., the FAB in fragment_chats.xml has an 88dp
+         bottom margin that clears the 64dp nav + a 24dp gap).
+
+         This "bottom nav overlays fragments" pattern is standard
+         CoordinatorLayout usage: it lets the bottom nav maintain a
+         stable visual position while fragments fill the full available
+         space behind it. Do NOT constrain the container's height with
+         layout_marginBottom — that would require CoordinatorLayout
+         behavior wiring and would break the FAB-dodge behavior that
+         we rely on for Snackbar positioning.
+         ============================================================ -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/bottom_nav_height"
+        tools:layout="@layout/fragment_chats" />
+
+    <!-- ============================================================
+         BOTTOM NAVIGATION
+         ------------------------------------------------------------
+         Three tabs: Chats / People / Profile.
+         Pinned to the bottom via layout_gravity. The CoordinatorLayout
+         parent recognizes the "bottom|start" gravity and treats this
+         as the bottom bar for Snackbar-dodge purposes.
+
+         app:labelVisibilityMode="labeled" shows all three labels
+         simultaneously. With only 3 tabs, labeled mode is the correct
+         choice — "selected" mode (labels only on the active tab) is
+         only appropriate for 5-tab layouts where space is tight.
+
+         app:itemIconTint and app:itemTextColor use the theme's primary
+         (selected) and on-surface-variant (unselected) colors via the
+         built-in Material 3 state list. No custom selector file is
+         needed — the theme resolves correctly in light and dark modes.
+
+         app:itemActiveIndicatorStyle applies the Material 3 pill
+         background behind the selected icon. Without it, Material 3
+         still shows the pill by default; overriding it here ensures
+         the pill color uses our theme's colorSecondaryContainer
+         (mapped from md_secondary_container_light/dark in themes.xml),
+         which is consistent with the rest of the app.
+         ============================================================ -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_nav_height"
+        android:layout_gravity="bottom"
+        android:background="?attr/colorSurface"
+        app:elevation="3dp"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/menu_bottom_nav" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

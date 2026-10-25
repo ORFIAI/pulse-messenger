@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    ic_google_g — the Google "G" brand mark
+    ------------------------------------------------------------
+    IMPORTANT: this is NOT a custom icon. It is the official
+    Google brand mark, reproduced faithfully from Google's own
+    published vector assets. The four color codes and the four
+    path shapes are fixed by Google's branding guidelines:
+
+      Blue    #4285F4   (top-right arm / circle segment)
+      Green   #34A853   (bottom-right arm)
+      Yellow  #FBBC05   (left + bottom-left arm)
+      Red     #EA4335   (top arc + left arm)
+
+    Do NOT:
+      - Change any fillColor value (breaks brand compliance).
+      - Merge, split, or edit any pathData (breaks the
+        mark's proportions — Google's legal team has been
+        known to send takedown notices for altered marks).
+      - Apply android:tint on this drawable or on any ImageView
+        that uses it (MaterialButton with app:iconTint="@null"
+        is what makes this work; do not override).
+      - Reference this file from anywhere other than the Google
+        sign-in button. Using it as a generic "login" icon or
+        anywhere unrelated to actual Google authentication is a
+        brand violation.
+
+    Viewport 24dp × 24dp is the standard Google asset size.
+    The MaterialButton at app:iconSize="20dp" will scale it
+    down cleanly — vectors scale without artifacts.
+
+    Source: Google Identity brand assets (developers.google.com/
+    identity/branding-guidelines). This asset is provided by
+    Google specifically for use on Google Sign-In buttons.
+    ============================================================
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Blue — top-right of the G -->
+    <path
+        android:fillColor="#4285F4"
+        android:pathData="M22.56,12.25c0,-0.78 -0.07,-1.53 -0.2,-2.25H12v4.26h5.92c-0.26,1.37 -1.04,2.53 -2.21,3.31v2.77h3.57c2.08,-1.92 3.28,-4.74 3.28,-8.09z" />
+
+    <!-- Green — bottom-right -->
+    <path
+        android:fillColor="#34A853"
+        android:pathData="M12,23c2.97,0 5.46,-0.98 7.28,-2.66l-3.57,-2.77c-0.98,0.66 -2.23,1.06 -3.71,1.06 -2.86,0 -5.29,-1.93 -6.16,-4.53H2.18v2.84C3.99,20.53 7.7,23 12,23z" />
+
+    <!-- Yellow — bottom-left and left arm -->
+    <path
+        android:fillColor="#FBBC05"
+        android:pathData="M5.84,14.09c-0.22,-0.66 -0.35,-1.36 -0.35,-2.09s0.13,-1.43 0.35,-2.09V7.07H2.18C1.43,8.55 1,10.22 1,12s0.43,3.45 1.18,4.93l2.85,-2.22 0.81,-0.62z" />
+
+    <!-- Red — top arc and left arm -->
+    <path
+        android:fillColor="#EA4335"
+        android:pathData="M12,5.38c1.62,0 3.06,0.56 4.21,1.64l3.15,-3.15C17.45,2.09 14.97,1 12,1 7.7,1 3.99,3.47 2.18,7.07l3.66,2.84c0.87,-2.6 3.3,-4.53 6.16,-4.53z" />
+
+</vector>

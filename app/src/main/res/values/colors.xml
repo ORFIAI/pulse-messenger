@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ============================================================
+         Brand accent
+         ------------------------------------------------------------
+         Used by:
+           - FCM notification light color (manifest meta-data)
+           - Launcher icon tint
+           - Splash screen icon tint
+           - Accent for "Pulse" wordmark
+         Deliberately original — not a copy of WhatsApp green, Messenger
+         blue, or Telegram blue. A modern indigo-violet.
+         ============================================================ -->
+    <color name="pulse_accent">#6D5EF5</color>
+    <color name="pulse_accent_dark">#4E42D1</color>
+    <color name="pulse_accent_light">#9A91FF</color>
+
+
+    <!-- ============================================================
+         Material 3 — Light theme semantic roles
+         ============================================================ -->
+
+    <!-- Primary (matches brand accent) -->
+    <color name="md_primary_light">#6D5EF5</color>
+    <color name="md_on_primary_light">#FFFFFF</color>
+    <color name="md_primary_container_light">#E4E0FF</color>
+    <color name="md_on_primary_container_light">#1A0F6E</color>
+
+    <!-- Secondary -->
+    <color name="md_secondary_light">#5E5C72</color>
+    <color name="md_on_secondary_light">#FFFFFF</color>
+    <color name="md_secondary_container_light">#E4E0F0</color>
+    <color name="md_on_secondary_container_light">#1B1A2A</color>
+
+    <!-- Tertiary (used sparingly for small accents) -->
+    <color name="md_tertiary_light">#B34A6F</color>
+    <color name="md_on_tertiary_light">#FFFFFF</color>
+
+    <!-- Background and surface -->
+    <color name="md_background_light">#FBF8FF</color>
+    <color name="md_on_background_light">#1B1A21</color>
+    <color name="md_surface_light">#FFFFFF</color>
+    <color name="md_on_surface_light">#1B1A21</color>
+    <color name="md_surface_variant_light">#EFECF4</color>
+    <color name="md_on_surface_variant_light">#47464F</color>
+
+    <!-- Outline and divider -->
+    <color name="md_outline_light">#777680</color>
+    <color name="md_outline_variant_light">#C8C5D0</color>
+    <color name="md_divider_light">#EAE7F0</color>
+
+    <!-- Error -->
+    <color name="md_error_light">#BA1A1A</color>
+    <color name="md_on_error_light">#FFFFFF</color>
+    <color name="md_error_container_light">#FFDAD6</color>
+    <color name="md_on_error_container_light">#410002</color>
+
+
+    <!-- ============================================================
+         Material 3 — Dark theme semantic roles
+         ============================================================ -->
+
+    <color name="md_primary_dark">#9A91FF</color>
+    <color name="md_on_primary_dark">#1A0F6E</color>
+    <color name="md_primary_container_dark">#3D32B8</color>
+    <color name="md_on_primary_container_dark">#E4E0FF</color>
+
+    <color name="md_secondary_dark">#C8C5DA</color>
+    <color name="md_on_secondary_dark">#302F42</color>
+    <color name="md_secondary_container_dark">#464558</color>
+    <color name="md_on_secondary_container_dark">#E4E0F0</color>
+
+    <color name="md_tertiary_dark">#FFB1C6</color>
+    <color name="md_on_tertiary_dark">#5F1132</color>
+
+    <color name="md_background_dark">#0F0F14</color>
+    <color name="md_on_background_dark">#E6E1E9</color>
+    <color name="md_surface_dark">#16151B</color>
+    <color name="md_on_surface_dark">#E6E1E9</color>
+    <color name="md_surface_variant_dark">#2A2831</color>
+    <color name="md_on_surface_variant_dark">#C9C4D0</color>
+
+    <color name="md_outline_dark">#928F9A</color>
+    <color name="md_outline_variant_dark">#47454F</color>
+    <color name="md_divider_dark">#2A2831</color>
+
+    <color name="md_error_dark">#FFB4AB</color>
+    <color name="md_on_error_dark">#690005</color>
+    <color name="md_error_container_dark">#93000A</color>
+    <color name="md_on_error_container_dark">#FFDAD6</color>
+
+
+    <!-- ============================================================
+         Message bubbles
+         ------------------------------------------------------------
+         Sender (own) bubbles use a warm indigo-tinted accent that is
+         clearly distinguishable from the primary accent used on
+         buttons — this is intentional. Messenger-style apps (and the
+         original Pulse design) use a slightly different tone for
+         bubbles than for interactive controls so the eye can parse
+         the conversation at a glance.
+         ============================================================ -->
+
+    <!-- Light theme bubbles -->
+    <color name="bubble_sent_light">#6D5EF5</color>
+    <color name="bubble_sent_text_light">#FFFFFF</color>
+    <color name="bubble_received_light">#F1EEF6</color>
+    <color name="bubble_received_text_light">#1B1A21</color>
+    <color name="bubble_sent_reply_bg_light">#5A4EE0</color>
+    <color name="bubble_received_reply_bg_light">#E1DCEC</color>
+    <color name="bubble_meta_sent_light">#D4CEFF</color>
+    <color name="bubble_meta_received_light">#6B6875</color>
+
+    <!-- Dark theme bubbles -->
+    <color name="bubble_sent_dark">#4E42D1</color>
+    <color name="bubble_sent_text_dark">#FFFFFF</color>
+    <color name="bubble_received_dark">#2A2831</color>
+    <color name="bubble_received_text_dark">#E6E1E9</color>
+    <color name="bubble_sent_reply_bg_dark">#3D32B8</color>
+    <color name="bubble_received_reply_bg_dark">#3A3844</color>
+    <color name="bubble_meta_sent_dark">#C7BFFF</color>
+    <color name="bubble_meta_received_dark">#A09BAA</color>
+
+
+    <!-- ============================================================
+         Chat background
+         ------------------------------------------------------------
+         A subtle off-white / near-black behind the message list.
+         Slightly warmer than the surface color so bubbles stand out
+         without a hard border.
+         ============================================================ -->
+    <color name="chat_background_light">#F4F1F9</color>
+    <color name="chat_background_dark">#0A0A0F</color>
+
+
+    <!-- ============================================================
+         Presence and status indicators
+         ============================================================ -->
+
+    <color name="status_online">#2ECC71</color>
+    <color name="status_offline">#9E9E9E</color>
+    <color name="status_typing">#6D5EF5</color>
+    <color name="status_delivered">#8E8A99</color>
+    <color name="status_seen">#4FC3F7</color>
+    <color name="status_failed">#E53935</color>
+    <color name="status_sending">#B0AEB8</color>
+
+
+    <!-- ============================================================
+         Utility colors
+         ============================================================ -->
+
+    <!-- Ripple / pressed state overlays -->
+    <color name="ripple_light">#1A000000</color>
+    <color name="ripple_dark">#33FFFFFF</color>
+
+    <!-- Scrims (behind dialogs, image viewer, bottom sheets) -->
+    <color name="scrim_40">#66000000</color>
+    <color name="scrim_60">#99000000</color>
+    <color name="scrim_80">#CC000000</color>
+
+    <!-- Shimmer skeleton placeholder tint -->
+    <color name="skeleton_light">#E8E5EE</color>
+    <color name="skeleton_dark">#22202A</color>
+
+    <!-- Upload progress ring -->
+    <color name="upload_track">#33FFFFFF</color>
+    <color name="upload_progress">#FFFFFF</color>
+
+    <!-- Transparent and pure black/white — used by viewers and overlays -->
+    <color name="transparent">#00000000</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+
+    <!-- ============================================================
+         Avatar placeholder palette
+         ------------------------------------------------------------
+         When a user has no photo, we pick one of these deterministically
+         from a hash of the UID so each user gets a stable colored
+         initials avatar. Six distinct, accessible hues.
+         ============================================================ -->
+    <color name="avatar_1">#F2789F</color>
+    <color name="avatar_2">#5DA9E9</color>
+    <color name="avatar_3">#F9A826</color>
+    <color name="avatar_4">#7FD99B</color>
+    <color name="avatar_5">#9B7EDE</color>
+    <color name="avatar_6">#E8785D</color>
+
+</resources>

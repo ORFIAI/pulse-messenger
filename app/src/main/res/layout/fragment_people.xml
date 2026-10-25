@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    fragment_people.xml — People tab (user search)
+    ------------------------------------------------------------
+    Consumed by PeopleFragment via FragmentPeopleBinding.
+
+    Binding IDs → PeopleFragment field:
+      tv_people_header    → "People" title (static)
+      til_search          → TextInputLayout (search container)
+      et_search_people    → binding.etSearchPeople
+      rv_people           → binding.rvPeople       (results list)
+      ll_empty_state      → binding.llEmptyState   (centered empty)
+      iv_empty_people     → empty-state icon
+      tv_empty_title      → binding.tvEmptyTitle
+      tv_empty_subtitle   → binding.tvEmptySubtitle
+      progress_people     → binding.progressPeople
+
+    Three states, all constrained to the same content slot
+    (below the search field). The fragment sets exactly one
+    of rv_people / ll_empty_state / progress_people to visible
+    at a time:
+      - ll_empty_state : no query yet, or query returned 0 results
+      - progress_people: query in flight (post-debounce)
+      - rv_people      : results available
+
+    Layout parallels fragment_chats.xml on purpose — same header
+    size, same search field, same empty-state visual. A user
+    navigating between Chats and People tabs should feel like
+    they are in the same app, not a different screen assembled
+    by a different developer.
+
+    The search field here IS NOT the same as the one in
+    fragment_chats.xml because the fragment IDs differ
+    (et_search_chats vs et_search_people) — each fragment
+    manages its own search state independently. A future
+    v2 could unify them under a shared search component, but
+    the two searches have different scopes (conversations vs.
+    users) and different backends (local filter vs. Firestore
+    query), so they do not share state.
+    ============================================================
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_people"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:paddingStart="@dimen/screen_padding_horizontal"
+    android:paddingEnd="@dimen/screen_padding_horizontal"
+    android:paddingTop="@dimen/space_md"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.PeopleFragment">
+
+    <!-- ---------- Header ---------- -->
+    <TextView
+        android:id="@+id/tv_people_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_md"
+        android:text="@string/people_title"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="28sp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="-0.02"
+        android:includeFontPadding="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ---------- Search field ---------- -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_search"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_sm"
+        android:hint="@string/people_search_hint"
+        app:boxBackgroundColor="?attr/colorSurfaceVariant"
+        app:boxCornerRadiusBottomEnd="@dimen/radius_lg"
+        app:boxCornerRadiusBottomStart="@dimen/radius_lg"
+        app:boxCornerRadiusTopEnd="@dimen/radius_lg"
+        app:boxCornerRadiusTopStart="@dimen/radius_lg"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:startIconDrawable="@drawable/ic_search"
+        app:startIconTint="?attr/colorOnSurfaceVariant"
+        app:layout_constraintTop_toBottomOf="@id/tv_people_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_search_people"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="?attr/colorOnSurface"
+            android:textColorHint="?attr/colorOnSurfaceVariant"
+            android:textSize="15sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- ---------- Results list ---------- -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_people"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/space_xs"
+        android:paddingBottom="@dimen/space_xl"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/til_search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_user"
+        tools:visibility="visible" />
+
+    <!-- ============================================================
+         EMPTY STATE (invite or no-results)
+         ------------------------------------------------------------
+         Reused for both "type to search" and "no results." The
+         fragment changes only the text, not the container.
+         ============================================================ -->
+    <LinearLayout
+        android:id="@+id/ll_empty_state"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/space_xl"
+        android:paddingEnd="@dimen/space_xl"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/til_search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/iv_empty_people"
+            android:layout_width="@dimen/icon_xxl"
+            android:layout_height="@dimen/icon_xxl"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_nav_people"
+            app:tint="?attr/colorOnSurfaceVariant" />
+
+        <TextView
+            android:id="@+id/tv_empty_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_md"
+            android:text="@string/people_empty_title"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-medium"
+            android:includeFontPadding="false"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tv_empty_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_xs"
+            android:text="@string/people_empty_subtitle"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp" />
+
+    </LinearLayout>
+
+    <!-- ============================================================
+         LOADING INDICATOR
+         ------------------------------------------------------------
+         Shown after the debounce fires and before the Firestore
+         query returns. On a warm connection this is ~100–200 ms;
+         on a cold connection up to ~1 s. The fragment controls
+         visibility — it is GONE in the idle and results states.
+         ============================================================ -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress_people"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:indicatorColor="?attr/colorPrimary"
+        app:indeterminate="true"
+        app:layout_constraintTop_toBottomOf="@id/til_search"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

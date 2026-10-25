@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    bg_bubble_sent — background for sent (own) message bubbles
+    ------------------------------------------------------------
+    Referenced by:
+      - item_message_sent.xml (root container background)
+
+    Constraints this file honors:
+
+    1. THEME ATTRIBUTE FILL, NOT COLOR RESOURCE.
+       The <solid> uses "?attr/pulseBubbleSent", which resolves
+       through the active theme:
+         - light theme → @color/bubble_sent_light (#6D5EF5)
+         - dark theme  → @color/bubble_sent_dark (#4E42D1)
+       A single drawable file therefore serves both themes,
+       with no drawable-night/ duplicate required. Do NOT
+       change to a hardcoded @color/bubble_sent_light —
+       that would pin the bubble to the light-theme indigo
+       and it would render incorrectly in dark mode.
+
+    2. ROUNDED RECTANGLE WITH DIRECTIONAL TAIL CORNER.
+       Three corners use the standard @dimen/bubble_radius
+       (18dp). The bottom-right corner uses
+       @dimen/bubble_tail_radius (4dp) to hint at the tail
+       direction — the same visual language used by every
+       messaging app. The 4dp corner is not a literal tail
+       triangle; it is a "subtle asymmetry" that conveys
+       direction without the visual noise of an explicit
+       triangular tail.
+
+       Why the bottom-RIGHT (not bottom-left):
+         Sent bubbles are right-aligned in the chat. The
+         tail corner faces outward — toward the screen edge
+         on the same side as the bubble. This mirrors the
+         received bubble's tail direction (bottom-left,
+         toward the incoming side). The result: bubbles
+         visually "point" toward their sender, which is
+         what every messaging UI does.
+
+    3. WHY NOT A LITERAL TAIL TRIANGLE.
+       Some messaging apps (older WhatsApp, iMessage in
+       some versions) draw an explicit triangular tail on
+       the bubble. At 24dp-to-300dp bubble widths, the
+       triangle either dominates the bubble (too big) or
+       disappears (too small). The modern Material
+       messaging pattern uses a rounded asymmetric corner
+       instead — it reads as "directional" without
+       requiring a triangle that is hard to size
+       correctly across bubble widths.
+
+       Do NOT add a triangular tail to this drawable.
+       If the design team insists on a literal tail later,
+       it must be implemented as a separate vector that
+       is layered behind the bubble shape (not as part of
+       the <shape> drawable, which cannot express a
+       triangle + rounded rect as one primitive).
+
+    4. NO STROKE, NO GRADIENT, NO SHADOW.
+       The bubble is flat-filled. Elevation/depth is
+       conveyed by the contrast between the bubble color
+       and the chat background, not by an inner shadow or
+       outer stroke. This matches the flat Material 3
+       aesthetic and keeps the bubble performant.
+
+    5. NO android:tint ON THE DRAWABLE.
+       Same discipline as every shape drawable in the
+       project: the fill is set via ?attr/pulseBubbleSent
+       (which resolves through the theme), NOT via a
+       runtime setBackgroundTintList call. Adding a tint
+       would layer on top of the themed color, producing
+       a slightly different hue than the theme intends.
+
+    No <size> element is declared. Shape drawables are
+    sized by their consumer View's bounds — the bubble's
+    width is determined by the message content (max-width
+    constrained to bubble_max_width_percent), and its
+    height by the number of text lines. Adding <size> here
+    would set intrinsic dimensions that the view would
+    then have to override, producing inconsistent bubble
+    widths. The correct pattern for shape drawables that
+    must size to content is to omit <size> entirely.
+    ============================================================
+-->
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <solid android:color="?attr/pulseBubbleSent" />
+
+    <corners
+        android:topLeftRadius="@dimen/bubble_radius"
+        android:topRightRadius="@dimen/bubble_radius"
+        android:bottomLeftRadius="@dimen/bubble_radius"
+        android:bottomRightRadius="@dimen/bubble_tail_radius" />
+
+</shape>

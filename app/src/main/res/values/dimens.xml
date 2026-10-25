@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ============================================================
+         SPACING SCALE
+         ------------------------------------------------------------
+         A strict 4dp base rhythm. Every margin/padding in the app
+         snaps to one of these values. This is the single most
+         impactful decision for visual consistency — mixed 12/14/16dp
+         padding is what makes hand-built UIs look "off" without the
+         designer knowing why.
+         ============================================================ -->
+    <dimen name="space_xxxs">2dp</dimen>
+    <dimen name="space_xxs">4dp</dimen>
+    <dimen name="space_xs">8dp</dimen>
+    <dimen name="space_sm">12dp</dimen>
+    <dimen name="space_md">16dp</dimen>
+    <dimen name="space_lg">20dp</dimen>
+    <dimen name="space_xl">24dp</dimen>
+    <dimen name="space_xxl">32dp</dimen>
+    <dimen name="space_xxxl">48dp</dimen>
+
+
+    <!-- ============================================================
+         SCREEN PADDING
+         ------------------------------------------------------------
+         Outer horizontal padding for content pages. Kept as its own
+         token so a future redesign can widen content on tablets
+         without touching every layout.
+         ============================================================ -->
+    <dimen name="screen_padding_horizontal">16dp</dimen>
+    <dimen name="screen_padding_vertical">16dp</dimen>
+
+
+    <!-- ============================================================
+         CORNER RADII
+         ------------------------------------------------------------
+         Modern rounded UI. Bubbles use a 20dp radius to look friendly
+         without being cartoonish. Cards use 16dp. Small chips use 8dp.
+         ============================================================ -->
+    <dimen name="radius_xs">4dp</dimen>
+    <dimen name="radius_sm">8dp</dimen>
+    <dimen name="radius_md">12dp</dimen>
+    <dimen name="radius_lg">16dp</dimen>
+    <dimen name="radius_xl">20dp</dimen>
+    <dimen name="radius_xxl">24dp</dimen>
+    <dimen name="radius_pill">100dp</dimen>
+
+    <!-- Message bubbles have a slightly smaller corner on the sender
+         side to hint at direction without an explicit tail. The
+         "tail" corner radius is applied to the corner closest to the
+         sender. -->
+    <dimen name="bubble_radius">18dp</dimen>
+    <dimen name="bubble_tail_radius">4dp</dimen>
+    <dimen name="bubble_reply_preview_radius">10dp</dimen>
+
+
+    <!-- ============================================================
+         AVATARS
+         ------------------------------------------------------------
+         Standard avatar sizes. 40dp is the chat-list default; 36dp is
+         used in message item views; 96dp is the profile screen header;
+         128dp is the full profile photo picker.
+         ============================================================ -->
+    <dimen name="avatar_xs">24dp</dimen>
+    <dimen name="avatar_sm">32dp</dimen>
+    <dimen name="avatar_md">40dp</dimen>
+    <dimen name="avatar_lg">56dp</dimen>
+    <dimen name="avatar_xl">80dp</dimen>
+    <dimen name="avatar_xxl">96dp</dimen>
+    <dimen name="avatar_profile">128dp</dimen>
+
+    <!-- Presence dot overlays the avatar's bottom-right corner. -->
+    <dimen name="presence_dot_size">12dp</dimen>
+    <dimen name="presence_dot_border">2dp</dimen>
+
+
+    <!-- ============================================================
+         ICONS
+         ------------------------------------------------------------
+         Standard icon sizes across the app. Material icons default to
+         24dp; small action icons in message bubbles use 16dp.
+         ============================================================ -->
+    <dimen name="icon_xs">16dp</dimen>
+    <dimen name="icon_sm">20dp</dimen>
+    <dimen name="icon_md">24dp</dimen>
+    <dimen name="icon_lg">32dp</dimen>
+    <dimen name="icon_xl">48dp</dimen>
+    <dimen name="icon_xxl">64dp</dimen>
+
+
+    <!-- ============================================================
+         TOUCH TARGETS
+         ------------------------------------------------------------
+         Android's minimum touch target is 48dp. Every clickable icon,
+         button, and row must be at least this tall. Enforced as a
+         dimension because Material Components sometimes shrinks
+         default targets — we explicitly size instead.
+         ============================================================ -->
+    <dimen name="touch_target_min">48dp</dimen>
+    <dimen name="touch_target_icon_button">48dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="bottom_nav_height">64dp</dimen>
+
+
+    <!-- ============================================================
+         CHAT SCREEN
+         ============================================================ -->
+    <!-- Height of the message composer bar (excluding keyboard insets). -->
+    <dimen name="composer_height">56dp</dimen>
+    <dimen name="composer_attach_button_size">40dp</dimen>
+    <dimen name="composer_send_button_size">40dp</dimen>
+
+    <!-- Max bubble width as a percentage of screen width. Applied at
+         runtime via ConstraintLayout's app:layout_constraintWidth_percent,
+         but kept here as a token so adapters can reference it. -->
+    <item name="bubble_max_width_percent" format="float" type="dimen">0.78</item>
+
+    <!-- Max height for image and video bubbles. Beyond this we letterbox. -->
+    <dimen name="media_bubble_max_height">320dp</dimen>
+    <dimen name="media_bubble_thumbnail">200dp</dimen>
+    <dimen name="media_bubble_min_width">120dp</dimen>
+
+    <!-- Reply preview strip inside a bubble. -->
+    <dimen name="reply_preview_height">40dp</dimen>
+    <dimen name="reply_preview_thumb">32dp</dimen>
+    <dimen name="reply_preview_accent_width">3dp</dimen>
+
+    <!-- Voice message waveform and playback strip. -->
+    <dimen name="voice_waveform_height">28dp</dimen>
+    <dimen name="voice_play_button_size">40dp</dimen>
+
+    <!-- Date/status pills that float between message groups. -->
+    <dimen name="date_pill_padding_horizontal">10dp</dimen>
+    <dimen name="date_pill_padding_vertical">4dp</dimen>
+
+
+    <!-- ============================================================
+         CHAT LIST
+         ============================================================ -->
+    <dimen name="chat_row_height">72dp</dimen>
+    <dimen name="chat_row_padding_horizontal">16dp</dimen>
+    <dimen name="chat_row_padding_vertical">8dp</dimen>
+
+
+    <!-- ============================================================
+         MATERIAL COMPONENTS OVERRIDES
+         ------------------------------------------------------------
+         TextInputLayout's "boxed" and "outlined" styles have their own
+         internal paddings — we tune them to match the app's rhythm.
+         ============================================================ -->
+    <dimen name="input_field_height">56dp</dimen>
+    <dimen name="input_corner_radius">14dp</dimen>
+    <dimen name="button_height">52dp</dimen>
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">0dp</dimen>
+    <dimen name="bottom_sheet_corner_radius">20dp</dimen>
+
+
+    <!-- ============================================================
+         TYPOGRAPHY LINE HEIGHTS
+         ------------------------------------------------------------
+         Text sizes are handled in styles/themes.xml via Material 3
+         type scale. Line heights live here because some custom TextViews
+         (message bubbles especially) need explicit line height.
+         ============================================================ -->
+    <dimen name="line_height_message">20sp</dimen>
+    <dimen name="line_height_body">22sp</dimen>
+
+
+    <!-- ============================================================
+         AUTH SCREEN
+         ============================================================ -->
+    <dimen name="auth_logo_size">96dp</dimen>
+    <dimen name="auth_google_button_height">52dp</dimen>
+    <dimen name="auth_max_content_width">400dp</dimen>
+
+
+    <!-- ============================================================
+         FULL-SCREEN IMAGE VIEWER
+         ============================================================ -->
+    <dimen name="viewer_top_bar_height">56dp</dimen>
+    <dimen name="viewer_action_button_size">48dp</dimen>
+    <dimen name="viewer_action_margin">8dp</dimen>
+
+
+    <!-- ============================================================
+         MISC
+         ============================================================ -->
+    <dimen name="divider_thickness">1dp</dimen>
+    <dimen name="badge_size">20dp</dimen>
+    <dimen name="badge_text_size">11sp</dimen>
+    <dimen name="progress_bar_height">2dp</dimen>
+    <dimen name="skeleton_corner_radius">8dp</dimen>
+
+</resources>
