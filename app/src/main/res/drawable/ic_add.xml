@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_add — plus-sign ("create new") icon
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - fragment_chats.xml (fab_new_chat, via app:srcCompat)
       - future: ChatActivity attach button, GroupCreateActivity

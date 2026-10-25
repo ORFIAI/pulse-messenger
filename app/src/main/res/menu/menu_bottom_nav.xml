@@ -2,7 +2,7 @@
 <!--
     ============================================================
     menu_bottom_nav.xml — bottom navigation items
-    ------------------------------------------------------------
+    ===
     Consumed by:
       - activity_main.xml  (app:menu="@menu/menu_bottom_nav")
       - MainActivity.java  (R.id.nav_chats / nav_people / nav_profile)

@@ -3,7 +3,7 @@
 
     <!-- ============================================================
          Theme.Pulse — main app theme (DARK variant)
-         ------------------------------------------------------------
+         ===
          This is NOT a separate theme. It is the SAME resource name
          "Theme.Pulse" provided in the -night configuration qualifier.
          Android's resource resolver picks this version automatically
@@ -21,32 +21,32 @@
          ============================================================ -->
     <style name="Theme.Pulse" parent="Theme.Material3.DayNight.NoActionBar">
 
-        <!-- --------------------------------------------------------
+        <!-- ===
              PRIMARY
-             -------------------------------------------------------- -->
+             === -->
         <item name="colorPrimary">@color/md_primary_dark</item>
         <item name="colorOnPrimary">@color/md_on_primary_dark</item>
         <item name="colorPrimaryContainer">@color/md_primary_container_dark</item>
         <item name="colorOnPrimaryContainer">@color/md_on_primary_container_dark</item>
         <item name="colorPrimaryInverse">@color/md_primary_light</item>
 
-        <!-- --------------------------------------------------------
+        <!-- ===
              SECONDARY
-             -------------------------------------------------------- -->
+             === -->
         <item name="colorSecondary">@color/md_secondary_dark</item>
         <item name="colorOnSecondary">@color/md_on_secondary_dark</item>
         <item name="colorSecondaryContainer">@color/md_secondary_container_dark</item>
         <item name="colorOnSecondaryContainer">@color/md_on_secondary_container_dark</item>
 
-        <!-- --------------------------------------------------------
+        <!-- ===
              TERTIARY
-             -------------------------------------------------------- -->
+             === -->
         <item name="colorTertiary">@color/md_tertiary_dark</item>
         <item name="colorOnTertiary">@color/md_on_tertiary_dark</item>
 
-        <!-- --------------------------------------------------------
+        <!-- ===
              BACKGROUND and SURFACE
-             -------------------------------------------------------- -->
+             === -->
         <item name="android:colorBackground">@color/md_background_dark</item>
         <item name="colorOnBackground">@color/md_on_background_dark</item>
         <item name="colorSurface">@color/md_surface_dark</item>
@@ -59,42 +59,42 @@
 
         <item name="colorSurfaceContainerLow">@color/md_surface_dark</item>
 
-        <!-- --------------------------------------------------------
+        <!-- ===
              OUTLINE
-             -------------------------------------------------------- -->
+             === -->
         <item name="colorOutline">@color/md_outline_dark</item>
         <item name="colorOutlineVariant">@color/md_outline_variant_dark</item>
 
-        <!-- --------------------------------------------------------
+        <!-- ===
              ERROR
-             -------------------------------------------------------- -->
+             === -->
         <item name="colorError">@color/md_error_dark</item>
         <item name="colorOnError">@color/md_on_error_dark</item>
         <item name="colorErrorContainer">@color/md_error_container_dark</item>
         <item name="colorOnErrorContainer">@color/md_on_error_container_dark</item>
 
-        <!-- --------------------------------------------------------
+        <!-- ===
              CONTROL STATE COLORS
              Dark ripple is translucent WHITE — a translucent black
              ripple on a dark surface is invisible.
-             -------------------------------------------------------- -->
+             === -->
         <item name="colorControlHighlight">@color/ripple_dark</item>
         <item name="colorControlNormal">@color/md_on_surface_variant_dark</item>
 
-        <!-- --------------------------------------------------------
+        <!-- ===
              SYSTEM BARS
              windowLightStatusBar = FALSE → light (white) icons on the
              dark status bar. The single most important flip in this
              file. Same for navigation bar.
-             -------------------------------------------------------- -->
+             === -->
         <item name="android:statusBarColor">@color/md_surface_dark</item>
         <item name="android:navigationBarColor">@color/md_surface_dark</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
 
-        <!-- --------------------------------------------------------
+        <!-- ===
              WINDOW BACKGROUND
-             -------------------------------------------------------- -->
+             === -->
         <item name="android:windowBackground">@color/md_background_dark</item>
 
         <!-- Shape appearances are NOT re-declared — corner radii do
@@ -102,7 +102,7 @@
 
         <!-- ========================================================
              CUSTOM PULSE ATTRIBUTES — DARK VALUES
-             --------------------------------------------------------
+             ===
              These are the DARK counterparts of the nine assignments
              in values/themes.xml. They MUST exist or the bubble
              drawables would resolve to nothing (drawables use
@@ -131,7 +131,7 @@
 
     <!-- ============================================================
          Theme.Pulse.Auth — dark variant
-         ------------------------------------------------------------
+         ===
          Only windowBackground needs overriding — every other
          attribute Theme.Pulse.Auth uses comes through its parent
          "Theme.Pulse", which resolves to the DARK version in night

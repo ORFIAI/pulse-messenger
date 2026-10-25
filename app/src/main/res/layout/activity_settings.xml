@@ -2,7 +2,7 @@
 <!--
     ============================================================
     activity_settings.xml — Settings screen
-    ------------------------------------------------------------
+    ===
     Consumed by SettingsActivity via ActivitySettingsBinding.
 
     Binding IDs → SettingsActivity field:

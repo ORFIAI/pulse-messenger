@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_video — video camera glyph (attach menu, video bubble badge)
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - bottom_sheet_attach.xml (option_video leading icon)
       - future: video message bubble type badge (Phase 7)

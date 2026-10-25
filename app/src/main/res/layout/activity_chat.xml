@@ -2,7 +2,7 @@
 <!--
     ============================================================
     activity_chat.xml — conversation screen
-    ------------------------------------------------------------
+    ===
     Consumed by ChatActivity via ActivityChatBinding.
 
     Binding IDs → ChatActivity field:
@@ -221,7 +221,7 @@
             android:paddingTop="@dimen/space_xxs"
             android:paddingBottom="@dimen/space_xxs">
 
-            <!-- ---------- Reply / edit strip ---------- -->
+            <!-- === Reply / edit strip === -->
             <LinearLayout
                 android:id="@+id/ll_reply_strip"
                 android:layout_width="match_parent"
@@ -287,7 +287,7 @@
 
             </LinearLayout>
 
-            <!-- ---------- Composer row ---------- -->
+            <!-- === Composer row === -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -2,7 +2,7 @@
 <!--
     ============================================================
     bg_attach_option — circular option-tile background
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - bottom_sheet_attach.xml (5 × FrameLayout circles,
         one per media type)

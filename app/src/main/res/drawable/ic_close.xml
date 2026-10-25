@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_close — "X" / close / cancel / dismiss icon
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - activity_chat.xml (btn_cancel_reply in the reply strip)
       - future: full-screen media viewer (Phase 7)

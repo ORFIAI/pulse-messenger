@@ -2,7 +2,7 @@
 <!--
     ============================================================
     bottom_sheet_attach.xml — attach-media bottom sheet
-    ------------------------------------------------------------
+    ===
     Consumed by ChatActivity via BottomSheetDialog:
         BottomSheetDialog sheet = new BottomSheetDialog(this);
         sheet.setContentView(R.layout.bottom_sheet_attach);
@@ -120,7 +120,7 @@
         android:paddingStart="@dimen/space_xs"
         android:paddingEnd="@dimen/space_xs">
 
-        <!-- ---------- Photo ---------- -->
+        <!-- === Photo === -->
         <LinearLayout
             android:id="@+id/option_photo"
             android:layout_width="0dp"
@@ -162,7 +162,7 @@
 
         </LinearLayout>
 
-        <!-- ---------- Video ---------- -->
+        <!-- === Video === -->
         <LinearLayout
             android:id="@+id/option_video"
             android:layout_width="0dp"
@@ -204,7 +204,7 @@
 
         </LinearLayout>
 
-        <!-- ---------- Audio ---------- -->
+        <!-- === Audio === -->
         <LinearLayout
             android:id="@+id/option_audio"
             android:layout_width="0dp"
@@ -246,7 +246,7 @@
 
         </LinearLayout>
 
-        <!-- ---------- Document ---------- -->
+        <!-- === Document === -->
         <LinearLayout
             android:id="@+id/option_document"
             android:layout_width="0dp"
@@ -288,7 +288,7 @@
 
         </LinearLayout>
 
-        <!-- ---------- Voice ---------- -->
+        <!-- === Voice === -->
         <LinearLayout
             android:id="@+id/option_voice"
             android:layout_width="0dp"

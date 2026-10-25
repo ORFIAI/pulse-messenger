@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_block — blocked-user icon (circle with diagonal slash)
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - fragment_profile.xml (row_blocked leading affordance)
       - future: ChatActivity overflow menu ("Block user")

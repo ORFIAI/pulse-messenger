@@ -3,7 +3,7 @@
 
     <!-- ============================================================
          SPACING SCALE
-         ------------------------------------------------------------
+         ===
          A strict 4dp base rhythm. Every margin/padding in the app
          snaps to one of these values. This is the single most
          impactful decision for visual consistency — mixed 12/14/16dp
@@ -23,7 +23,7 @@
 
     <!-- ============================================================
          SCREEN PADDING
-         ------------------------------------------------------------
+         ===
          Outer horizontal padding for content pages. Kept as its own
          token so a future redesign can widen content on tablets
          without touching every layout.
@@ -34,7 +34,7 @@
 
     <!-- ============================================================
          CORNER RADII
-         ------------------------------------------------------------
+         ===
          Modern rounded UI. Bubbles use a 20dp radius to look friendly
          without being cartoonish. Cards use 16dp. Small chips use 8dp.
          ============================================================ -->
@@ -57,7 +57,7 @@
 
     <!-- ============================================================
          AVATARS
-         ------------------------------------------------------------
+         ===
          Standard avatar sizes. 40dp is the chat-list default; 36dp is
          used in message item views; 96dp is the profile screen header;
          128dp is the full profile photo picker.
@@ -77,7 +77,7 @@
 
     <!-- ============================================================
          ICONS
-         ------------------------------------------------------------
+         ===
          Standard icon sizes across the app. Material icons default to
          24dp; small action icons in message bubbles use 16dp.
          ============================================================ -->
@@ -91,7 +91,7 @@
 
     <!-- ============================================================
          TOUCH TARGETS
-         ------------------------------------------------------------
+         ===
          Android's minimum touch target is 48dp. Every clickable icon,
          button, and row must be at least this tall. Enforced as a
          dimension because Material Components sometimes shrinks
@@ -145,7 +145,7 @@
 
     <!-- ============================================================
          MATERIAL COMPONENTS OVERRIDES
-         ------------------------------------------------------------
+         ===
          TextInputLayout's "boxed" and "outlined" styles have their own
          internal paddings — we tune them to match the app's rhythm.
          ============================================================ -->
@@ -159,7 +159,7 @@
 
     <!-- ============================================================
          TYPOGRAPHY LINE HEIGHTS
-         ------------------------------------------------------------
+         ===
          Text sizes are handled in styles/themes.xml via Material 3
          type scale. Line heights live here because some custom TextViews
          (message bubbles especially) need explicit line height.

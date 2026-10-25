@@ -2,7 +2,7 @@
 <!--
     ============================================================
     item_user.xml — user row (People search / Group member picker)
-    ------------------------------------------------------------
+    ===
     Consumed by UserAdapter via ItemUserBinding.
 
     Two display modes, controlled by UserAdapter.mode:
@@ -132,7 +132,7 @@
 
     <!-- ============================================================
          Selection checkbox (MODE_SELECT only)
-         ------------------------------------------------------------
+         ===
          Anchored to the same end position as btn_message — both
          cannot be visible simultaneously (the adapter toggles
          visibility per mode). When btn_message is GONE and

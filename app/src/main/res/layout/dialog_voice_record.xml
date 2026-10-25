@@ -2,7 +2,7 @@
 <!--
     ============================================================
     dialog_voice_record.xml — voice message recording overlay
-    ------------------------------------------------------------
+    ===
     Inflated into a BottomSheetDialog by ChatActivity when the
     user picks the "Voice message" option from the attach sheet.
 
@@ -192,7 +192,7 @@
 
     <!-- ============================================================
          BIG CIRCULAR MIC BUTTON
-         ------------------------------------------------------------
+         ===
          The primary touch target for the hold-to-record gesture.
          Uses a plain MaterialButton with icon (rather than a
          FloatingActionButton) because we want a strictly circular

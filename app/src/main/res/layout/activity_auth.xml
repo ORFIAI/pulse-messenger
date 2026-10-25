@@ -2,7 +2,7 @@
 <!--
     ============================================================
     activity_auth.xml — Google-only sign-in welcome screen
-    ------------------------------------------------------------
+    ===
     Consumed by com.pulse.messenger.auth.AuthActivity.
     Referenced IDs:
       - root_auth           → root ConstraintLayout (Snackbar anchor)
@@ -43,7 +43,7 @@
 
     <!-- ============================================================
          Logo
-         ------------------------------------------------------------
+         ===
          Centered brand mark. Uses the same foreground vector as
          the adaptive launcher icon so the icon the user tapped
          on the home screen visually "opens into" this screen —
@@ -93,7 +93,7 @@
 
     <!-- ============================================================
          Welcome subtitle
-         ------------------------------------------------------------
+         ===
          Uses string with embedded "\n" — the resource string
          contains the newline escape, so the copy reads as two
          visual lines regardless of screen width. Do not split
@@ -116,7 +116,7 @@
 
     <!-- ============================================================
          "Continue with Google" button
-         ------------------------------------------------------------
+         ===
          MaterialButton, filled style, brand accent.
 
          app:icon = @drawable/ic_google_g — the multicolor Google
@@ -175,7 +175,7 @@
 
     <!-- ============================================================
          Progress indicator
-         ------------------------------------------------------------
+         ===
          Hidden by default. AuthActivity toggles visibility
          between this and btn_google while the Google account
          picker / Firebase credential exchange is in progress.
@@ -202,7 +202,7 @@
 
     <!-- ============================================================
          Terms & privacy acknowledgement
-         ------------------------------------------------------------
+         ===
          A single line of small text at the bottom. If the user
          taps the "Terms of Service" or "Privacy Policy" span,
          AuthActivity opens a dialog or web intent — the tap

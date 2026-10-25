@@ -2,7 +2,7 @@
 <!--
     ============================================================
     activity_main.xml — app shell (bottom navigation)
-    ------------------------------------------------------------
+    ===
     Consumed by MainActivity via ActivityMainBinding.
 
     Binding IDs → MainActivity field:
@@ -57,14 +57,14 @@
 
     <!-- ============================================================
          FRAGMENT CONTAINER
-         ------------------------------------------------------------
+         ===
          Fills everything above the BottomNavigationView.
          Use FragmentContainerView (not FrameLayout):
            - Correct fragment transition z-ordering (no visual
              artifacts during enter/exit animations).
            - Enforces that fragments are added via FragmentManager
              transactions (which is what MainActivity does).
-         ------------------------------------------------------------
+         ===
          The container's bottom is constrained by the BottomNavigationView
          via app:layout_behavior? No — CoordinatorLayout does not
          auto-constrain. Instead, the container's height is match_parent
@@ -90,7 +90,7 @@
 
     <!-- ============================================================
          BOTTOM NAVIGATION
-         ------------------------------------------------------------
+         ===
          Three tabs: Chats / People / Profile.
          Pinned to the bottom via layout_gravity. The CoordinatorLayout
          parent recognizes the "bottom|start" gravity and treats this

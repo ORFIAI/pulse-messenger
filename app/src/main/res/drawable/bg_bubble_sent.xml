@@ -2,7 +2,7 @@
 <!--
     ============================================================
     bg_bubble_sent — background for sent (own) message bubbles
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - item_message_sent.xml (root container background)
 

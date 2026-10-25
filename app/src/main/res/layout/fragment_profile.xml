@@ -2,7 +2,7 @@
 <!--
     ============================================================
     fragment_profile.xml — Profile tab
-    ------------------------------------------------------------
+    ===
     Consumed by ProfileFragment via FragmentProfileBinding.
 
     Binding IDs → ProfileFragment field:
@@ -414,7 +414,7 @@
 
         <!-- ============================================================
              LOADING INDICATOR
-             ------------------------------------------------------------
+             ===
              Overlays the whole content while the user document loads.
              Shown by ProfileFragment only during initial load.
              ============================================================ -->

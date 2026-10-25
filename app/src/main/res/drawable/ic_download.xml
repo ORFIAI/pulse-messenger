@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_download — download glyph (media viewer, media bubbles)
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - activity_media_viewer.xml (btn_download top-bar action)
       - future: document message bubbles (Phase 7 — "tap to

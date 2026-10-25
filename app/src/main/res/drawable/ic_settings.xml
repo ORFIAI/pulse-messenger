@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_settings — gear/cogwheel icon (Settings row affordance)
-    ------------------------------------------------------------
+    ===
     Referenced by fragment_profile.xml's row_settings leading
     ImageView.
 

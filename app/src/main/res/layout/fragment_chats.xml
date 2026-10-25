@@ -2,7 +2,7 @@
 <!--
     ============================================================
     fragment_chats.xml — chat list fragment layout
-    ------------------------------------------------------------
+    ===
     Consumed by ChatsFragment (next-next-next file — depends on
     ConversationAdapter which is already created).
 
@@ -59,7 +59,7 @@
         android:paddingEnd="@dimen/screen_padding_horizontal"
         android:paddingTop="@dimen/space_md">
 
-        <!-- ---------- Header ---------- -->
+        <!-- === Header === -->
         <TextView
             android:id="@+id/tv_chats_header"
             android:layout_width="wrap_content"
@@ -74,7 +74,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- ---------- Search field ---------- -->
+        <!-- === Search field === -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_search"
             style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
@@ -108,7 +108,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- ---------- Conversation list ---------- -->
+        <!-- === Conversation list === -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_chats"
             android:layout_width="0dp"
@@ -127,7 +127,7 @@
 
         <!-- ============================================================
              EMPTY STATE
-             ------------------------------------------------------------
+             ===
              Centered in the RecyclerView's bounds. The fragment
              shows this when the conversation list is empty and no
              search is active. When a search is active but returns
@@ -187,7 +187,7 @@
 
         <!-- ============================================================
              LOADING INDICATOR
-             ------------------------------------------------------------
+             ===
              Centered. Shown only during initial chat-list load when
              no cached data exists yet. Firestore's persistent cache
              usually resolves in <100 ms on a warm start, so this
@@ -211,7 +211,7 @@
 
     <!-- ============================================================
          FAB — New chat / New group
-         ------------------------------------------------------------
+         ===
          Bottom-right, above the bottom navigation bar (the fragment
          is inside a FragmentContainerView that sits above the
          BottomNavigationView in MainActivity, so the FAB's

@@ -2,7 +2,7 @@
 <!--
     ============================================================
     bg_brand_dot — circular brand-accent dot
-    ------------------------------------------------------------
+    ===
     A simple oval filled with ?attr/colorPrimary.
 
     Why a theme attribute and not a fixed color resource:

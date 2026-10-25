@@ -2,7 +2,7 @@
 <!--
     ============================================================
     item_message_sent.xml — sent (own) message bubble
-    ------------------------------------------------------------
+    ===
     Consumed by MessageAdapter via ItemMessageSentBinding.
 
     Binding IDs → MessageAdapter field:
@@ -149,7 +149,7 @@
 
     <!-- ============================================================
          MEDIA CONTAINER (NEW)
-         ------------------------------------------------------------
+         ===
          GONE for text-only messages. VISIBLE for image (and later
          video, audio, document, voice) messages. Holds a single
          rounded thumbnail; the outer FrameLayout exists so that

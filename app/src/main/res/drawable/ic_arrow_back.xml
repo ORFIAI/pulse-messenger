@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_arrow_back — left-pointing back arrow
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - activity_settings.xml (toolbar navigationIcon)
       - future: ChatActivity, ProfileEditActivity,

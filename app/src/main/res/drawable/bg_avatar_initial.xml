@@ -2,7 +2,7 @@
 <!--
     ============================================================
     bg_avatar_initial — circular initials-avatar background
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - item_conversation.xml  (tv_initials)
       - message-item layouts    (tv_sender_initials, when added)

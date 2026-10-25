@@ -2,7 +2,7 @@
 <!--
     ============================================================
     activity_group_create.xml — New group creation screen
-    ------------------------------------------------------------
+    ===
     Consumed by GroupCreateActivity via ActivityGroupCreateBinding.
 
     Binding IDs → GroupCreateActivity field:
@@ -139,7 +139,7 @@
 
                 <!-- ============================================================
                      SELECTED MEMBERS CHIPS
-                     ------------------------------------------------------------
+                     ===
                      Hidden when no members have been selected. GroupCreateActivity
                      populates it programmatically — one Chip per selected user,
                      each with a close icon for removal.

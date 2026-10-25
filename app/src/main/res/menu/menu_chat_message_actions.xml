@@ -2,7 +2,7 @@
 <!--
     ============================================================
     menu_chat_message_actions.xml — message-action ID registry
-    ------------------------------------------------------------
+    ===
     This menu is NOT inflated as a visual menu anywhere in the
     app. Its items exist purely to give each long-press action
     a stable R.id.* constant that ChatActivity can compare

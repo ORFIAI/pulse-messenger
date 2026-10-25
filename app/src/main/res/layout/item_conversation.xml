@@ -2,7 +2,7 @@
 <!--
     ============================================================
     item_conversation.xml — chat-list row
-    ------------------------------------------------------------
+    ===
     Consumed by ConversationAdapter via ItemConversationBinding.
 
     Binding IDs → adapter field:

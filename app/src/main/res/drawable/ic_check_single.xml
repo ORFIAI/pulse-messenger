@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_check_single — single-checkmark "sent" indicator
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - MessageAdapter.java (via binding.ivStatus.setImageResource
         when a message's send is confirmed by Firestore)

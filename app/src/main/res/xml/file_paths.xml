@@ -2,7 +2,7 @@
 <!--
     ============================================================
     Pulse — FileProvider path scoping
-    ------------------------------------------------------------
+    ===
     Every <cache-path>, <files-path>, etc. here opens a
     specific subdirectory of the app's private storage as a
     content:// export namespace. NOTHING outside these declared
@@ -33,7 +33,7 @@
 
     <!-- ============================================================
          Camera captures
-         ------------------------------------------------------------
+         ===
          When the user sends a photo by taking a new one, we
          create a temp file at:
              getCacheDir()/camera/<timestamp>.jpg
@@ -54,7 +54,7 @@
 
     <!-- ============================================================
          Media previews
-         ------------------------------------------------------------
+         ===
          Photos/videos/audio/documents selected by the user for
          sending pass through here only when we need to process
          them (compress, generate thumbnail, extract duration,
@@ -73,7 +73,7 @@
 
     <!-- ============================================================
          Voice message recordings
-         ------------------------------------------------------------
+         ===
          MediaRecorder writes the in-progress recording here:
              cache/voice/<timestamp>.m4a
          After stop() we read duration, upload to Firebase
@@ -90,7 +90,7 @@
 
     <!-- ============================================================
          Exports for external opening
-         ------------------------------------------------------------
+         ===
          When the user taps a document or media message that has
          not yet been downloaded locally, we:
            1. Download from Firebase Storage to cache/exports/

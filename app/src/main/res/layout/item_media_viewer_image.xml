@@ -2,7 +2,7 @@
 <!--
     ============================================================
     item_media_viewer_image.xml — one page in the image viewer
-    ------------------------------------------------------------
+    ===
     Consumed by MediaViewerActivity's ViewPager2 adapter.
     Each pager page inflates this layout once and binds it to
     a single image URL (the current page's media download URL).
@@ -105,7 +105,7 @@
 
     <!-- ============================================================
          IMAGE
-         ------------------------------------------------------------
+         ===
          Full-bleed ImageView. Content is set by Glide at bind
          time (load(downloadUrl)). scaleType=fitCenter ensures
          the whole image is visible.

@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_search — magnifying glass (search field start icon)
-    ------------------------------------------------------------
+    ===
     Referenced by fragment_chats.xml:
         app:startIconDrawable="@drawable/ic_search"
         app:startIconTint="?attr/colorOnSurfaceVariant"

@@ -2,7 +2,7 @@
 <!--
     ============================================================
     item_audio_preview.xml — audio/voice message preview card
-    ------------------------------------------------------------
+    ===
     Consumed by MessageAdapter (Phase-9 modification) for
     Message.TYPE_AUDIO and Message.TYPE_VOICE.
 
@@ -140,7 +140,7 @@
 
         <!-- ============================================================
              PLAY / PAUSE BUTTON
-             ------------------------------------------------------------
+             ===
              Starts with the play icon. The adapter swaps to
              ic_pause_circle when playback is active, and back
              to ic_play_circle when paused or stopped.

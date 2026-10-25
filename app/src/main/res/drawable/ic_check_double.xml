@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_check_double — double-checkmark "delivered/read" indicator
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - MessageAdapter.java (via binding.ivStatus.setImageResource
         when the peer has read the message, computed from the

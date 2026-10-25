@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_audio — music note glyph (attach menu, audio bubble badge)
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - bottom_sheet_attach.xml (option_audio leading icon)
       - future: audio message bubble type badge (Phase 7)

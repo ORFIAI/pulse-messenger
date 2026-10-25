@@ -2,7 +2,7 @@
 <!--
     ============================================================
     Pulse — launcher icon fallback (API 24–25)
-    ------------------------------------------------------------
+    ===
     Android 8.0 (API 26) introduced the <adaptive-icon> format.
     Devices on API 24–25 (Android 7.0 Nougat and 7.1 Nougat) do
     not understand that XML schema at all and will crash trying

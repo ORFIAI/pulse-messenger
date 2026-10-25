@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_nav_people — bottom-nav People tab icon
-    ------------------------------------------------------------
+    ===
     Referenced by menu_bottom_nav.xml:
         android:icon="@drawable/ic_nav_people"
 
@@ -79,7 +79,7 @@
 
     <!-- ============================================================
          BACKGROUND FIGURE (right, slightly smaller)
-         ------------------------------------------------------------
+         ===
          Positioned to the right of the foreground figure and
          drawn first so the foreground figure paints on top of it.
          Only the head and upper shoulders are visible — the
@@ -112,7 +112,7 @@
 
     <!-- ============================================================
          FOREGROUND FIGURE (left, slightly larger, full outline)
-         ------------------------------------------------------------
+         ===
          Positioned to the left, occupies more vertical space.
          Full silhouette: head circle + shoulder arch.
 

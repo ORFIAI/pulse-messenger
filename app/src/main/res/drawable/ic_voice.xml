@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_voice — microphone glyph (voice messages, record button)
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - bottom_sheet_attach.xml (option_voice leading icon)
       - future: voice message bubble type badge (Phase 7)

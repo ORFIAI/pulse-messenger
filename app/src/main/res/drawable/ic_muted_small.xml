@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_muted_small — chat-list "muted conversation" indicator
-    ------------------------------------------------------------
+    ===
     Referenced by item_conversation.xml's iv_muted, in the
     top-right metadata cluster (next to the pin and timestamp).
 

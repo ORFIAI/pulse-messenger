@@ -2,7 +2,7 @@
 <!--
     ============================================================
     activity_profile_edit.xml — Edit / first-time profile setup
-    ------------------------------------------------------------
+    ===
     Consumed by ProfileEditActivity via ActivityProfileEditBinding.
 
     Binding IDs → ProfileEditActivity field:
@@ -150,7 +150,7 @@
 
             <!-- ============================================================
                  PHOTO UPLOAD PROGRESS
-                 ------------------------------------------------------------
+                 ===
                  Centered under the avatar area, visible only while the
                  photo is uploading. Shows a determinate progress bar
                  driven by StorageHelper.ProgressCallback.
@@ -192,7 +192,7 @@
 
             <!-- ============================================================
                  USERNAME
-                 ------------------------------------------------------------
+                 ===
                  The username field is intentionally single-line,
                  no suggestions, no autocorrect. Lowercase input is
                  enforced by the activity's TextWatcher / setError;

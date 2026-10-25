@@ -3,7 +3,7 @@
 
     <!-- ============================================================
          Custom theme attributes — message bubbles and chat surface
-         ------------------------------------------------------------
+         ===
          Why custom attributes instead of direct color references?
 
          A <shape> drawable's <solid android:color="..."> can accept

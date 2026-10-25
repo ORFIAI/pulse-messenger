@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_photo — photo/image glyph (attach menu, media bubble badge)
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - bottom_sheet_attach.xml (option_photo leading icon)
       - future: image message bubble type badge (Phase 7)

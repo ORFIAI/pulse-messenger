@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_empty_chats — chat-list empty-state illustration
-    ------------------------------------------------------------
+    ===
     Referenced by fragment_chats.xml:
         iv_empty_chats (64dp × 64dp)
         app:tint="?attr/colorOnSurfaceVariant"

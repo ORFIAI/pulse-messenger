@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_nav_profile — bottom-nav Profile tab icon
-    ------------------------------------------------------------
+    ===
     Referenced by menu_bottom_nav.xml:
         android:icon="@drawable/ic_nav_profile"
 
@@ -75,7 +75,7 @@
 
     <!-- ============================================================
          OUTER CIRCLE (the "avatar frame")
-         ------------------------------------------------------------
+         ===
          Drawn as an evenOdd ring: outer circle minus inner
          circle, producing a hollow outline ~1.5 units thick.
          The inner circle defines the visual boundary that
@@ -105,7 +105,7 @@
 
     <!-- ============================================================
          HEAD SILHOUETTE (solid filled circle)
-         ------------------------------------------------------------
+         ===
          Center (12, 9.5), radius 2.8 → spans (9.2, 6.7) to
          (14.8, 12.3).
 
@@ -125,7 +125,7 @@
 
     <!-- ============================================================
          SHOULDER SILHOUETTE (solid filled arch)
-         ------------------------------------------------------------
+         ===
          A semicircle / arch starting at (7, 17.5), curving
          up to a flat top at y=12.5 and back down to (17, 17.5).
          The arch represents the person's shoulders and upper

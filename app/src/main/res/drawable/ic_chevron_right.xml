@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_chevron_right — right-pointing chevron (row affordance)
-    ------------------------------------------------------------
+    ===
     Referenced by fragment_profile.xml's four row ImageViews.
     Each row has app:tint="?attr/colorOnSurfaceVariant" so the
     chevron renders in the correct low-emphasis theme color

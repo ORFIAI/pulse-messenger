@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_nav_chats — bottom-nav Chats tab icon
-    ------------------------------------------------------------
+    ===
     Referenced by menu_bottom_nav.xml:
         android:icon="@drawable/ic_nav_chats"
 

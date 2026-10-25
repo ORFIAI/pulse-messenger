@@ -2,7 +2,7 @@
 <!--
     ============================================================
     bg_unread_badge — pill/circle background for unread count
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - item_conversation.xml (tv_unread_badge)
       - future: a "unread in conversation" floating pill in

@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_share — share glyph (media viewer, forward action)
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - activity_media_viewer.xml (btn_share top-bar action)
       - future: menu_chat_message_actions.xml (Forward action

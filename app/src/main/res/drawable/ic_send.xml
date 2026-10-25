@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_send — paper-plane / send-arrow icon
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - activity_chat.xml (btn_send, via app:icon)
       - future: msg_forward_to dialog (send action)

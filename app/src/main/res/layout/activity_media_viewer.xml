@@ -2,7 +2,7 @@
 <!--
     ============================================================
     activity_media_viewer.xml — full-screen media viewer
-    ------------------------------------------------------------
+    ===
     Consumed by MediaViewerActivity via ActivityMediaViewerBinding.
 
     Binding IDs → MediaViewerActivity field:
@@ -187,7 +187,7 @@
 
     <!-- ============================================================
          LOADING SPINNER (centered)
-         ------------------------------------------------------------
+         ===
          Shown while the current page's media is loading. The
          activity toggles this to VISIBLE during a Glide load
          or an ExoPlayer prepare, and GONE once the media is

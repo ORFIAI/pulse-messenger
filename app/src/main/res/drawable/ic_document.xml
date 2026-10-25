@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_document — document/file glyph (attach menu, doc bubble)
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - bottom_sheet_attach.xml (option_document leading icon)
       - future: document message bubble type badge (Phase 7)

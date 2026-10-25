@@ -3,7 +3,7 @@
 
     <!-- ============================================================
          Brand accent
-         ------------------------------------------------------------
+         ===
          Used by:
            - FCM notification light color (manifest meta-data)
            - Launcher icon tint
@@ -93,7 +93,7 @@
 
     <!-- ============================================================
          Message bubbles
-         ------------------------------------------------------------
+         ===
          Sender (own) bubbles use a warm indigo-tinted accent that is
          clearly distinguishable from the primary accent used on
          buttons — this is intentional. Messenger-style apps (and the
@@ -125,7 +125,7 @@
 
     <!-- ============================================================
          Chat background
-         ------------------------------------------------------------
+         ===
          A subtle off-white / near-black behind the message list.
          Slightly warmer than the surface color so bubbles stand out
          without a hard border.
@@ -176,7 +176,7 @@
 
     <!-- ============================================================
          Avatar placeholder palette
-         ------------------------------------------------------------
+         ===
          When a user has no photo, we pick one of these deterministically
          from a hash of the UID so each user gets a stable colored
          initials avatar. Six distinct, accessible hues.

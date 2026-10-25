@@ -2,7 +2,7 @@
 <!--
     ============================================================
     bg_bubble_received — background for received message bubbles
-    ------------------------------------------------------------
+    ===
     Referenced by:
       - item_message_received.xml (root container background)
 
@@ -10,7 +10,7 @@
     exactly three attributes:
 
       | aspect          | bg_bubble_sent       | bg_bubble_received  |
-      |-----------------|----------------------|---------------------|
+      |===|===|===|
       | fill attribute  | pulseBubbleSent      | pulseBubbleReceived |
       | tail corner     | bottom-right (4dp)   | bottom-left  (4dp)  |
       | resolved light  | #6D5EF5 (indigo)     | #F1EEF6 (light gray)|

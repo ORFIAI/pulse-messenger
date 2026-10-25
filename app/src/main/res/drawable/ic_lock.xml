@@ -2,7 +2,7 @@
 <!--
     ============================================================
     ic_lock — padlock icon (Privacy row affordance)
-    ------------------------------------------------------------
+    ===
     Referenced by fragment_profile.xml's row_privacy leading
     ImageView.
 
