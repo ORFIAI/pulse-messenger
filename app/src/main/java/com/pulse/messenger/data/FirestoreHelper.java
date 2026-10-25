@@ -77,7 +77,7 @@ public class FirestoreHelper {
     }
 
     /** Thrown by {@link #reserveUsername} when the requested handle is owned by someone else. */
-    public static final class UsernameTakenException extends Exception {
+    public static final class UsernameTakenException extends RuntimeException {
         public UsernameTakenException(String username) {
             super("Username already taken: " + username);
         }

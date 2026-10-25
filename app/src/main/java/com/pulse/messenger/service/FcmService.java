@@ -182,7 +182,7 @@ public class FcmService extends FirebaseMessagingService {
         // goAsync keeps the service alive for up to 10s while we
         // complete the Firestore reads. Without it, the system could
         // kill the service mid-read on low-memory devices.
-     final android.app.Service.PendingResult pendingResult = goAsync();
+     final android.app.Service.PendingResult pendingResult = ((android.app.Service) this).goAsync();
 
         FirestoreHelper.get().getConversation(conversationId,
                 new FirestoreHelper.Callback<Conversation>() {
