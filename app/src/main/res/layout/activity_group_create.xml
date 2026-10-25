@@ -156,7 +156,7 @@
                     tools:visibility="visible">
 
                     <com.google.android.material.chip.Chip
-                        style="@style/Widget.Material3.Chip.Person"
+                        style="@style/Widget.Material3.Chip.Assist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checkable="false"
@@ -166,7 +166,7 @@
                         app:closeIconVisible="true" />
 
                     <com.google.android.material.chip.Chip
-                        style="@style/Widget.Material3.Chip.Person"
+                        style="@style/Widget.Material3.Chip.Assist"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checkable="false"
@@ -279,7 +279,7 @@
                         android:layout_marginBottom="@dimen/space_md"
                         android:visibility="gone"
                         app:indicatorColor="?attr/colorPrimary"
-                        app:indeterminate="true" />
+                         />
 
                 </FrameLayout>
 

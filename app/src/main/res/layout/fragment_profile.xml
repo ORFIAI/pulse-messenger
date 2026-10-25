@@ -426,7 +426,7 @@
             android:layout_marginTop="@dimen/space_lg"
             android:visibility="gone"
             app:indicatorColor="?attr/colorPrimary"
-            app:indeterminate="true" />
+             />
 
     </LinearLayout>
 

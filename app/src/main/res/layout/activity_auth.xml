@@ -33,7 +33,7 @@
     android:id="@+id/root_auth"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorBackground"
+    android:background="?attr/colorSurface"
     android:paddingStart="@dimen/screen_padding_horizontal"
     android:paddingEnd="@dimen/screen_padding_horizontal"
     android:paddingTop="@dimen/screen_padding_vertical"

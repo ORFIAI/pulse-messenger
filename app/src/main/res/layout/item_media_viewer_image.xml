@@ -127,7 +127,7 @@
         android:layout_gravity="center"
         android:visibility="visible"
         app:indicatorColor="@android:color/white"
-        app:indeterminate="true"
+        
         tools:visibility="visible" />
 
     <!-- ============================================================

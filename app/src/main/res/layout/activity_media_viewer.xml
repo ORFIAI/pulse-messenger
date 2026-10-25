@@ -200,6 +200,6 @@
         android:layout_gravity="center"
         android:visibility="gone"
         app:indicatorColor="@android:color/white"
-        app:indeterminate="true" />
+         />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
