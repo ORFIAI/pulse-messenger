@@ -236,7 +236,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/chat_hint_message"
-                        android:imeOptions="actionDefault"
+                        android:imeOptions="actionSend"
                         android:inputType="textCapSentences|textMultiLine|textShortMessage"
                         android:maxLines="5"
                         android:paddingTop="@dimen/space_xs"
