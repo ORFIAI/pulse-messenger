@@ -32,6 +32,9 @@
          ============================================================ -->
     <application
         android:name=".App"
+<meta-data
+    android:name="com.google.android.gms.credentials.API_ENABLED"
+    android:value="false" />
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
