@@ -2,39 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- ============================================================
-         Permissions
-         ============================================================ -->
-
-    <!-- Networking (Firebase SDKs and Glide all require this) -->
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- Runtime permission required on Android 13+ to post notifications.
-         Requested from Settings and after first login. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <!-- Voice message recording. Requested on first voice-message tap. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
-    <!-- ============================================================
-         Hardware features
-         Declared required="false" so devices without a microphone or
-         camera can still install the app. Voice recording gracefully
-         disables itself if RECORD_AUDIO is denied or no mic exists.
-         ============================================================ -->
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
 
-    <!-- ============================================================
-         Application
-         ============================================================ -->
     <application
         android:name=".App"
-<meta-data
-    android:name="com.google.android.gms.credentials.API_ENABLED"
-    android:value="false" />
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -43,13 +22,7 @@
         android:usesCleartextTraffic="false"
         android:enableOnBackInvokedCallback="true">
 
-        <!-- =========================================================
-             FCM default notification configuration.
-             These defaults are used by FirebaseMessagingService when
-             the server sends a "notification" payload. We primarily
-             use data-only payloads, but these defaults matter if any
-             notification payload slips through.
-             ========================================================= -->
+        <!-- FCM defaults -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
@@ -60,11 +33,12 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/pulse_accent" />
 
-        <!-- =========================================================
-             Entry point: Google sign-in gate.
-             - Session-restored users are immediately routed to MainActivity.
-             - Fresh users see the welcome screen with a Continue-with-Google button.
-             ========================================================= -->
+        <!-- FALLBACK: Force legacy Google Sign-In if Credential Manager fails -->
+        <meta-data
+            android:name="com.google.android.gms.credentials.API_ENABLED"
+            android:value="false" />
+
+        <!-- Auth -->
         <activity
             android:name=".auth.AuthActivity"
             android:exported="true"
@@ -76,22 +50,13 @@
             </intent-filter>
         </activity>
 
-        <!-- =========================================================
-             Bottom-navigation shell (Chats / People / Profile).
-             ========================================================= -->
+        <!-- Main -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="false"
             android:launchMode="singleTop" />
 
-        <!-- =========================================================
-             Conversation screen.
-             Launched from the chat list and from notification taps.
-             exported="false" is safe here: PendingIntents created by
-             our own app can still launch it; only external apps
-             cannot. windowSoftInputMode="adjustResize" is essential
-             for the composer to survive the keyboard.
-             ========================================================= -->
+        <!-- Chat -->
         <activity
             android:name=".ui.ChatActivity"
             android:exported="false"
@@ -99,37 +64,34 @@
             android:parentActivityName=".ui.MainActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- =========================================================
-             First-time and later profile editing.
-             ========================================================= -->
+        <!-- Profile Edit -->
         <activity
             android:name=".ui.ProfileEditActivity"
             android:exported="false"
             android:parentActivityName=".ui.MainActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- =========================================================
-             Settings.
-             ========================================================= -->
+        <!-- Settings -->
         <activity
             android:name=".ui.SettingsActivity"
             android:exported="false"
             android:parentActivityName=".ui.MainActivity" />
 
-        <!-- =========================================================
-             Group creation.
-             ========================================================= -->
+        <!-- Group Create -->
         <activity
             android:name=".ui.GroupCreateActivity"
             android:exported="false"
             android:parentActivityName=".ui.MainActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- =========================================================
-             Firebase Cloud Messaging receiver.
-             exported="false" is correct: only the Firebase SDK (which
-             runs inside our own process) sends the MESSAGING_EVENT.
-             ========================================================= -->
+        <!-- Media Viewer -->
+        <activity
+            android:name=".ui.MediaViewerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Pulse"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <!-- FCM Service -->
         <service
             android:name=".service.FcmService"
             android:exported="false">
@@ -138,13 +100,7 @@
             </intent-filter>
         </service>
 
-        <!-- =========================================================
-             FileProvider.
-             Lets us hand file:// URIs to the system camera, share
-             intents, or "open in external app" without exposing the
-             private app sandbox. Scoped to specific paths in
-             res/xml/file_paths.xml (created later).
-             ========================================================= -->
+        <!-- FileProvider -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
