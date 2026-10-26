@@ -1,73 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    ============================================================
-    item_message_sent.xml — sent (own) message bubble
-    ===
-    Consumed by MessageAdapter via ItemMessageSentBinding.
-
-    Binding IDs → MessageAdapter field:
-      bubble_sent_root       → binding.bubbleSentRoot
-      ll_reply_preview       → binding.llReplyPreview
-      tv_reply_sender        → binding.tvReplySender
-      tv_reply_preview_text  → binding.tvReplyPreviewText
-      fl_media               → binding.flMedia          (NEW)
-      iv_media_thumbnail     → binding.ivMediaThumbnail (NEW)
-      tv_message_text        → binding.tvMessageText
-      tv_edited              → binding.tvEdited
-      tv_bubble_time         → binding.tvBubbleTime
-      iv_status              → binding.ivStatus
-      tv_deleted             → binding.tvDeleted
-
-    Media container (fl_media):
-      - GONE for text-only messages. Everything below it
-        (text, timestamp, status icon) collapses up to the
-        reply preview's bottom, producing the exact same
-        layout as the pre-media version.
-      - VISIBLE for image messages. A 200dp × 200dp rounded
-        thumbnail displays above the caption and timestamp.
-
-    Message flow when fl_media is VISIBLE:
-      [reply preview if any]
-      [200×200 image thumbnail]
-      [caption text (optional — GONE when empty)]
-      [time | edited | status]
-
-    Message flow when fl_media is GONE (text messages):
-      [reply preview if any]
-      [text]
-      [time | edited | status]
-
-    The media container is deliberately sized as a fixed
-    200×200 square (`@dimen/media_bubble_thumbnail`). This
-    is the standard chat thumbnail size — WhatsApp uses a
-    comparable dimension for its image bubbles. Phase 8 will
-    add aspect-ratio-aware sizing (a portrait photo renders
-    as a tall rectangle, a landscape photo as a wide one);
-    Phase 7's fixed square keeps the first cut simple and
-    fully functional. The full image (uncropped) is what
-    the user sees when tapping the bubble to open the
-    full-screen viewer — the bubble is a preview, not the
-    definitive view.
-
-    ShapeableImageView is used instead of a plain ImageView
-    because it clips its contents to a rounded shape. With
-    `app:shapeAppearance="@style/ShapeAppearance.Pulse.Medium"`
-    (12dp corners), the image inside the bubble has the same
-    rounding as the general bubble content — matching the
-    visual language of the reply preview strip and the
-    thumbnail in the full-screen viewer.
-
-    The thumbnail background is `?attr/pulseBubbleSentReply`
-    (a slightly-deeper sent-bubble color). This is the
-    placeholder visible:
-      - before Glide has loaded the image
-      - briefly during load (covered by Glide's fade-in)
-      - if the load fails and no error UI is set
-    It reads as "an image is loading here" rather than as a
-    blank hole in the bubble. When the image loads
-    successfully, Glide paints it on top of this background.
-    ============================================================
--->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -86,11 +17,8 @@
     android:paddingBottom="@dimen/space_xxs"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    tools:ignore="UnusedAttribute">
+    app:layout_constraintHorizontal_bias="1.0">
 
-    <!-- ============================================================
-         REPLY PREVIEW STRIP
-         ============================================================ -->
     <LinearLayout
         android:id="@+id/ll_reply_preview"
         android:layout_width="0dp"
@@ -105,21 +33,19 @@
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible">
-
+        app:layout_constraintEnd_toEndOf="parent">
+        
         <View
             android:layout_width="@dimen/reply_preview_accent_width"
             android:layout_height="match_parent"
             android:background="?attr/pulseBubbleSentText" />
-
+            
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="@dimen/space_xxs"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/tv_reply_sender"
                 android:layout_width="match_parent"
@@ -129,9 +55,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="Alex Rivera" />
-
+                android:ellipsize="end" />
             <TextView
                 android:id="@+id/tv_reply_preview_text"
                 android:layout_width="match_parent"
@@ -140,49 +64,31 @@
                 android:textSize="12sp"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="The original message text" />
-
+                android:ellipsize="end" />
         </LinearLayout>
-
     </LinearLayout>
 
-    <!-- ============================================================
-         MEDIA CONTAINER (NEW)
-         ===
-         GONE for text-only messages. VISIBLE for image (and later
-         video, audio, document, voice) messages. Holds a single
-         rounded thumbnail; the outer FrameLayout exists so that
-         the future video bubble can layer a play button over the
-         thumbnail without restructuring this file — it just
-         becomes a new child of fl_media.
-         ============================================================ -->
     <FrameLayout
         android:id="@+id/fl_media"
-        android:layout_width="@dimen/media_bubble_thumbnail"
-        android:layout_height="@dimen/media_bubble_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_xxs"
         android:layout_marginBottom="@dimen/space_xxs"
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/ll_reply_preview"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_media_thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="@dimen/media_bubble_thumbnail"
+            android:layout_height="@dimen/media_bubble_thumbnail"
             android:background="?attr/pulseBubbleSentReply"
             android:contentDescription="@string/cd_message_sent_image"
             android:scaleType="centerCrop"
             app:shapeAppearance="@style/ShapeAppearance.Pulse.Medium" />
-
     </FrameLayout>
 
-    <!-- ============================================================
-         MESSAGE TEXT (caption for media, body for text)
-         ============================================================ -->
     <TextView
         android:id="@+id/tv_message_text"
         android:layout_width="wrap_content"
@@ -191,15 +97,10 @@
         android:textSize="15sp"
         android:lineSpacingExtra="2dp"
         android:includeFontPadding="false"
-        android:textIsSelectable="false"
         app:layout_constraintTop_toBottomOf="@id/fl_media"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="Hey — are we still on for tomorrow?" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ============================================================
-         DELETED TOMBSTONE
-         ============================================================ -->
     <TextView
         android:id="@+id/tv_deleted"
         android:layout_width="wrap_content"
@@ -212,12 +113,8 @@
         android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/fl_media"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="gone" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ============================================================
-         META ROW: time | edited | status
-         ============================================================ -->
     <TextView
         android:id="@+id/tv_edited"
         android:layout_width="wrap_content"
@@ -230,8 +127,7 @@
         android:layout_marginEnd="2dp"
         app:layout_constraintTop_toBottomOf="@id/tv_message_text"
         app:layout_constraintEnd_toStartOf="@id/tv_bubble_time"
-        app:layout_constraintBaseline_toBaselineOf="@id/tv_bubble_time"
-        tools:visibility="visible" />
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_bubble_time" />
 
     <TextView
         android:id="@+id/tv_bubble_time"
@@ -244,20 +140,15 @@
         android:fontFamily="sans-serif-medium"
         app:layout_constraintTop_toBottomOf="@id/tv_message_text"
         app:layout_constraintEnd_toStartOf="@id/iv_status"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="14:32" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
         android:id="@+id/iv_status"
         android:layout_width="14dp"
         android:layout_height="14dp"
-        android:contentDescription="@string/cd_message_status"
         android:layout_marginStart="@dimen/space_xxxs"
         android:layout_marginBottom="1dp"
         app:layout_constraintTop_toTopOf="@id/tv_bubble_time"
         app:layout_constraintBottom_toBottomOf="@id/tv_bubble_time"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:src="@drawable/ic_check_double"
-        tools:tint="?attr/colorOnPrimary" />
-
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

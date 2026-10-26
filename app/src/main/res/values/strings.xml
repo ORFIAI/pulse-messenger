@@ -85,11 +85,13 @@
     <string name="conversation_pinned_label">Pinned</string>
     <string name="conversation_you_prefix">You: </string>
     <string name="conversation_draft_prefix">Draft: </string>
-    <string name="conversation_type_image">\U0001F4F7 Photo</string>
-    <string name="conversation_type_video">\U0001F3A5 Video</string>
-    <string name="conversation_type_audio">\U0001F3B5 Audio</string>
-    <string name="conversation_type_voice">\U0001F3A4 Voice message</string>
-    <string name="conversation_type_document">\U0001F4C4 Document</string>
+    
+    <!-- FIXED EMOJI ESCAPES HERE -->
+    <string name="conversation_type_image">\uD83D\uDCF7 Photo</string>
+    <string name="conversation_type_video">\uD83C\uDFA5 Video</string>
+    <string name="conversation_type_audio">\uD83C\uDFB5 Audio</string>
+    <string name="conversation_type_voice">\uD83C\uDFA4 Voice message</string>
+    <string name="conversation_type_document">\uD83D\uDCC4 Document</string>
 
     <!-- People / user search -->
     <string name="people_title">Find people</string>
