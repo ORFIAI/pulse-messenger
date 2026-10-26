@@ -1,31 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    ============================================================
-    activity_auth.xml — Google-only sign-in welcome screen
-    ===
-    Consumed by com.pulse.messenger.auth.AuthActivity.
-    Referenced IDs:
-      - root_auth           → root ConstraintLayout (Snackbar anchor)
-      - iv_logo             → brand mark (foreground vector)
-      - tv_welcome_title    → "Welcome to Pulse" headline
-      - tv_welcome_subtitle → supporting copy
-      - btn_google          → MaterialButton "Continue with Google"
-      - progress_auth       → CircularProgressIndicator (hidden)
-      - tv_terms            → terms/privacy acknowledgement
-
-    Design notes (referenced IDs used by AuthActivity will be
-    hooked up to click/listener logic next file):
-      - Content column centered vertically with a slight upward
-        bias (0.42) — same visual-center logic as the Phase-1
-        MainActivity layout, for consistency.
-      - Button height 52dp (@dimen/auth_google_button_height)
-        reaches the 48dp minimum with room to breathe.
-      - Logo is the SAME foreground vector used by the launcher
-        icon. If the P is redesigned, both update together.
-      - No toolbar — a full-screen welcome with no chrome is
-        the modern standard for first-run experiences.
-    ============================================================
--->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -33,7 +6,7 @@
     android:id="@+id/root_auth"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="?attr/colorBackground"
     android:paddingStart="@dimen/screen_padding_horizontal"
     android:paddingEnd="@dimen/screen_padding_horizontal"
     android:paddingTop="@dimen/screen_padding_vertical"
@@ -41,24 +14,6 @@
     android:fitsSystemWindows="true"
     tools:context=".auth.AuthActivity">
 
-    <!-- ============================================================
-         Logo
-         ===
-         Centered brand mark. Uses the same foreground vector as
-         the adaptive launcher icon so the icon the user tapped
-         on the home screen visually "opens into" this screen —
-         a small but meaningful brand-consistency cue.
-
-         iv_logo is consumed by AuthActivity for a subtle entry
-         animation (fade + scale), which is why the ID exists
-         even though there is no click handler.
-
-         contentDescription is set programmatically to
-         @string/cd_profile_photo? No — the logo is decorative
-         and carries no informational content, so we set
-         importantForAccessibility="no" to keep TalkBack silent
-         on it. The button is the only actionable element here.
-         ============================================================ -->
     <ImageView
         android:id="@+id/iv_logo"
         android:layout_width="@dimen/auth_logo_size"
@@ -71,16 +26,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.22" />
+        app:layout_constraintVertical_bias="0.15" />
 
-    <!-- ============================================================
-         Welcome headline
-         ============================================================ -->
     <TextView
         android:id="@+id/tv_welcome_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_xxl"
+        android:layout_marginTop="@dimen/space_xl"
         android:gravity="center"
         android:text="@string/auth_welcome_title"
         android:textColor="?attr/colorOnBackground"
@@ -91,102 +43,59 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ============================================================
-         Welcome subtitle
-         ===
-         Uses string with embedded "\n" — the resource string
-         contains the newline escape, so the copy reads as two
-         visual lines regardless of screen width. Do not split
-         into two TextViews; the current pattern is one logical
-         paragraph that happens to break twice.
-         ============================================================ -->
-    <TextView
-        android:id="@+id/tv_welcome_subtitle"
-        android:layout_width="0dp"
+    <!-- Email Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_email"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xl"
+        android:hint="@string/auth_email_hint"
+        app:layout_constraintTop_toBottomOf="@id/tv_welcome_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Password Field -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_password"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_sm"
-        android:gravity="center"
-        android:text="@string/auth_welcome_subtitle"
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:textSize="15sp"
-        android:lineSpacingExtra="4dp"
-        app:layout_constraintTop_toBottomOf="@id/tv_welcome_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:hint="@string/auth_password_hint"
+        app:passwordToggleEnabled="true"
+        app:layout_constraintTop_toBottomOf="@id/til_email">
 
-    <!-- ============================================================
-         "Continue with Google" button
-         ===
-         MaterialButton, filled style, brand accent.
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-         app:icon = @drawable/ic_google_g — the multicolor Google
-         "G" that users expect on a Google sign-in button. This is
-         one of the very few places in the app where a multicolor
-         icon is used (launcher icons are the other). It signals
-         "Google" instantly and reduces sign-in abandonment — see
-         the ic_google_g file for design provenance.
-
-         app:iconTint is NOT set: the Google G is intentionally
-         multicolor and tinting it white would produce a
-         monochrome blob that users misread as a generic sign-in.
-         The MaterialButton default does not override the icon
-         tint in this configuration — verify visually after the
-         next file if using a Material theme variant that applies
-         automatic icon tinting.
-
-         app:iconGravity="textStart" places the icon to the LEFT
-         of the label, with 12dp gap (app:iconPadding). This is
-         the de-facto standard Google sign-in button layout.
-
-         android:insetTop / insetBottom = 0dp to keep the button
-         at the declared 52dp height — MaterialButton has a
-         default 6dp insetTop and 6dp insetBottom that would
-         otherwise shrink the visual button to 40dp inside a
-         52dp container. Zeroing them keeps the touch target
-         and the visible button the same size.
-
-         Android's own "Sign in with Google" branding guidelines
-         specify the icon, colors, and label ordering. Deviating
-         from them reduces user trust and can cause app-store
-         review friction. This layout follows the guidelines.
-         ============================================================ -->
+    <!-- Main Action Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_google"
+        android:id="@+id/btn_auth_action"
         android:layout_width="match_parent"
         android:layout_height="@dimen/auth_google_button_height"
-        android:layout_marginTop="@dimen/space_xxl"
+        android:layout_marginTop="@dimen/space_xl"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:text="@string/auth_continue_with_google"
+        android:text="@string/auth_login"
         android:textSize="16sp"
         android:textAllCaps="false"
         android:fontFamily="sans-serif-medium"
-        android:letterSpacing="0"
         app:backgroundTint="?attr/colorPrimary"
-        app:icon="@drawable/ic_google_g"
-        app:iconSize="20dp"
-        app:iconPadding="@dimen/space_sm"
-        app:iconTint="@null"
-        app:iconGravity="textStart"
         app:cornerRadius="@dimen/radius_md"
-        app:layout_constraintTop_toBottomOf="@id/tv_welcome_subtitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/til_password" />
 
-    <!-- ============================================================
-         Progress indicator
-         ===
-         Hidden by default. AuthActivity toggles visibility
-         between this and btn_google while the Google account
-         picker / Firebase credential exchange is in progress.
-         Both must never be visible at the same time — a
-         tappable button during a network operation produces
-         duplicate sign-in attempts.
-
-         Uses the indeterminate variant. No app:indicatorSize
-         is set — Material defaults to 40dp which sits
-         comfortably under the 52dp button height.
-         ============================================================ -->
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/progress_auth"
         android:layout_width="wrap_content"
@@ -194,45 +103,38 @@
         android:visibility="gone"
         app:indicatorColor="?attr/colorPrimary"
         app:trackThickness="3dp"
-        app:layout_constraintTop_toTopOf="@id/btn_google"
-        app:layout_constraintBottom_toBottomOf="@id/btn_google"
-        app:layout_constraintStart_toStartOf="@id/btn_google"
-        app:layout_constraintEnd_toEndOf="@id/btn_google"
+        app:layout_constraintTop_toTopOf="@id/btn_auth_action"
+        app:layout_constraintBottom_toBottomOf="@id/btn_auth_action"
+        app:layout_constraintStart_toStartOf="@id/btn_auth_action"
+        app:layout_constraintEnd_toEndOf="@id/btn_auth_action"
         tools:visibility="visible" />
 
-    <!-- ============================================================
-         Terms & privacy acknowledgement
-         ===
-         A single line of small text at the bottom. If the user
-         taps the "Terms of Service" or "Privacy Policy" span,
-         AuthActivity opens a dialog or web intent — the tap
-         handling is set programmatically via ClickableSpan
-         because the two spans need distinct click targets that
-         a single TextView on-click cannot express.
+    <!-- Toggle Login/Signup -->
+    <TextView
+        android:id="@+id/tv_toggle_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_md"
+        android:padding="@dimen/space_xs"
+        android:text="@string/auth_toggle_to_signup"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintTop_toBottomOf="@id/btn_auth_action"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-         Not a checkbox. A checkbox would add friction and signal
-         "we plan to email you" — Pulse does not. Acknowledgement
-         by continued use is the correct pattern for a chat app
-         with no separate marketing consent.
-
-         android:autoLink is deliberately NOT set — autoLink would
-         scan the text for URLs and phone numbers and turn them
-         into spans, which conflicts with our ClickableSpan
-         setup. The links are set programmatically.
-         ============================================================ -->
     <TextView
         android:id="@+id/tv_terms"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_lg"
         android:layout_marginBottom="@dimen/space_md"
         android:gravity="center"
+        android:text="@string/auth_terms_prefix"
         android:textColor="?attr/colorOnSurfaceVariant"
         android:textSize="12sp"
-        android:lineSpacingExtra="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="By continuing, you agree to our Terms of Service and Privacy Policy" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
