@@ -22,10 +22,6 @@ jobs:
       run: |
         echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > app/google-services.json
 
-    # ----------------------------------------------------------------
-    # SHA-1 Caching: Ensures the debug keystore (and its SHA-1) 
-    # remains the same across all GitHub Action builds.
-    # ----------------------------------------------------------------
     - name: Cache Debug Keystore
       uses: actions/cache@v4
       id: debug-keystore-cache
@@ -39,15 +35,12 @@ jobs:
         mkdir -p ~/.android
         keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
-    - name: Print Debug SHA-1
+    - name: Print Debug Signatures
       run: |
-        echo "========== YOUR DEBUG SHA-1 FINGERPRINT =========="
-        keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android | grep SHA1
-        echo "==================================================="
+        echo "========== YOUR DEBUG SHA SIGNATURES =========="
+        keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+        echo "==============================================="
 
-    # ----------------------------------------------------------------
-    # Build Steps
-    # ----------------------------------------------------------------
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 

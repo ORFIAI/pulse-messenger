@@ -1,5 +1,6 @@
 package com.pulse.messenger.auth;
 
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -214,32 +215,31 @@ public class AuthActivity extends AppCompatActivity {
      * unnecessary account picker.</p>
      */
     private void launchExplicitSignIn() {
-        GetGoogleIdOption explicitOption = new GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(getString(R.string.default_web_client_id))
-                .build();
+    GetSignInWithGoogleOption explicitOption = new GetSignInWithGoogleOption.Builder(
+            getString(R.string.default_web_client_id))
+            .build();
 
-        GetCredentialRequest request = new GetCredentialRequest.Builder()
-                .addCredentialOption(explicitOption)
-                .build();
+    GetCredentialRequest request = new GetCredentialRequest.Builder()
+            .addCredentialOption(explicitOption)
+            .build();
 
-        credentialManager.getCredentialAsync(
-                this,
-                request,
-                null,
-                executor,
-                new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
-                    @Override
-                    public void onResult(GetCredentialResponse result) {
-                        handleCredentialResponse(result);
-                    }
+    credentialManager.getCredentialAsync(
+            this,
+            request,
+            null,
+            executor,
+            new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
+                @Override
+                public void onResult(GetCredentialResponse result) {
+                    handleCredentialResponse(result);
+                }
 
-                    @Override
-                    public void onError(@NonNull GetCredentialException e) {
-                        runOnUiThread(() -> handleCredentialError(e));
-                    }
-                });
-    }
+                @Override
+                public void onError(@NonNull GetCredentialException e) {
+                    runOnUiThread(() -> handleCredentialError(e));
+                }
+            });
+}
 
     /**
      * Validates the Credential Manager response shape, extracts the ID
