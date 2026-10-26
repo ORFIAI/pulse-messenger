@@ -33,11 +33,6 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/pulse_accent" />
 
-        <!-- FALLBACK: Force legacy Google Sign-In if Credential Manager fails -->
-        <meta-data
-            android:name="com.google.android.gms.credentials.API_ENABLED"
-            android:value="false" />
-
         <!-- Auth -->
         <activity
             android:name=".auth.AuthActivity"
